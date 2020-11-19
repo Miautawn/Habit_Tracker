@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Habit_Tracker">
-        <activity android:name=".ui.NewHabitActivity"
+        <activity android:name=".ui.CustomHabitActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.NewHabitActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.RegisterActivity"
             android:screenOrientation="portrait" />

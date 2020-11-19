@@ -34,8 +34,8 @@ public class NewHabitActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (view == createCustomHabitBtn) {
-            //Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            startActivity(intent);
         }
     }
 
