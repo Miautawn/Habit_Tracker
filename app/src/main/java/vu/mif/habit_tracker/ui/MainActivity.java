@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 slideUpDown(hiddenLeaderBoardOverlay);
             }
         } else if(view == plusBtn) {
-            //Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
+            startActivity(intent);
         }
     }
 
