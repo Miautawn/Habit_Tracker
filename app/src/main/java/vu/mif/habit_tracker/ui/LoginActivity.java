@@ -34,8 +34,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         } else if (view == loginTextRedirect) {
-            //Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         }
     }
 

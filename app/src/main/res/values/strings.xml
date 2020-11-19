@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Habit_Tracker</string>
+    <string name="app_name">tackle.</string>
+    <string name="privacyNote">By continuing, you agree to accept our\n
+        Privacy Policy \&amp; Terms of Service.</string>
 </resources>
