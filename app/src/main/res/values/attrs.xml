@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularProgressBar">
+        <attr name="progressBar_progress" format="integer" />
+        <attr name="progressBar_progress_max" format="integer" />
+        <attr name="progressBar_color" format="color" />
+        <attr name="progressBar_background_color" format="color" />
+        <attr name="progressBar_width" format="dimension" />
+        <attr name="progressBar_background_width" format="dimension" />
+        <attr name="progressBar_startAngle" format="float" />
+        <attr name="progressBar_image" format="reference" />
+    </declare-styleable>
+</resources>

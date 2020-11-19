@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        app:constraintSetEnd="@id/barLeft"
+        app:constraintSetStart="@id/start"
+        app:duration="1000">
+        <OnSwipe
+            app:dragDirection="dragLeft"
+            app:onTouchUp="autoComplete"
+            app:touchRegionId="@id/progressBarCenter"/>
+        <KeyFrameSet>
+        </KeyFrameSet>
+    </Transition>
+
+    <Transition
+        app:constraintSetEnd="@id/barRight"
+        app:constraintSetStart="@id/start"
+        app:duration="1000">
+        <OnSwipe
+            app:dragDirection="dragRight"
+            app:onTouchUp="autoComplete"
+            app:touchRegionId="@id/progressBarCenter"/>
+        <KeyFrameSet>
+        </KeyFrameSet>
+    </Transition>
+
+    <!--====================-->
+
+    <ConstraintSet android:id="@+id/start">
+
+        <Constraint
+            android:id="@+id/progressBarLeftTwo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="250" >
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="2.5dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarLeftOne"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="215">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="2.5dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarCenter"
+            android:layout_width="290dp"
+            android:layout_height="290dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="180"
+            app:layout_editor_absoluteY="199dp"
+            app:layout_editor_absoluteX="60dp">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="6dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarRightOne"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="145">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="2.5dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarRightTwo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="110">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="2.5dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/barLeft">
+        <Constraint
+            android:id="@+id/progressBarLeftTwo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="285" />
+        <Constraint
+            android:id="@+id/progressBarLeftOne"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="250" />
+        <Constraint
+            android:id="@+id/progressBarCenter"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="215">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="2.5dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarRightOne"
+            android:layout_width="290dp"
+            android:layout_height="290dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="180">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="6dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarRightTwo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="145" />
+        <Constraint
+            android:id="@+id/guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/barRight">
+        <Constraint
+            android:id="@+id/progressBarLeftTwo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="215" />
+        <Constraint
+            android:id="@+id/progressBarLeftOne"
+            android:layout_width="290dp"
+            android:layout_height="290dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="180">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="6dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarCenter"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="145">
+            <CustomAttribute
+                app:attributeName="progressBarWidth"
+                app:customDimension="2.5dp"/>
+        </Constraint>
+        <Constraint
+            android:id="@+id/progressBarRightOne"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="110" />
+        <Constraint
+            android:id="@+id/progressBarRightTwo"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintCircleRadius="345dp"
+            app:layout_constraintCircle="@id/guide"
+            app:layout_constraintCircleAngle="75" />
+        <Constraint
+            android:id="@+id/guide"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+</MotionScene>
