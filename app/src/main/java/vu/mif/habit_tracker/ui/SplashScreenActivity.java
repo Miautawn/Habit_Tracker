@@ -13,8 +13,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // TODO: Fix issues with navigation buttons
 
-        //startActivity(new Intent(SplashScreenActivity.this,
-        //        LoginActivity.class));
-        //finish();
+        startActivity(new Intent(SplashScreenActivity.this,
+                LoginActivity.class));
+        finish();
     }
 }
