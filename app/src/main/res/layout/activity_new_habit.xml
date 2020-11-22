@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.NewHabitActivity"
+    android:orientation="vertical"
+    android:background="@color/darkGrey"
+    android:gravity="center_horizontal">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/nhToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:text="Create new habit"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/createCustomHabitBtn"
+        android:layout_width="290dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="17sp"
+        android:textColor="@color/pink"
+        android:text="Create your own"
+        android:background="@drawable/custom_habit_btn_bg"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:textSize="15sp"
+        android:textColor="@color/lightGrey"
+        android:text="or choose from existing categories"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/alarmBtn"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bicycleBtn"
+            app:layout_constraintBottom_toTopOf="@id/bookBtn"
+            android:src="@drawable/alarm_clock"
+            android:background="@drawable/habit_btn"/>
+
+        <ImageButton
+            android:id="@+id/bicycleBtn"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/alarmBtn"
+            app:layout_constraintBottom_toTopOf="@id/cleaningBtn"
+            android:src="@drawable/bicycle"
+            android:background="@drawable/habit_btn"/>
+
+        <ImageButton
+            android:id="@+id/bookBtn"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toBottomOf="@+id/alarmBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cleaningBtn"
+            app:layout_constraintBottom_toTopOf="@id/waterBtn"
+            android:src="@drawable/book"
+            android:background="@drawable/habit_btn"/>
+
+        <ImageButton
+            android:id="@+id/cleaningBtn"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toBottomOf="@+id/bicycleBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/bookBtn"
+            app:layout_constraintBottom_toTopOf="@id/walletBtn"
+            android:src="@drawable/cleaning"
+            android:background="@drawable/habit_btn"/>
+
+        <ImageButton
+            android:id="@+id/waterBtn"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toBottomOf="@+id/bookBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/walletBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/water"
+            android:background="@drawable/habit_btn"/>
+
+        <ImageButton
+            android:id="@+id/walletBtn"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            app:layout_constraintTop_toBottomOf="@+id/cleaningBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/waterBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/wallet"
+            android:background="@drawable/habit_btn"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

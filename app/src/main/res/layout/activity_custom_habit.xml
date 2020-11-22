@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ui.NewHabitActivity"
+    android:orientation="vertical"
+    android:background="@color/darkGrey"
+    android:gravity="center_horizontal">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/nhToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:text="Create new habit"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
+        android:textSize="17sp"
+        android:textColor="@color/lightGrey"
+        android:text="create your own"/>
+
+    <EditText
+        android:id="@+id/customHabitName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/white_btn_container"
+        android:fontFamily="@font/montserrat_medium"
+        android:textSize="17sp"
+        android:textColor="@color/lightGrey"
+        android:hint="name of the habit"
+        android:gravity="center"
+        android:maxLines="1"
+        android:inputType="text"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="25dp">
+
+        <TextView
+            android:id="@+id/tvIcon"
+            android:layout_width="76dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvColor"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="17sp"
+            android:textColor="@color/lightGrey"
+            android:text="icon"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tvColor"
+            android:layout_width="76dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvIcon"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="17sp"
+            android:textColor="@color/lightGrey"
+            android:text="colour"
+            android:gravity="center"/>
+
+        <ImageButton
+            android:id="@+id/ibChooseIcon"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ibChooseColor"
+            android:src="@drawable/workplace"
+            android:background="@drawable/choose_btn_bg"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ibChooseColor"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ibChooseIcon"
+            android:background="@drawable/habit_color_btn_bg"
+            android:stateListAnimator="@null"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="290dp"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@color/lightGrey"/>
+
+    <TextView
+        android:id="@+id/tvRepeatHabit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
+        android:textSize="17sp"
+        android:textColor="@color/lightGrey"
+        android:text="repeat this habit"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/tvRepeatHabit"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/dailyBtn"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15sp"
+            android:textColor="@color/radio_btn_state_text_color"
+            android:text="daily"
+            android:checked="true"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/radio_btn_status_selector"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+
+        <RadioButton
+            android:id="@+id/weeklyBtn"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15sp"
+            android:textColor="@color/radio_btn_state_text_color"
+            android:text="weekly"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/radio_btn_status_selector"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+
+        <RadioButton
+            android:id="@+id/monthlyBtn"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15sp"
+            android:textColor="@color/radio_btn_state_text_color"
+            android:text="monthly"
+            android:gravity="center"
+            android:button="@android:color/transparent"
+            android:background="@drawable/radio_btn_status_selector"/>
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="290dp"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@color/lightGrey"/>
+
+    <RelativeLayout
+        android:layout_width="290dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="17sp"
+            android:textColor="@color/lightGrey"
+            android:text="set end date"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/endDateOn"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="on"
+                android:checked="true"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector"/>
+
+            <RadioButton
+                android:id="@+id/endDateOff"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="off"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tvType"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/tvDate"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:text="date"
+            android:gravity="center"
+            android:background="@drawable/white_btn_container"/>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:text="14 Jan, 2021"
+            android:gravity="center"
+            android:background="@drawable/white_btn_container"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="290dp"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@color/lightGrey"/>
+
+    <RelativeLayout
+        android:layout_width="290dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="17sp"
+            android:textColor="@color/lightGrey"
+            android:text="set a goal"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/endGoalOn"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="on"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector_alternative"/>
+
+            <RadioButton
+                android:id="@+id/endGoalOff"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="off"
+                android:checked="true"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector_alternative"/>
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="290dp"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@color/lightGrey"/>
+
+    <RelativeLayout
+        android:layout_width="290dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="17sp"
+            android:textColor="@color/lightGrey"
+            android:text="reminder"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/endReminderOn"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="on"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector_alternative"/>
+
+            <RadioButton
+                android:id="@+id/endReminderOff"
+                android:layout_width="55dp"
+                android:layout_height="25dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="off"
+                android:checked="true"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector_alternative"/>
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/submitCustomHabitBtn"
+            android:layout_width="205dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="17sp"
+            android:textColor="@color/white"
+            android:text="CREATE"
+            android:background="@drawable/custom_habit_create_btn"
+            android:stateListAnimator="@null"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
