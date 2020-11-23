@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "65720058566",
+    "firebase_url": "https://tackle-28098.firebaseio.com",
+    "project_id": "tackle-28098",
+    "storage_bucket": "tackle-28098.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65720058566:android:d8221e5bf795afef104dc7",
+        "android_client_info": {
+          "package_name": "vu.mif.habit_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65720058566-7hangsho3ju0h56onl7ualcnvkaqv3vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvnBjAfSGRRXDMyncUt9Np43WLawwmTMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65720058566-7hangsho3ju0h56onl7ualcnvkaqv3vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
