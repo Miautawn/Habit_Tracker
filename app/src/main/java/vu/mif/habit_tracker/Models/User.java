@@ -11,6 +11,7 @@ public class User {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private String username;
     private int currency;
     private String pictureURL;
@@ -28,6 +29,8 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getId() { return id; }
 
     public String getUsername() {
         return username;

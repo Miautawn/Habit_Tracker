@@ -10,8 +10,9 @@ public class Habit {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private String name;
-    private int IconID;
+    private int iconID;
     private int colourID;
     private boolean isRepeatble;
     private int repeatNumber;
@@ -27,7 +28,7 @@ public class Habit {
 
     public Habit(String name, int iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int endGoal, boolean isDaily, int dailyGoal, boolean hasNotifications) {
         this.name = name;
-        IconID = iconID;
+        this.iconID = iconID;
         this.colourID = colourID;
         this.isRepeatble = isRepeatble;
         this.repeatNumber = repeatNumber;
@@ -42,12 +43,16 @@ public class Habit {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
 
     public int getIconID() {
-        return IconID;
+        return iconID;
     }
 
     public int getColourID() {

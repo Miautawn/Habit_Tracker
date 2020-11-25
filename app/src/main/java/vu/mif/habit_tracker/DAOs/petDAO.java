@@ -23,10 +23,10 @@ public interface petDAO {
     @Delete
     void delete(Pet pet);
 
-    @Query("DELETE FROM Habit")
+    @Query("DELETE FROM Pet")
     void deleteAllPets();
 
-    @Query("SELECT * FROM Habit")
+    @Query("SELECT * FROM Pet")
     LiveData<List<Pet>> getAllPets();
 
 }
