@@ -16,17 +16,17 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.R;
-import vu.mif.habit_tracker.Repositories.RegisterRepository;
-import vu.mif.habit_tracker.ViewModels.RegisterActivityViewModel;
+import vu.mif.habit_tracker.ViewModels.HabitTestViewModel;
+import vu.mif.habit_tracker.ViewModels.PetTestViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private ImageButton passwordVisibilityToggle;
     private EditText passwordField;
     private boolean isPasswordVisible = false;
-    private RegisterActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
                             InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     passwordField.setSelection(passwordField.length());
                     isPasswordVisible = false;
+
                 } else {
                     passwordField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     passwordField.setSelection(passwordField.length());
@@ -59,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         //This is where the viewmodel for this view is initialized
-        viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(RegisterActivityViewModel.class);
+        //viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(HabitTestViewModel.class);
 
 
     }

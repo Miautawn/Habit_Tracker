@@ -16,9 +16,6 @@ public class User {
     private int currency;
     private String pictureURL;
 
-//    @ForeignKey
-////    private int Pet_id;
-
 
     public User(String username, int currency, String pictureURL) {
         this.username = username;

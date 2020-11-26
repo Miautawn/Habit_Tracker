@@ -22,8 +22,6 @@ public class Habit {
     private int dailyGoal;
     private boolean hasNotifications;
 
-//    @ForeignKey
-//    private int userID;
 
 
     public Habit(String name, int iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int endGoal, boolean isDaily, int dailyGoal, boolean hasNotifications) {

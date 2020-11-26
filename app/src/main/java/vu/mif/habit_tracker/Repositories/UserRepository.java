@@ -12,18 +12,18 @@ import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.roomDB;
 
 //This repository will be linked to the RegisterActivity and will provide the methods while doing all the work
-public class RegisterRepository {
+public class UserRepository {
     private userDAO userDAO;
-    private LiveData<List<User>> users;
+    private LiveData<User> user;
 
-    public RegisterRepository(Application application)
+    public UserRepository(Application application)
     {
         roomDB database = roomDB.getInstance(application);
         this.userDAO = database.getUserDAO();
-        this.users = userDAO.getAllUsers();
+        this.user = userDAO.getUser();
     }
 
-    // These methods are the only thing that view model will see and they have such shit struture because they need to be run on a background task
+    // These methods are the only thing that view model will see and they have such shit structure because they need to be run on a background task
     public void insertUser(User user)
     {
         new InsertUserAsyncTask(userDAO).execute(user);
@@ -32,17 +32,10 @@ public class RegisterRepository {
     {
         new UpdateUserAsyncTask(userDAO).execute(user);
     }
-    public void deleteUser(User user)
+    public void deleteUser() { new DeleteUserTask(userDAO).execute(); }
+    public LiveData<User> getUser()
     {
-        new DeleteUserAsyncTask(userDAO).execute(user);
-    }
-    public void deleteAllUsers()
-    {
-        new DeleteAllUsersTask(userDAO).execute();
-    }
-    public LiveData<List<User>> getAllUsers()
-    {
-        return users;
+        return user;
     }
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
@@ -56,20 +49,6 @@ public class RegisterRepository {
         @Override
         protected Void doInBackground(User... user) {
             userDAO.insert(user[0]);
-            return null;
-        }
-    }
-    private static class DeleteUserAsyncTask extends AsyncTask<User, Void, Void>
-    {
-        private userDAO userDAO;
-        private DeleteUserAsyncTask(userDAO userDAO)
-        {
-            this.userDAO = userDAO;
-        }
-
-        @Override
-        protected Void doInBackground(User... user) {
-            userDAO.delete(user[0]);
             return null;
         }
     }
@@ -87,17 +66,17 @@ public class RegisterRepository {
             return null;
         }
     }
-    private static class DeleteAllUsersTask extends AsyncTask<Void, Void, Void>
+    private static class DeleteUserTask extends AsyncTask<Void, Void, Void>
     {
         private userDAO userDAO;
-        private DeleteAllUsersTask(userDAO userDAO)
+        private DeleteUserTask(userDAO userDAO)
         {
             this.userDAO = userDAO;
         }
 
         @Override
         protected Void doInBackground(Void... user) {
-            userDAO.deleteAllUsers();
+            userDAO.deleteUser();
             return null;
         }
     }

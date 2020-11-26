@@ -20,13 +20,16 @@ public interface petDAO {
     void insert(Pet pet);
     @Update
     void update(Pet pet);
-    @Delete
-    void delete(Pet pet);
+
+    // We would only need to delete one pet, so specifying which one is unnecessary
+    //@Delete
+    //void delete(Pet pet);
 
     @Query("DELETE FROM Pet")
-    void deleteAllPets();
+    void deletePet();
 
-    @Query("SELECT * FROM Pet")
-    LiveData<List<Pet>> getAllPets();
+    // "LIMIT 1" should be just a precaution as there should be only one pet
+    @Query("SELECT * FROM Pet LIMIT 1")
+    LiveData<Pet> getPet();
 
 }

@@ -14,8 +14,6 @@ public class Pet {
     private String pet_name;
     private int aksesuaras;
 
-//    @ForeignKey
-//    private int userID;
 
 
     public Pet(String pet_name, int aksesuaras) {

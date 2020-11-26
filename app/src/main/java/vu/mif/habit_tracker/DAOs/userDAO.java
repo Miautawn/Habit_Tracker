@@ -20,13 +20,16 @@ public interface userDAO {
     void insert(User user);
     @Update
     void update(User user);
-    @Delete
-    void delete(User user);
+
+    // We would only need to delete one user, so specifying which one is unnecessary
+    //@Delete
+    //void delete(User user);
 
     @Query("DELETE FROM User")
-    void deleteAllUsers();
+    void deleteUser();
 
-    @Query("SELECT * FROM User")
-    LiveData<List<User>> getAllUsers();
+    // "LIMIT 1" should be just a precaution as there should be only one user
+    @Query("SELECT *  FROM User LIMIT 1")
+    LiveData<User> getUser();
 
 }
