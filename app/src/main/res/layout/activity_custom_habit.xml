@@ -128,14 +128,15 @@
             android:layout_width="70dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            android:fontFamily="@font/montserrat_medium"
-            android:textSize="15sp"
-            android:textColor="@color/radio_btn_state_text_color"
-            android:text="daily"
-            android:checked="true"
-            android:gravity="center"
+            android:background="@drawable/radio_btn_status_selector"
             android:button="@android:color/transparent"
-            android:background="@drawable/radio_btn_status_selector"/>
+            android:checked="true"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:onClick="onRepeatRBClicked"
+            android:text="daily"
+            android:textColor="@color/radio_btn_state_text_color"
+            android:textSize="15sp" />
 
         <Space
             android:layout_width="wrap_content"
@@ -153,7 +154,8 @@
             android:text="weekly"
             android:gravity="center"
             android:button="@android:color/transparent"
-            android:background="@drawable/radio_btn_status_selector"/>
+            android:background="@drawable/radio_btn_status_selector"
+            android:onClick="onRepeatRBClicked"/>
 
         <Space
             android:layout_width="wrap_content"
@@ -171,7 +173,8 @@
             android:text="monthly"
             android:gravity="center"
             android:button="@android:color/transparent"
-            android:background="@drawable/radio_btn_status_selector"/>
+            android:background="@drawable/radio_btn_status_selector"
+            android:onClick="onRepeatRBClicked"/>
 
     </RadioGroup>
 
@@ -214,7 +217,8 @@
                 android:checked="true"
                 android:gravity="center"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector"/>
+                android:background="@drawable/radio_btn_status_selector"
+                android:onClick="onSetDateRBClicked"/>
 
             <RadioButton
                 android:id="@+id/endDateOff"
@@ -226,7 +230,8 @@
                 android:text="off"
                 android:gravity="center"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector"/>
+                android:background="@drawable/radio_btn_status_selector"
+                android:onClick="onSetDateRBClicked"/>
 
         </RadioGroup>
 
@@ -296,7 +301,8 @@
                 android:text="on"
                 android:gravity="center"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector_alternative"/>
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:onClick="onSetGoalRBClicked"/>
 
             <RadioButton
                 android:id="@+id/endGoalOff"
@@ -309,7 +315,8 @@
                 android:checked="true"
                 android:gravity="center"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector_alternative"/>
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:onClick="onSetGoalRBClicked"/>
 
         </RadioGroup>
 
@@ -353,7 +360,8 @@
                 android:text="on"
                 android:gravity="center"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector_alternative"/>
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:onClick="onSetReminderRBClicked"/>
 
             <RadioButton
                 android:id="@+id/endReminderOff"
@@ -366,7 +374,8 @@
                 android:checked="true"
                 android:gravity="center"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector_alternative"/>
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:onClick="onSetReminderRBClicked"/>
 
         </RadioGroup>
 

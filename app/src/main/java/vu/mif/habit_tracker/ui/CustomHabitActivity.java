@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import java.util.List;
 
@@ -22,6 +24,20 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
     AppCompatButton submitCustomHabitBtn;
     CustomHabitViewModel viewModel;
+
+    EditText customHabitName;
+
+    // TODO: Update fields when UI will be updated
+    private String name;
+    private int iconID = R.drawable.wallet;
+    private int colourID = R.color.pink;
+    private boolean isRepeatble = true;
+    private int repeatNumber = 0;
+    private String endDate = "";
+    private int endGoal = 0;
+    private boolean isDaily = false;
+    private int dailyGoal = 0;
+    private boolean hasNotifications = true;
 
     //Cia tas naudojamas listas
     List<Habit> habits;
@@ -39,6 +55,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
+        customHabitName = findViewById(R.id.customHabitName);
 
         //initializing viewmodel and obtaining the list of habits
         viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(CustomHabitViewModel.class);
@@ -55,9 +72,93 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         if (view == submitCustomHabitBtn) {
+            name = customHabitName.getText().toString();
+
+            Habit habit = new Habit(name, iconID, colourID, isRepeatble, repeatNumber, endDate,
+                    endGoal, isDaily, dailyGoal, hasNotifications);
+
+            viewModel.insertHabit(habit);
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+        }
+    }
+
+    public void onRepeatRBClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.dailyBtn:
+                if (checked)
+                    isDaily = true;
+                    isRepeatble = true;
+                    repeatNumber = -1;
+                    break;
+            case R.id.weeklyBtn:
+                if (checked)
+                    isRepeatble = true;
+                    repeatNumber = -2;
+                    break;
+            case R.id.monthlyBtn:
+                if(checked)
+                    isRepeatble = true;
+                    repeatNumber = -3;
+                    break;
+        }
+
+    }
+
+    public void onSetDateRBClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.endDateOn:
+                if (checked)
+
+                break;
+            case R.id.endDateOff:
+                if (checked)
+
+                break;
+        }
+    }
+
+    public void onSetGoalRBClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.endGoalOn:
+                if (checked)
+
+                    break;
+            case R.id.endGoalOff:
+                if (checked)
+
+                    break;
+        }
+    }
+
+    public void onSetReminderRBClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.endReminderOn:
+                if (checked)
+                    hasNotifications = true;
+                break;
+            case R.id.endReminderOff:
+                if (checked)
+                    hasNotifications = false;
+                break;
         }
     }
 
