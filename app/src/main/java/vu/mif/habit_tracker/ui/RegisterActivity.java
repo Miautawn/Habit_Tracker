@@ -3,6 +3,8 @@ package vu.mif.habit_tracker.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -10,8 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import java.util.List;
+
+import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.R;
+import vu.mif.habit_tracker.ViewModels.HabitTestViewModel;
+import vu.mif.habit_tracker.ViewModels.PetTestViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -41,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
                             InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     passwordField.setSelection(passwordField.length());
                     isPasswordVisible = false;
+
                 } else {
                     passwordField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     passwordField.setSelection(passwordField.length());
@@ -48,6 +58,11 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //This is where the viewmodel for this view is initialized
+        //viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(HabitTestViewModel.class);
+
+
     }
 
     @Override

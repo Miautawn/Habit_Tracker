@@ -29,6 +29,23 @@ android {
 
 dependencies {
 
+    //<- everything for ROOM DB and LiveData stuff ->
+    def lifecycle_version = "2.2.0"
+    def room_version = "2.2.5"
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    // Annotation processor
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    //<- everything for ROOM DB and LiveData stuff ->
+
+
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
 
