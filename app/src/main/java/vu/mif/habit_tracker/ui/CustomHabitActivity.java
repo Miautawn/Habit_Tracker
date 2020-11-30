@@ -4,17 +4,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
+import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.R;
+import vu.mif.habit_tracker.ViewModels.CustomHabitViewModel;
 
 public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener {
 
     AppCompatButton submitCustomHabitBtn;
+    CustomHabitViewModel viewModel;
+
+    //Cia tas naudojamas listas
+    List<Habit> habits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +39,17 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
+
+        //initializing viewmodel and obtaining the list of habits
+        viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(CustomHabitViewModel.class);
+        viewModel.getAllHabits().observe(this, new Observer<List<Habit>>() {
+            @Override
+            public void onChanged(List<Habit> habits) {
+                CustomHabitActivity.this.habits = habits;
+            }
+        });
+
+
     }
 
     @Override

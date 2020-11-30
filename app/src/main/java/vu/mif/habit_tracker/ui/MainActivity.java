@@ -3,6 +3,7 @@ package vu.mif.habit_tracker.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.motion.widget.TransitionAdapter;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -13,6 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
+import java.util.List;
+
+import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.components.CircularProgressBar;
@@ -27,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MainActivity context;
     MotionLayout motionLayout;
     MainActivityViewModel model;
+
+    //Cia habitu listas ir useris
+    List<Habit> habits;
+    User user;
 
     CircularProgressBar progressBarLeftTwo;
     CircularProgressBar progressBarLeftOne;
@@ -54,6 +63,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarRightTwo = findViewById(R.id.progressBarRightTwo);
 
         model.getStream().observe(context, this::bindProgressBar);
+        model.getAllHabits().observe(context, new Observer<List<Habit>>() {
+            @Override
+            public void onChanged(List<Habit> habits) {
+                context.habits = habits;
+            }
+        });
+        model.getUser().observe(context, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                context.user = user;
+            }
+        });
 
         motionLayout.setTransitionListener(new TransitionAdapter() {
             @Override
