@@ -37,6 +37,10 @@ public class UserRepository {
     {
         return user;
     }
+    public void registerUser(String email, String password)
+    {
+        return firebaseDB
+    }
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
     {
