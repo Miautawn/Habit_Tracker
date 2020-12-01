@@ -48,11 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CircularProgressBar progressBarRightOne;
     CircularProgressBar progressBarRightTwo;
 
-    Habit habitLeftTwo;
-    Habit habitLeftOne;
-    Habit habitCenter;
-    Habit habitRightOne;
-    Habit habitRightTwo;
+    Habit[] cardHabits = new Habit[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarRightOne = findViewById(R.id.progressBarRightOne);
         progressBarRightTwo = findViewById(R.id.progressBarRightTwo);
 
-        model.getStream().observe(context, this::bindProgressBar);
+        model.getStream().observe(context, this::updateCards);
         model.getAllHabits().observe(context, new Observer<List<Habit>>() {
             @Override
             public void onChanged(List<Habit> habits) {
@@ -89,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        // TODO: Fix flickering
         motionLayout.setTransitionListener(new TransitionAdapter() {
             @Override
             public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
@@ -131,35 +126,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUI() {
         if (!habits.isEmpty()){
             updateData();
-            updateCards();
+            // UI flicker fix :)
+            model.updateCards(cardHabits);
         }
     }
 
     private void updateData() {
-        habitLeftTwo = habits.get(currentIndex % habits.size());
-        habitLeftOne = habits.get((currentIndex + 1) % habits.size());
-        habitCenter = habits.get((currentIndex + 2) % habits.size());
-        habitRightOne = habits.get((currentIndex + 3) % habits.size());
-        habitRightTwo = habits.get((currentIndex + 4) % habits.size());
+        cardHabits[0] = habits.get(currentIndex % habits.size());
+        cardHabits[1] = habits.get((currentIndex + 1) % habits.size());
+        cardHabits[2] = habits.get((currentIndex + 2) % habits.size());
+        cardHabits[3] = habits.get((currentIndex + 3) % habits.size());
+        cardHabits[4] = habits.get((currentIndex + 4) % habits.size());
     }
 
-    private void updateCards() {
-        progressBarLeftTwo.setProgressBarColor(habitLeftTwo.getColourID());
+    private void updateCards(Habit[] _habits) {
+        progressBarLeftTwo.setProgressBarColor(_habits[0].getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                habitLeftTwo.getIconID(), null));
-        progressBarLeftOne.setProgressBarColor(habitLeftOne.getColourID());
+                _habits[0].getIconID(), null));
+        progressBarLeftOne.setProgressBarColor(_habits[1].getColourID());
         progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                habitLeftOne.getIconID(), null));
-        progressBarCenter.setProgressBarColor(habitCenter.getColourID());
+                _habits[1].getIconID(), null));
+        progressBarCenter.setProgressBarColor(_habits[2].getColourID());
         progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
-                habitCenter.getIconID(), null));
-        currentHabitName.setText(habitCenter.getName());
-        progressBarRightOne.setProgressBarColor(habitRightOne.getColourID());
+                _habits[2].getIconID(), null));
+        currentHabitName.setText(_habits[2].getName());
+        progressBarRightOne.setProgressBarColor(_habits[3].getColourID());
         progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                habitRightOne.getIconID(), null));
-        progressBarRightTwo.setProgressBarColor(habitRightTwo.getColourID());
+                _habits[3].getIconID(), null));
+        progressBarRightTwo.setProgressBarColor(_habits[4].getColourID());
         progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                habitRightTwo.getIconID(), null));
+                _habits[4].getIconID(), null));
     }
 
     public void swipeRight() {

@@ -20,7 +20,7 @@ import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.roomDB;
 
 public class MainActivityViewModel extends AndroidViewModel {
-    private MutableLiveData<Integer[]> stream;
+    private MutableLiveData<Habit[]> stream;
 
     private HabitRepository habitRepo;
     private LiveData<List<Habit>> habits;
@@ -80,7 +80,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<Integer[]> getStream() {
+    public LiveData<Habit[]> getStream() {
         return stream;
     }
 
@@ -156,7 +156,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 //        updateCards();
 //    }
 //
-//    private void updateCards() {
-//        stream.postValue(colors);
-//    }
+    public void updateCards(Habit[] cardHabits) {
+        stream.postValue(cardHabits);
+    }
 }
