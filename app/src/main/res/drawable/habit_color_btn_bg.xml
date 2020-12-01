@@ -5,9 +5,4 @@
             <solid android:color="@color/white"/>
         </shape>
     </item>
-    <item android:top="15dp" android:bottom="15dp" android:right="15dp" android:left="15dp">
-        <shape android:shape="oval">
-            <solid android:color="@color/pink"/>
-        </shape>
-    </item>
 </layer-list>

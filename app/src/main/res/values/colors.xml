@@ -11,4 +11,19 @@
     <color name="mailBg">#FFC75D</color>
     <color name="pink">#D82E76</color>
     <color name="transparentBlack">#80000000</color>
+
+    <array name="colors">
+        <item name="bright_pink">#FF007F</item>
+        <item name="red">#FF0000</item>
+        <item name="orange">#FF7F00</item>
+        <item name="yellow">#FFFF00</item>
+        <item name="chartreuse">#7FFF00</item>
+        <item name="green">#00FF00</item>
+        <item name="spring_green">#00FF7F</item>
+        <item name="cyan">#00FFFF</item>
+        <item name="azure">#007FFF</item>
+        <item name="blue">#0000FF</item>
+        <item name="violet">#7F00FF</item>
+        <item name="magenta">#FF00FF</item>
+    </array>
 </resources>

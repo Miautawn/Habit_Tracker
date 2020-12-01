@@ -1,5 +1,6 @@
 package vu.mif.habit_tracker.ui;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -8,29 +9,40 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import java.util.List;
 
+import petrov.kristiyan.colorpicker.ColorPicker;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.CustomHabitViewModel;
 
 public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // Color picker
+    int[] colors;
+
     AppCompatButton submitCustomHabitBtn;
     CustomHabitViewModel viewModel;
 
     EditText customHabitName;
+    ImageButton colorPickerBtn;
+
+    CustomHabitActivity context;
 
     // TODO: Update fields when UI will be updated
     private String name;
-    private int iconID = R.drawable.wallet;
-    private int colourID = R.color.pink;
+    private int iconID = R.drawable.book_white;
+    private int colourID = Color.WHITE;
     private boolean isRepeatble = true;
     private int repeatNumber = 0;
     private String endDate = "";
@@ -55,7 +67,10 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
+        colorPickerBtn = findViewById(R.id.ibChooseColor);
+        colorPickerBtn.setOnClickListener(this);
         customHabitName = findViewById(R.id.customHabitName);
+        context = this;
 
         //initializing viewmodel and obtaining the list of habits
         viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(CustomHabitViewModel.class);
@@ -65,7 +80,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                 CustomHabitActivity.this.habits = habits;
             }
         });
-
 
     }
 
@@ -82,6 +96,28 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+        } else if (view == colorPickerBtn) {
+            final ColorPicker colorPicker = new ColorPicker(context);
+            colors = getResources().getIntArray(R.array.colors);
+            colorPicker
+                .setColors(colors)
+                .setColumns(4)
+                .setRoundColorButton(true)
+                .disableDefaultButtons(true)
+                .setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
+                    @Override
+                    public void setOnFastChooseColorListener(int position, int color) {
+                        colourID = color;
+                        colorPickerBtn.setColorFilter(colourID);
+
+                        colorPicker.dismissDialog();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                }).show();
         }
     }
 
@@ -160,6 +196,10 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                     hasNotifications = false;
                 break;
         }
+    }
+
+    private void setColor(@ColorInt int color) {
+        Toast.makeText(this, "Changed color", Toast.LENGTH_SHORT);
     }
 
     @Override

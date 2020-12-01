@@ -3,4 +3,5 @@
     <string name="app_name">tackle.</string>
     <string name="privacyNote">By continuing, you agree to accept our\n
         Privacy Policy \&amp; Terms of Service.</string>
+    <string name="no_color">Default Color</string>
 </resources>

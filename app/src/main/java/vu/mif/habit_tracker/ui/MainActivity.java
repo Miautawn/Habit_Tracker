@@ -3,6 +3,7 @@ package vu.mif.habit_tracker.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.motion.widget.TransitionAdapter;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -24,10 +26,13 @@ import vu.mif.habit_tracker.components.CircularProgressBar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private int currentIndex = 0;
+
     private ViewGroup hiddenLeaderBoardOverlay;
     private View overlayTrigger;
 
     private ImageButton plusBtn;
+    private TextView currentHabitName;
 
     MainActivity context;
     MotionLayout motionLayout;
@@ -43,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CircularProgressBar progressBarRightOne;
     CircularProgressBar progressBarRightTwo;
 
+    Habit habitLeftTwo;
+    Habit habitLeftOne;
+    Habit habitCenter;
+    Habit habitRightOne;
+    Habit habitRightTwo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
@@ -55,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         plusBtn = findViewById(R.id.plusBtn);
         hiddenLeaderBoardOverlay = findViewById(R.id.leaderboardOverlayContainer);
         overlayTrigger = findViewById(R.id.leaderboardContainer);
+        currentHabitName = findViewById(R.id.currentHabitName);
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -67,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChanged(List<Habit> habits) {
                 context.habits = habits;
+                updateUI();
             }
         });
         model.getUser().observe(context, new Observer<User>() {
@@ -76,17 +89,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // TODO: Fix flickering
         motionLayout.setTransitionListener(new TransitionAdapter() {
             @Override
             public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
                 switch (currentId) {
                     case R.id.barLeft:
+                        swipeRight();
                         motionLayout.setProgress(0f);
-                        model.swipeRight();
                         break;
                     case R.id.barRight:
+                        swipeLeft();
                         motionLayout.setProgress(0f);
-                        model.swipeLeft();
                         break;
                 }
             }
@@ -96,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         overlayTrigger.setOnClickListener(this);
         hiddenLeaderBoardOverlay.setOnClickListener(this);
         plusBtn.setOnClickListener(this);
-
     }
 
     @Override
@@ -113,6 +126,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void updateUI() {
+        if (!habits.isEmpty()){
+            updateData();
+            updateCards();
+        }
+    }
+
+    private void updateData() {
+        habitLeftTwo = habits.get(currentIndex % habits.size());
+        habitLeftOne = habits.get((currentIndex + 1) % habits.size());
+        habitCenter = habits.get((currentIndex + 2) % habits.size());
+        habitRightOne = habits.get((currentIndex + 3) % habits.size());
+        habitRightTwo = habits.get((currentIndex + 4) % habits.size());
+    }
+
+    private void updateCards() {
+        progressBarLeftTwo.setProgressBarColor(habitLeftTwo.getColourID());
+        progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
+                habitLeftTwo.getIconID(), null));
+        progressBarLeftOne.setProgressBarColor(habitLeftOne.getColourID());
+        progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
+                habitLeftOne.getIconID(), null));
+        progressBarCenter.setProgressBarColor(habitCenter.getColourID());
+        progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
+                habitCenter.getIconID(), null));
+        currentHabitName.setText(habitCenter.getName());
+        progressBarRightOne.setProgressBarColor(habitRightOne.getColourID());
+        progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
+                habitRightOne.getIconID(), null));
+        progressBarRightTwo.setProgressBarColor(habitRightTwo.getColourID());
+        progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
+                habitRightTwo.getIconID(), null));
+    }
+
+    public void swipeRight() {
+        currentIndex += 1;
+        updateUI();
+    }
+
+    public void swipeLeft() {
+        if (currentIndex == 0) {
+            currentIndex = habits.size() - 1;
+        } else {
+            currentIndex -= 1;
+        }
+        updateUI();
     }
 
     public void slideUpDown(final View view){
