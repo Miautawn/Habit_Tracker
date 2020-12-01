@@ -12,7 +12,7 @@ public class Habit {
     private int id;
 
     private String name;
-    private int iconID;
+    private String iconID;
     private int colourID;
     private boolean isRepeatble;
     private int repeatNumber;
@@ -24,7 +24,7 @@ public class Habit {
 
 
 
-    public Habit(String name, int iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int endGoal, boolean isDaily, int dailyGoal, boolean hasNotifications) {
+    public Habit(String name, String iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int endGoal, boolean isDaily, int dailyGoal, boolean hasNotifications) {
         this.name = name;
         this.iconID = iconID;
         this.colourID = colourID;
@@ -49,7 +49,7 @@ public class Habit {
         return name;
     }
 
-    public int getIconID() {
+    public String getIconID() {
         return iconID;
     }
 

@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import vu.mif.habit_tracker.Models.Habit;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MainActivity context;
     MotionLayout motionLayout;
     MainActivityViewModel model;
+    TypedArray habitIcons;
 
     //Cia habitu listas ir useris
     List<Habit> habits;
@@ -142,20 +145,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateCards(Habit[] _habits) {
         progressBarLeftTwo.setProgressBarColor(_habits[0].getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                _habits[0].getIconID(), null));
+                getResId(_habits[0].getIconID(), R.drawable.class), null));
         progressBarLeftOne.setProgressBarColor(_habits[1].getColourID());
         progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                _habits[1].getIconID(), null));
+                getResId(_habits[1].getIconID(), R.drawable.class), null));
         progressBarCenter.setProgressBarColor(_habits[2].getColourID());
         progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
-                _habits[2].getIconID(), null));
+                getResId(_habits[2].getIconID(), R.drawable.class), null));
         currentHabitName.setText(_habits[2].getName());
         progressBarRightOne.setProgressBarColor(_habits[3].getColourID());
         progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                _habits[3].getIconID(), null));
+                getResId(_habits[3].getIconID(), R.drawable.class), null));
         progressBarRightTwo.setProgressBarColor(_habits[4].getColourID());
         progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                _habits[4].getIconID(), null));
+                getResId(_habits[4].getIconID(), R.drawable.class), null));
+    }
+
+    public int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     public void swipeRight() {
@@ -192,14 +206,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean isPanelShown() {
         return hiddenLeaderBoardOverlay.getVisibility() == View.VISIBLE;
-    }
-
-    private void bindProgressBar(Integer[] it) {
-        progressBarLeftTwo.setProgressBarColor(it[0]);
-        progressBarLeftOne.setProgressBarColor(it[1]);
-        progressBarCenter.setProgressBarColor(it[2]);
-        progressBarRightOne.setProgressBarColor(it[3]);
-        progressBarRightTwo.setProgressBarColor(it[4]);
     }
 
     @Override

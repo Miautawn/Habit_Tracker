@@ -26,4 +26,9 @@
         <item name="violet">#7F00FF</item>
         <item name="magenta">#FF00FF</item>
     </array>
+
+    <string-array name="habit_icons">
+        <item>@drawable/book_white</item>
+        <item>@drawable/juice_white</item>
+    </string-array>
 </resources>

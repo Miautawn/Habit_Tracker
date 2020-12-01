@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Random;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 import vu.mif.habit_tracker.Models.Habit;
@@ -39,9 +41,11 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
     CustomHabitActivity context;
 
+    String[] habitIcons = {"book_white", "juice_white"};
+
     // TODO: Update fields when UI will be updated
     private String name;
-    private int iconID = R.drawable.book_white;
+    private String iconID = "book_white";
     private int colourID = Color.WHITE;
     private boolean isRepeatble = true;
     private int repeatNumber = 0;
@@ -88,6 +92,10 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         if (view == submitCustomHabitBtn) {
             name = customHabitName.getText().toString();
 
+            int rnd = new Random().nextInt(habitIcons.length);
+
+            iconID = habitIcons[rnd];
+
             Habit habit = new Habit(name, iconID, colourID, isRepeatble, repeatNumber, endDate,
                     endGoal, isDaily, dailyGoal, hasNotifications);
 
@@ -99,6 +107,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         } else if (view == colorPickerBtn) {
             final ColorPicker colorPicker = new ColorPicker(context);
             colors = getResources().getIntArray(R.array.colors);
+            colorPicker.getDialogBaseLayout().setBackgroundColor(getResources().getColor(R.color.grey, null));
             colorPicker
                 .setColors(colors)
                 .setColumns(4)
