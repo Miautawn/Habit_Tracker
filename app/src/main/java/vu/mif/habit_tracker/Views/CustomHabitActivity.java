@@ -1,4 +1,4 @@
-package vu.mif.habit_tracker.ui;
+package vu.mif.habit_tracker.Views;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -9,10 +9,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;

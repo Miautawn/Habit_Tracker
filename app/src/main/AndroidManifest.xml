@@ -9,19 +9,19 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Habit_Tracker">
-        <activity android:name=".ui.CustomHabitActivity"
+        <activity android:name=".Views.CustomHabitActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.NewHabitActivity"
+            android:name=".Views.NewHabitActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name=".Views.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".Views.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SplashScreenActivity"
+            android:name=".Views.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".Views.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

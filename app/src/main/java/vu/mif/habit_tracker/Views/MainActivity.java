@@ -1,4 +1,4 @@
-package vu.mif.habit_tracker.ui;
+package vu.mif.habit_tracker.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +27,6 @@ import vu.mif.habit_tracker.components.CircularProgressBar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private int currentIndex = 0;
-
     private ViewGroup hiddenLeaderBoardOverlay;
     private View overlayTrigger;
 
@@ -39,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MainActivity context;
     MotionLayout motionLayout;
     MainActivityViewModel model;
-    TypedArray habitIcons;
 
     //Cia habitu listas ir useris
     List<Habit> habits;
@@ -50,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CircularProgressBar progressBarCenter;
     CircularProgressBar progressBarRightOne;
     CircularProgressBar progressBarRightTwo;
-
-    Habit[] cardHabits = new Habit[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +67,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarRightOne = findViewById(R.id.progressBarRightOne);
         progressBarRightTwo = findViewById(R.id.progressBarRightTwo);
 
-        model.getStream().observe(context, this::updateCards);
         model.getAllHabits().observe(context, new Observer<List<Habit>>() {
             @Override
             public void onChanged(List<Habit> habits) {
                 context.habits = habits;
-                updateUI();
             }
         });
         model.getUser().observe(context, new Observer<User>() {
@@ -87,17 +79,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 context.user = user;
             }
         });
+        model.getHabitCards().observe(context, this::updateCards);
 
         motionLayout.setTransitionListener(new TransitionAdapter() {
             @Override
             public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
                 switch (currentId) {
                     case R.id.barLeft:
-                        swipeRight();
+                        model.swipeRight();
                         motionLayout.setProgress(0f);
                         break;
                     case R.id.barRight:
-                        swipeLeft();
+                        model.swipeLeft();
                         motionLayout.setProgress(0f);
                         break;
                 }
@@ -124,22 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
             startActivity(intent);
         }
-    }
-
-    private void updateUI() {
-        if (!habits.isEmpty()){
-            updateData();
-            // UI flicker fix :)
-            model.updateCards(cardHabits);
-        }
-    }
-
-    private void updateData() {
-        cardHabits[0] = habits.get(currentIndex % habits.size());
-        cardHabits[1] = habits.get((currentIndex + 1) % habits.size());
-        cardHabits[2] = habits.get((currentIndex + 2) % habits.size());
-        cardHabits[3] = habits.get((currentIndex + 3) % habits.size());
-        cardHabits[4] = habits.get((currentIndex + 4) % habits.size());
     }
 
     private void updateCards(Habit[] _habits) {
@@ -170,20 +147,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
             return -1;
         }
-    }
-
-    public void swipeRight() {
-        currentIndex += 1;
-        updateUI();
-    }
-
-    public void swipeLeft() {
-        if (currentIndex == 0) {
-            currentIndex = habits.size() - 1;
-        } else {
-            currentIndex -= 1;
-        }
-        updateUI();
     }
 
     public void slideUpDown(final View view){

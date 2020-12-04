@@ -1,4 +1,4 @@
-package vu.mif.habit_tracker.ui;
+package vu.mif.habit_tracker.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
