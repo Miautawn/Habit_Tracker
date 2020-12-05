@@ -57,7 +57,7 @@
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/lightGrey"
             android:textSize="15sp"
-            android:text="drink water"/>
+            android:text=""/>
 
         <!-- Progress bars -->
 
@@ -68,9 +68,9 @@
             app:layout_constraintCircle="@id/guide"
             app:layout_constraintCircleRadius="345dp"
             app:layout_constraintCircleAngle="250"
+            app:progressBar_progress="0"
             app:progressBar_width="1dp"
-            app:progressBar_color="@android:color/holo_red_dark"
-            app:progressBar_image="@drawable/book_white"/>
+            app:progressBar_color="@android:color/holo_red_dark" />
 
         <vu.mif.habit_tracker.components.CircularProgressBar
             android:id="@+id/progressBarLeftOne"
@@ -79,9 +79,9 @@
             app:layout_constraintCircle="@id/guide"
             app:layout_constraintCircleRadius="345dp"
             app:layout_constraintCircleAngle="215"
+            app:progressBar_progress="0"
             app:progressBar_width="1dp"
-            app:progressBar_color="@android:color/holo_green_light"
-            app:progressBar_image="@drawable/juice_white"/>
+            app:progressBar_color="@android:color/holo_green_light" />
 
         <vu.mif.habit_tracker.components.CircularProgressBar
             android:id="@+id/progressBarCenter"
@@ -90,7 +90,7 @@
             app:layout_constraintCircle="@id/guide"
             app:layout_constraintCircleAngle="180"
             app:layout_constraintCircleRadius="345dp"
-            app:progressBar_image="@drawable/book_white"
+            app:progressBar_progress="0"
             app:progressBar_width="2dp"
             tools:layout_editor_absoluteX="60dp"
             tools:layout_editor_absoluteY="199dp" />
@@ -102,9 +102,9 @@
             app:layout_constraintCircle="@id/guide"
             app:layout_constraintCircleRadius="345dp"
             app:layout_constraintCircleAngle="145"
+            app:progressBar_progress="0"
             app:progressBar_width="1dp"
-            app:progressBar_color="@color/white"
-            app:progressBar_image="@drawable/juice_white"/>
+            app:progressBar_color="@color/white" />
 
         <vu.mif.habit_tracker.components.CircularProgressBar
             android:id="@+id/progressBarRightTwo"
@@ -113,9 +113,9 @@
             app:layout_constraintCircle="@id/guide"
             app:layout_constraintCircleRadius="345dp"
             app:layout_constraintCircleAngle="110"
+            app:progressBar_progress="0"
             app:progressBar_width="1dp"
-            app:progressBar_color="@android:color/holo_blue_dark"
-            app:progressBar_image="@drawable/book_white"/>
+            app:progressBar_color="@android:color/holo_blue_dark" />
 
         <TextView
             android:id="@+id/tvCurrentHabitPercentage"
@@ -129,7 +129,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/white"
             android:textSize="29sp"
-            android:text="60%"/>
+            android:text="Create new habit"/>
 
         <TextView
             android:id="@+id/tvCurrentHabitInfo"
@@ -142,7 +142,7 @@
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/lightGrey"
             android:textSize="15sp"
-            android:text="3 / 5 glasses"/>
+            android:text=""/>
 
         <!-- Leader-board info -->
 

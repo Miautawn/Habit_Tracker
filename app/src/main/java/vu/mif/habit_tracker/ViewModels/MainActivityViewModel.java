@@ -23,8 +23,8 @@ import vu.mif.habit_tracker.roomDB;
 
 public class MainActivityViewModel extends AndroidViewModel {
     private int currentIndex = 0;
-    private MutableLiveData<List<Habit>> habitCards;
-    private List<Habit> _habitCards = new ArrayList<>();
+    private MutableLiveData<Habit[]> habitCards;
+    private Habit[] _habitCards = new Habit[5];
 
     private HabitRepository habitRepo;
     private LiveData<List<Habit>> habits;
@@ -89,17 +89,17 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<List<Habit>> getHabitCards() {
+    public LiveData<Habit[]> getHabitCards() {
         return habitCards;
     }
 
     private void updateData() {
         if (habitCardList.size() != 0) {
-            _habitCards.add(habitCardList.get(currentIndex % habitCardList.size()));
-            _habitCards.add(habitCardList.get((currentIndex + 1) % habitCardList.size()));
-            _habitCards.add(habitCardList.get((currentIndex + 2) % habitCardList.size()));
-            _habitCards.add(habitCardList.get((currentIndex + 3) % habitCardList.size()));
-            _habitCards.add(habitCardList.get((currentIndex + 4) % habitCardList.size()));
+            _habitCards[0] = habitCardList.get(currentIndex % habitCardList.size());
+            _habitCards[1] = habitCardList.get((currentIndex + 1) % habitCardList.size());
+            _habitCards[2] = habitCardList.get((currentIndex + 2) % habitCardList.size());
+            _habitCards[3] = habitCardList.get((currentIndex + 3) % habitCardList.size());
+            _habitCards[4] = habitCardList.get((currentIndex + 4) % habitCardList.size());
         }
     }
 

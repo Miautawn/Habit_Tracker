@@ -124,16 +124,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void updateCards(List<Habit> _habits) {
-        if (_habits.size() == 0) return;
-        progressBarLeftTwo.setProgressBarColor(_habits.get(0).getColourID());
+    private void updateCards(Habit[] _habits) {
+        if (_habits[2] == null) return;
+        progressBarLeftTwo.setProgressBarColor(_habits[0].getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits.get(0).getIconID(), R.drawable.class), null));
-        progressBarLeftOne.setProgressBarColor(_habits.get(1).getColourID());
+                getResId(_habits[0].getIconID(), R.drawable.class), null));
+        progressBarLeftOne.setProgressBarColor(_habits[1].getColourID());
         progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits.get(1).getIconID(), R.drawable.class), null));
+                getResId(_habits[1].getIconID(), R.drawable.class), null));
         // Set up current progressBar info
-        Habit centerHabit = _habits.get(2);
+        Habit centerHabit = _habits[2];
         progressBarCenter.setProgressBarColor(centerHabit.getColourID());
         progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(centerHabit.getIconID(), R.drawable.class), null));
@@ -151,12 +151,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressBarCenter.setProgress(60f);
         }
 
-        progressBarRightOne.setProgressBarColor(_habits.get(3).getColourID());
+        progressBarRightOne.setProgressBarColor(_habits[3].getColourID());
         progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits.get(3).getIconID(), R.drawable.class), null));
-        progressBarRightTwo.setProgressBarColor(_habits.get(4).getColourID());
+                getResId(_habits[3].getIconID(), R.drawable.class), null));
+        progressBarRightTwo.setProgressBarColor(_habits[4].getColourID());
         progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits.get(4).getIconID(), R.drawable.class), null));
+                getResId(_habits[4].getIconID(), R.drawable.class), null));
     }
 
     public int getResId(String resName, Class<?> c) {
