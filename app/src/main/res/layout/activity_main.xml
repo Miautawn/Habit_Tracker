@@ -118,7 +118,7 @@
             app:progressBar_image="@drawable/book_white"/>
 
         <TextView
-            android:id="@+id/currentHabitPercentage"
+            android:id="@+id/tvCurrentHabitPercentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,12 +132,12 @@
             android:text="60%"/>
 
         <TextView
-            android:id="@+id/currentHabitInfo"
+            android:id="@+id/tvCurrentHabitInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currentHabitPercentage"
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentHabitPercentage"
             android:layout_marginBottom="62dp"
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/lightGrey"

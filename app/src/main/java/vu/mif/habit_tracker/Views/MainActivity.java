@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Locale;
 
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ImageButton plusBtn;
     private TextView currentHabitName;
+    private TextView tvCurrentHabitPercentage;
+    private TextView tvCurrentHabitInfo;
 
     MainActivity context;
     MotionLayout motionLayout;
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         hiddenLeaderBoardOverlay = findViewById(R.id.leaderboardOverlayContainer);
         overlayTrigger = findViewById(R.id.leaderboardContainer);
         currentHabitName = findViewById(R.id.currentHabitName);
+        tvCurrentHabitPercentage = findViewById(R.id.tvCurrentHabitPercentage);
+        tvCurrentHabitInfo = findViewById(R.id.tvCurrentHabitInfo);
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -119,23 +124,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void updateCards(Habit[] _habits) {
-        progressBarLeftTwo.setProgressBarColor(_habits[0].getColourID());
+    private void updateCards(List<Habit> _habits) {
+        if (_habits.size() == 0) return;
+        progressBarLeftTwo.setProgressBarColor(_habits.get(0).getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[0].getIconID(), R.drawable.class), null));
-        progressBarLeftOne.setProgressBarColor(_habits[1].getColourID());
+                getResId(_habits.get(0).getIconID(), R.drawable.class), null));
+        progressBarLeftOne.setProgressBarColor(_habits.get(1).getColourID());
         progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[1].getIconID(), R.drawable.class), null));
-        progressBarCenter.setProgressBarColor(_habits[2].getColourID());
+                getResId(_habits.get(1).getIconID(), R.drawable.class), null));
+        // Set up current progressBar info
+        Habit centerHabit = _habits.get(2);
+        progressBarCenter.setProgressBarColor(centerHabit.getColourID());
         progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[2].getIconID(), R.drawable.class), null));
-        currentHabitName.setText(_habits[2].getName());
-        progressBarRightOne.setProgressBarColor(_habits[3].getColourID());
+                getResId(centerHabit.getIconID(), R.drawable.class), null));
+        currentHabitName.setText(centerHabit.getName());
+        if (centerHabit.getEndGoal() != 0) {
+            int currentPercentage = (centerHabit.getDailyGoal() * 100 / centerHabit.getEndGoal());
+            tvCurrentHabitPercentage.setText(String.format(Locale.ENGLISH, "%d%%",
+                    currentPercentage));
+            tvCurrentHabitInfo.setText(String.format(Locale.ENGLISH, "%d / %d %s",
+                    centerHabit.getDailyGoal(), centerHabit.getEndGoal(), "pages"));
+            progressBarCenter.setProgress(currentPercentage);
+        } else {
+            tvCurrentHabitPercentage.setText("");
+            tvCurrentHabitInfo.setText("");
+            progressBarCenter.setProgress(60f);
+        }
+
+        progressBarRightOne.setProgressBarColor(_habits.get(3).getColourID());
         progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[3].getIconID(), R.drawable.class), null));
-        progressBarRightTwo.setProgressBarColor(_habits[4].getColourID());
+                getResId(_habits.get(3).getIconID(), R.drawable.class), null));
+        progressBarRightTwo.setProgressBarColor(_habits.get(4).getColourID());
         progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[4].getIconID(), R.drawable.class), null));
+                getResId(_habits.get(4).getIconID(), R.drawable.class), null));
     }
 
     public int getResId(String resName, Class<?> c) {
