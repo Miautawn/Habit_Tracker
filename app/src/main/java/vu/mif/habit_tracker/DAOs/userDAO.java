@@ -21,10 +21,6 @@ public interface userDAO {
     @Update
     void update(User user);
 
-    // We would only need to delete one user, so specifying which one is unnecessary
-    //@Delete
-    //void delete(User user);
-
     @Query("DELETE FROM User")
     void deleteUser();
 
