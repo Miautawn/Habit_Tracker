@@ -48,7 +48,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     private boolean isRepeatble = true;
     private int repeatNumber = 0;
     private String endDate = "";
-    private int endGoal = 0;
+    private int endGoal = 1;
     private boolean isDaily = false;
     private int dailyGoal = 0;
     private boolean hasNotifications = true;

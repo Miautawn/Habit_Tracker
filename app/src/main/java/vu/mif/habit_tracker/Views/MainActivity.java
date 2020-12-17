@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,6 +26,7 @@ import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.components.CircularProgressBar;
+import vu.mif.habit_tracker.components.HabitDialog;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MainActivity context;
     MotionLayout motionLayout;
     MainActivityViewModel model;
+
+    float startX;
+    float startY;
 
     //Cia habitu listas ir useris
     List<Habit> habits;
@@ -124,39 +129,99 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (touchEventInsideTargetView(progressBarCenter, ev)) {
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    startX = ev.getX();
+                    startY = ev.getY();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    float endX = ev.getX();
+                    float endY = ev.getY();
+                    if (isAClick(startX, endX, startY, endY)) {
+                        if(doClickTransition()){
+                            return true;
+                        }
+                    }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private boolean touchEventInsideTargetView(View v, MotionEvent ev) {
+        if (ev.getX() > v.getLeft() && ev.getX() < v.getRight()) {
+            if (ev.getY() > v.getTop() && ev.getY() < v.getBottom()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAClick(Float startX, Float endX, Float startY, Float endY){
+        float differenceX = Math.abs(startX - endX);
+        float differenceY = Math.abs(startY - endY);
+        return !/* =5 */(differenceX > 200 || differenceY > 200);
+    }
+
+    public void openDialog() {
+        HabitDialog habitDialog = new HabitDialog();
+        habitDialog.show(getSupportFragmentManager(), "habit dialog");
+    }
+
+    private boolean doClickTransition(){
+        boolean isClickHandled = false;
+        if (motionLayout.getProgress() < 0.05F) {
+            openDialog();
+            isClickHandled = true;
+        }
+        return isClickHandled;
+    }
+
     private void updateCards(Habit[] _habits) {
         if (_habits[2] == null) return;
-        progressBarLeftTwo.setProgressBarColor(_habits[0].getColourID());
+        Habit leftTwoHabit = _habits[0];
+        progressBarLeftTwo.setProgressBarColor(leftTwoHabit.getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[0].getIconID(), R.drawable.class), null));
-        progressBarLeftOne.setProgressBarColor(_habits[1].getColourID());
+                getResId(leftTwoHabit.getIconID(), R.drawable.class), null));
+        int leftTwoPercentage = (leftTwoHabit.getDailyGoal() * 100 / leftTwoHabit.getEndGoal());
+        progressBarLeftTwo.setProgress(leftTwoPercentage);
+
+        Habit leftOneHabit = _habits[1];
+        progressBarLeftOne.setProgressBarColor(leftOneHabit.getColourID());
         progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[1].getIconID(), R.drawable.class), null));
+                getResId(leftOneHabit.getIconID(), R.drawable.class), null));
+        int leftOnePercentage = (leftOneHabit.getDailyGoal() * 100 / leftOneHabit.getEndGoal());
+        progressBarLeftOne.setProgress(leftOnePercentage);
+
         // Set up current progressBar info
         Habit centerHabit = _habits[2];
         progressBarCenter.setProgressBarColor(centerHabit.getColourID());
         progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(centerHabit.getIconID(), R.drawable.class), null));
         currentHabitName.setText(centerHabit.getName());
-        if (centerHabit.getEndGoal() != 0) {
-            int currentPercentage = (centerHabit.getDailyGoal() * 100 / centerHabit.getEndGoal());
-            tvCurrentHabitPercentage.setText(String.format(Locale.ENGLISH, "%d%%",
-                    currentPercentage));
-            tvCurrentHabitInfo.setText(String.format(Locale.ENGLISH, "%d / %d %s",
-                    centerHabit.getDailyGoal(), centerHabit.getEndGoal(), "pages"));
-            progressBarCenter.setProgress(currentPercentage);
-        } else {
-            tvCurrentHabitPercentage.setText("");
-            tvCurrentHabitInfo.setText("");
-            progressBarCenter.setProgress(60f);
-        }
 
-        progressBarRightOne.setProgressBarColor(_habits[3].getColourID());
+        int currentPercentage = (centerHabit.getDailyGoal() * 100 / centerHabit.getEndGoal());
+        tvCurrentHabitPercentage.setText(String.format(Locale.ENGLISH, "%d%%",
+                currentPercentage));
+        tvCurrentHabitInfo.setText(String.format(Locale.ENGLISH, "%d / %d %s",
+                centerHabit.getDailyGoal(), centerHabit.getEndGoal(), "pages"));
+        progressBarCenter.setProgress(currentPercentage);
+
+        Habit rightOneHabit = _habits[3];
+        progressBarRightOne.setProgressBarColor(rightOneHabit.getColourID());
         progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[3].getIconID(), R.drawable.class), null));
-        progressBarRightTwo.setProgressBarColor(_habits[4].getColourID());
+                getResId(rightOneHabit.getIconID(), R.drawable.class), null));
+        int rightOnePercentage = (rightOneHabit.getDailyGoal() * 100 / rightOneHabit.getEndGoal());
+        progressBarRightOne.setProgress(rightOnePercentage);
+
+        Habit rightTwoHabit = _habits[4];
+        progressBarRightTwo.setProgressBarColor(rightTwoHabit.getColourID());
         progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
-                getResId(_habits[4].getIconID(), R.drawable.class), null));
+                getResId(rightTwoHabit.getIconID(), R.drawable.class), null));
+        int rightTwoPercentage = (rightTwoHabit.getDailyGoal() * 100 / rightTwoHabit.getEndGoal());
+        progressBarRightTwo.setProgress(rightTwoPercentage);
     }
 
     public int getResId(String resName, Class<?> c) {
