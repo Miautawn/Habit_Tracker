@@ -45,7 +45,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     // TODO: Update fields when UI will be updated
     private String name;
     private String iconID = "book_white";
-    private int colourID = Color.WHITE;
+    private int colourID;
     private boolean isRepeatable = true;
     private int repeatNumber = 0;
     private String endDate = "";
@@ -66,6 +66,8 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         toolbar.setNavigationIcon(R.drawable.ic_navigate_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+
+        colourID = getResources().getColor(R.color.initialHabitColor, null);
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);

@@ -11,6 +11,7 @@
     <color name="mailBg">#FFC75D</color>
     <color name="pink">#D82E76</color>
     <color name="transparentBlack">#80000000</color>
+    <color name="initialHabitColor">#FF007F</color>
 
     <array name="colors">
         <item name="bright_pink">#FF007F</item>
