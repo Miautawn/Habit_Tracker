@@ -96,7 +96,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ibChooseIcon"
             android:padding="15dp"
-            android:src="@color/pink"
+            android:src="@drawable/habit_color_btn"
             android:background="@drawable/habit_color_btn_bg"
 
             android:stateListAnimator="@null"/>
