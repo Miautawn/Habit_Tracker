@@ -22,11 +22,12 @@ import java.util.List;
 import java.util.Random;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
+import vu.mif.habit_tracker.Fragments.iconPicker;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.CustomHabitViewModel;
 
-public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener {
+public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener, iconPicker.iconPickerListener {
 
     // Color picker
     int[] colors;
@@ -36,10 +37,10 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
     EditText customHabitName;
     ImageButton colorPickerBtn;
+    ImageButton iconPickerBtn;
+    iconPicker pickerDialog;
 
     CustomHabitActivity context;
-
-    String[] habitIcons = {"book_white", "juice_white"};
 
     // TODO: Update fields when UI will be updated
     private String name;
@@ -69,7 +70,9 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
         colorPickerBtn = findViewById(R.id.ibChooseColor);
+        iconPickerBtn = findViewById(R.id.ibChooseIcon);
         colorPickerBtn.setOnClickListener(this);
+        iconPickerBtn.setOnClickListener(this);
         customHabitName = findViewById(R.id.customHabitName);
         context = this;
 
@@ -89,9 +92,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         if (view == submitCustomHabitBtn) {
             name = customHabitName.getText().toString();
 
-            int rnd = new Random().nextInt(habitIcons.length);
-
-            iconID = habitIcons[rnd];
 
             Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endDate,
                     totalProgress, currentProgress);
@@ -124,6 +124,10 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
                     }
                 }).show();
+        }else if (view == iconPickerBtn)
+        {
+            pickerDialog = new iconPicker();
+            pickerDialog.show(getSupportFragmentManager(), "icon picker");
         }
     }
 
@@ -198,5 +202,13 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void applyIcon(int position, int recourse_id) {
+        iconID =  getResources().getStringArray(R.array.habit_icons)[position];
+        System.out.println(iconID);
+        iconPickerBtn.setImageResource(recourse_id);
+        pickerDialog.dismiss();
     }
 }
