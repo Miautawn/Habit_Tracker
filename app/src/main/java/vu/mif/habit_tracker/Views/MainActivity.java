@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void applyChanges(int id, int currentProgress) {
         for (Habit habit: habits) {
             if (habit.getId() == id){
-                habit.setDailyGoal(currentProgress);
+                habit.setCurrentProgress(currentProgress);
                 model.updateHabit(habit);
             }
         }
@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (Habit habit: habits) {
             if(habit.getId() == currentHabitId) {
                 args.putInt("id", currentHabitId);
-                args.putInt("total_progress", habit.getEndGoal());
-                args.putInt("current_progress", habit.getDailyGoal());
+                args.putInt("total_progress", habit.getTotalProgress());
+                args.putInt("current_progress", habit.getCurrentProgress());
             }
         }
         habitDialog.setArguments(args);
@@ -205,14 +205,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarLeftTwo.setProgressBarColor(leftTwoHabit.getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(leftTwoHabit.getIconID(), R.drawable.class), null));
-        int leftTwoPercentage = (leftTwoHabit.getDailyGoal() * 100 / leftTwoHabit.getEndGoal());
+        int leftTwoPercentage = (leftTwoHabit.getCurrentProgress() * 100 / leftTwoHabit.getTotalProgress());
         progressBarLeftTwo.setProgress(leftTwoPercentage);
 
         Habit leftOneHabit = _habits[1];
         progressBarLeftOne.setProgressBarColor(leftOneHabit.getColourID());
         progressBarLeftOne.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(leftOneHabit.getIconID(), R.drawable.class), null));
-        int leftOnePercentage = (leftOneHabit.getDailyGoal() * 100 / leftOneHabit.getEndGoal());
+        int leftOnePercentage = (leftOneHabit.getCurrentProgress() * 100 / leftOneHabit.getTotalProgress());
         progressBarLeftOne.setProgress(leftOnePercentage);
 
         // Set up current progressBar info
@@ -223,25 +223,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getResId(centerHabit.getIconID(), R.drawable.class), null));
         currentHabitName.setText(centerHabit.getName());
 
-        int currentPercentage = (centerHabit.getDailyGoal() * 100 / centerHabit.getEndGoal());
+        int currentPercentage = (centerHabit.getCurrentProgress() * 100 / centerHabit.getTotalProgress());
         tvCurrentHabitPercentage.setText(String.format(Locale.ENGLISH, "%d%%",
                 currentPercentage));
         tvCurrentHabitInfo.setText(String.format(Locale.ENGLISH, "%d / %d %s",
-                centerHabit.getDailyGoal(), centerHabit.getEndGoal(), "pages"));
+                centerHabit.getCurrentProgress(), centerHabit.getTotalProgress(), "pages"));
         progressBarCenter.setProgress(currentPercentage);
 
         Habit rightOneHabit = _habits[3];
         progressBarRightOne.setProgressBarColor(rightOneHabit.getColourID());
         progressBarRightOne.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(rightOneHabit.getIconID(), R.drawable.class), null));
-        int rightOnePercentage = (rightOneHabit.getDailyGoal() * 100 / rightOneHabit.getEndGoal());
+        int rightOnePercentage = (rightOneHabit.getCurrentProgress() * 100 / rightOneHabit.getTotalProgress());
         progressBarRightOne.setProgress(rightOnePercentage);
 
         Habit rightTwoHabit = _habits[4];
         progressBarRightTwo.setProgressBarColor(rightTwoHabit.getColourID());
         progressBarRightTwo.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(rightTwoHabit.getIconID(), R.drawable.class), null));
-        int rightTwoPercentage = (rightTwoHabit.getDailyGoal() * 100 / rightTwoHabit.getEndGoal());
+        int rightTwoPercentage = (rightTwoHabit.getCurrentProgress() * 100 / rightTwoHabit.getTotalProgress());
         progressBarRightTwo.setProgress(rightTwoPercentage);
     }
 

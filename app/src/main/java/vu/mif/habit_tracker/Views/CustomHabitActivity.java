@@ -48,10 +48,9 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     private boolean isRepeatble = true;
     private int repeatNumber = 0;
     private String endDate = "";
-    private int endGoal = 1;
-    private boolean isDaily = false;
-    private int dailyGoal = 0;
-    private boolean hasNotifications = true;
+    private int totalProgress = 1;
+    private int currentProgress = 0;
+
 
     //Cia tas naudojamas listas
     List<Habit> habits;
@@ -95,7 +94,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
             iconID = habitIcons[rnd];
 
             Habit habit = new Habit(name, iconID, colourID, isRepeatble, repeatNumber, endDate,
-                    endGoal, isDaily, dailyGoal, hasNotifications);
+                    totalProgress, currentProgress);
 
             viewModel.insertHabit(habit);
 
@@ -136,7 +135,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         switch(view.getId()) {
             case R.id.dailyBtn:
                 if (checked)
-                    isDaily = true;
                     isRepeatble = true;
                     repeatNumber = -1;
                     break;
@@ -185,23 +183,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                 if (checked)
 
                     break;
-        }
-    }
-
-    public void onSetReminderRBClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.endReminderOn:
-                if (checked)
-                    hasNotifications = true;
-                break;
-            case R.id.endReminderOff:
-                if (checked)
-                    hasNotifications = false;
-                break;
         }
     }
 
