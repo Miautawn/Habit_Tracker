@@ -45,7 +45,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     private String name;
     private String iconID = "book_white";
     private int colourID = Color.WHITE;
-    private boolean isRepeatble = true;
+    private boolean isRepeatable = true;
     private int repeatNumber = 0;
     private String endDate = "";
     private int totalProgress = 1;
@@ -93,7 +93,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
             iconID = habitIcons[rnd];
 
-            Habit habit = new Habit(name, iconID, colourID, isRepeatble, repeatNumber, endDate,
+            Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endDate,
                     totalProgress, currentProgress);
 
             viewModel.insertHabit(habit);
@@ -135,17 +135,17 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         switch(view.getId()) {
             case R.id.dailyBtn:
                 if (checked)
-                    isRepeatble = true;
+                    isRepeatable = true;
                     repeatNumber = -1;
                     break;
             case R.id.weeklyBtn:
                 if (checked)
-                    isRepeatble = true;
+                    isRepeatable = true;
                     repeatNumber = -2;
                     break;
             case R.id.monthlyBtn:
                 if(checked)
-                    isRepeatble = true;
+                    isRepeatable = true;
                     repeatNumber = -3;
                     break;
         }

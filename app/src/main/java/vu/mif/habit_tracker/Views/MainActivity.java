@@ -1,21 +1,27 @@
 package vu.mif.habit_tracker.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.motion.widget.TransitionAdapter;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -34,30 +40,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View overlayTrigger;
 
     private ImageButton plusBtn;
+    private ImageButton moreInfoBtn;
     private TextView currentHabitName;
     private TextView tvCurrentHabitPercentage;
     private TextView tvCurrentHabitInfo;
+    private DrawerLayout drawerLayout;
+    private AppCompatButton btnLogOut;
+    private ImageView ivAccountPic;
 
-    MainActivity context;
-    MotionLayout motionLayout;
-    MainActivityViewModel model;
+    private MainActivity context;
+    private MotionLayout motionLayout;
+    private MainActivityViewModel model;
 
-    float startX;
-    float startY;
-    int currentHabitId;
+    private boolean leaderBoardOpen;
+
+    private float startX;
+    private float startY;
+    private int currentHabitId;
 
     //Cia habitu listas ir useris
     List<Habit> habits;
     User user;
 
-    CircularProgressBar progressBarLeftTwo;
-    CircularProgressBar progressBarLeftOne;
-    CircularProgressBar progressBarCenter;
-    CircularProgressBar progressBarRightOne;
-    CircularProgressBar progressBarRightTwo;
+    private CircularProgressBar progressBarLeftTwo;
+    private CircularProgressBar progressBarLeftOne;
+    private CircularProgressBar progressBarCenter;
+    private CircularProgressBar progressBarRightOne;
+    private CircularProgressBar progressBarRightTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.darkGrey, null));
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,11 +79,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         model = new ViewModelProvider(context).get(MainActivityViewModel.class);
 
         plusBtn = findViewById(R.id.plusBtn);
+        moreInfoBtn = findViewById(R.id.moreInfoBtn);
+        drawerLayout = findViewById(R.id.accountInfoDrawer);
         hiddenLeaderBoardOverlay = findViewById(R.id.leaderboardOverlayContainer);
         overlayTrigger = findViewById(R.id.leaderboardContainer);
         currentHabitName = findViewById(R.id.currentHabitName);
         tvCurrentHabitPercentage = findViewById(R.id.tvCurrentHabitPercentage);
         tvCurrentHabitInfo = findViewById(R.id.tvCurrentHabitInfo);
+        btnLogOut = findViewById(R.id.btnLogOut);
+        ivAccountPic = findViewById(R.id.ivAccountPic);
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -112,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         overlayTrigger.setOnClickListener(this);
         hiddenLeaderBoardOverlay.setOnClickListener(this);
         plusBtn.setOnClickListener(this);
+        moreInfoBtn.setOnClickListener(this);
+        btnLogOut.setOnClickListener(this);
+        ivAccountPic.setOnClickListener(this);
     }
 
     @Override
@@ -127,6 +147,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if(view == plusBtn) {
             Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
             startActivity(intent);
+        } else if (view == moreInfoBtn){
+            drawerLayout.openDrawer(GravityCompat.START);
+        } else if (view == btnLogOut){
+            Toast.makeText(this, "You have pressed logout button!", Toast.LENGTH_SHORT).show();
+        } else if (view == ivAccountPic) {
+            Toast.makeText(this, "You tried to click image!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -151,11 +177,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case MotionEvent.ACTION_UP:
                     float endX = ev.getX();
                     float endY = ev.getY();
-                    if (isAClick(startX, endX, startY, endY)) {
-                        if(doClickTransition()){
-                            return true;
+                    if (!leaderBoardOpen && !drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        if (isAClick(startX, endX, startY, endY)) {
+                            if (doClickTransition()) {
+                                return true;
+                            }
                         }
                     }
+                    break;
             }
         }
         return super.dispatchTouchEvent(ev);
@@ -261,6 +290,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Animation bottomUp = AnimationUtils.loadAnimation(this,
                     R.anim.bottom_up);
 
+            leaderBoardOpen = true;
+
             hiddenLeaderBoardOverlay.startAnimation(bottomUp);
             hiddenLeaderBoardOverlay.setVisibility(View.VISIBLE);
             hiddenLeaderBoardOverlay.setClickable(true);
@@ -268,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Animation bottomDown = AnimationUtils.loadAnimation(this,
                     R.anim.bottom_down);
+
+            leaderBoardOpen = false;
 
             hiddenLeaderBoardOverlay.startAnimation(bottomDown);
             hiddenLeaderBoardOverlay.setVisibility(View.GONE);
