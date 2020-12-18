@@ -5,22 +5,29 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 import vu.mif.habit_tracker.DAOs.userDAO;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
 
 //This repository will be linked to the RegisterActivity and will provide the methods while doing all the work
 public class UserRepository {
     private userDAO userDAO;
     private LiveData<User> user;
+    private FirebaseAuth auth;
 
     public UserRepository(Application application)
     {
         roomDB database = roomDB.getInstance(application);
         this.userDAO = database.getUserDAO();
         this.user = userDAO.getUser();
+        this.auth = firebaseDB.getAuthInstance();
     }
 
     // These methods are the only thing that view model will see and they have such shit structure because they need to be run on a background task
@@ -37,6 +44,8 @@ public class UserRepository {
     {
         return user;
     }
+    public Task<AuthResult> loginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
+    public Task<AuthResult> registerUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
     {
