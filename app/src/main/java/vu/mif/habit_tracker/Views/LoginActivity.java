@@ -1,4 +1,4 @@
-package vu.mif.habit_tracker.ui;
+package vu.mif.habit_tracker.Views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -15,7 +15,7 @@ import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.LoginActivityViewModel;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.Views.MainActivity;
-import vu.mif.habit_tracker.Views.RegisterActivity;
+
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
