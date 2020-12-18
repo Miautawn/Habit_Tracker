@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 import vu.mif.habit_tracker.DAOs.userDAO;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
 
 //This repository will be linked to the RegisterActivity and will provide the methods while doing all the work

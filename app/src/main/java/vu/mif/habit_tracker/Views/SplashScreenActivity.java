@@ -22,18 +22,20 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // TODO: Fix issues with navigation buttons
 
-        //getting the user
+        //getting the user from database
         viewModel.getUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 if(user != null)
                 {
+                    //if user exists, proceed to main screen
                     startActivity(new Intent(SplashScreenActivity.this,
                             MainActivity.class));
                     finish();
                 }
                 else
                 {
+                    //if user does not exist, proceed to login screen
                     startActivity(new Intent(SplashScreenActivity.this,
                             LoginActivity.class));
                     finish();

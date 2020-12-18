@@ -32,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isPasswordVisible = false;
     private Button btnSignIn;
     private EditText email;
+    private EditText username;
     private RegisterActivityViewModel viewmodel;
 
     @Override
@@ -51,11 +52,12 @@ public class RegisterActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.passwordField);
 
         email= findViewById(R.id.signinEmailEditText);
+        username = findViewById(R.id.signiUserNameEditText);
         btnSignIn = findViewById(R.id.signinBtn);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewmodel.registerUser(email.getText().toString(), passwordField.getText().toString(), RegisterActivity.this);
+                viewmodel.registerUser(username.getText().toString(), email.getText().toString(), passwordField.getText().toString(), RegisterActivity.this);
             }
         });
 

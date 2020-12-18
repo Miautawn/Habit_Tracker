@@ -12,9 +12,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.MainActivity;
-import vu.mif.habit_tracker.ui.LoginActivity;
+
 
 
 public class LoginActivityViewModel extends AndroidViewModel   {
@@ -33,6 +34,8 @@ public class LoginActivityViewModel extends AndroidViewModel   {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
+                        //TODO: implement data download from firebase
+                        repo.insertUser(new User("testas", 100, "nera"));
                         context.startActivity(new Intent(context, MainActivity.class));
                         context.finish();
                     }

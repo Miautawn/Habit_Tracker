@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.MainActivity;
 
@@ -22,7 +23,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
         repo = new UserRepository(application);
     }
 
-    public void registerUser(String email, String password, Activity context)
+    public void registerUser(String username, String email, String password, Activity context)
     {
         if(!email.isEmpty() && !password.isEmpty())
         {
@@ -31,6 +32,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
+                        repo.insertUser(new User(username, 100, "nera"));
                         context.startActivity(new Intent(context, MainActivity.class));
                         context.finish();
                     }else
