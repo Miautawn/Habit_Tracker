@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/progress_update_bg"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity = "center_horizontal"
+    >
+
+    <GridView
+        android:id="@+id/icon_gridView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numColumns="2"
+        android:columnWidth="110dp"
+        android:verticalSpacing="30dp"
+        android:stretchMode="spacingWidth"
+        android:paddingStart="35dp"
+        android:paddingEnd="35dp"
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp"
+        android:background="@android:color/transparent" />
+</RelativeLayout>

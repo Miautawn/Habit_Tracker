@@ -28,7 +28,14 @@
     </array>
 
     <string-array name="habit_icons">
-        <item>@drawable/book_white</item>
-        <item>@drawable/juice_white</item>
+        <item>book_white</item>
+        <item>juice_white</item>
+        <item>alarm_clock_white</item>
+        <item>bicycle_white</item>
+        <item>cleaning_white</item>
+        <item>water_white</item>
+        <item>wallet_white</item>
+        <item>workplace_white</item>
     </string-array>
+
 </resources>

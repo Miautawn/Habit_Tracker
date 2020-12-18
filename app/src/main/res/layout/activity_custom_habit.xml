@@ -95,9 +95,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tvColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ibChooseIcon"
-            android:src="@drawable/habit_color_btn"
             android:padding="15dp"
+            android:src="@color/pink"
             android:background="@drawable/habit_color_btn_bg"
+
             android:stateListAnimator="@null"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
