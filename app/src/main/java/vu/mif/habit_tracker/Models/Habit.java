@@ -17,24 +17,18 @@ public class Habit {
     private boolean isRepeatble;
     private int repeatNumber;
     private String endDate;
-    private int endGoal;
-    private boolean isDaily;
-    private int dailyGoal;
-    private boolean hasNotifications;
+    private int totalProgress;
+    private int currentProgress;
 
-
-
-    public Habit(String name, String iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int endGoal, boolean isDaily, int dailyGoal, boolean hasNotifications) {
+    public Habit(String name, String iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int totalProgress, int currentProgress) {
         this.name = name;
         this.iconID = iconID;
         this.colourID = colourID;
         this.isRepeatble = isRepeatble;
         this.repeatNumber = repeatNumber;
         this.endDate = endDate;
-        this.endGoal = endGoal;
-        this.isDaily = isDaily;
-        this.dailyGoal = dailyGoal;
-        this.hasNotifications = hasNotifications;
+        this.totalProgress = totalProgress;
+        this.currentProgress = currentProgress;
     }
 
     public void setId(int id) {
@@ -69,23 +63,11 @@ public class Habit {
         return endDate;
     }
 
-    public int getEndGoal() {
-        return endGoal;
+    public int getTotalProgress() {
+        return totalProgress;
     }
 
-    public boolean isDaily() {
-        return isDaily;
-    }
-
-    public int getDailyGoal() {
-        return dailyGoal;
-    }
-
-    public void setDailyGoal(int dailyGoal) {
-        this.dailyGoal = dailyGoal ;
-    }
-
-    public boolean isHasNotifications() {
-        return hasNotifications;
+    public int getCurrentProgress() {
+        return currentProgress;
     }
 }
