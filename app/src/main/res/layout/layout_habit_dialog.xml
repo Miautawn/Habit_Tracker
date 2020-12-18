@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="262dp"
+    android:minWidth="250dp"
+    android:background="@drawable/progress_update_bg">
+
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:textAllCaps="true"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:text="Progress update" />
+
+    <EditText
+        android:id="@+id/etUpdate"
+        android:layout_width="120dp"
+        android:layout_height="34dp"
+        android:layout_below="@id/tvDialogTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:inputType="number"
+        android:digits="0123456789"
+        android:textColor="@color/lightGrey"
+        android:textColorHint="@color/lightGrey"
+        android:hint="###"
+        android:gravity="center"
+        android:background="@drawable/progress_update_edit_text"/>
+
+    <RelativeLayout
+        android:id="@+id/ibContainer"
+        android:layout_below="@id/etUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp">
+
+    <ImageButton
+        android:id="@+id/ibMinus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_min"
+        android:background="@drawable/progress_update_button"/>
+
+    <ImageButton
+        android:id="@+id/ibPlus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toEndOf="@+id/ibMinus"
+        android:layout_marginStart="60dp"
+        android:src="@drawable/ic_add"
+        android:background="@drawable/progress_update_button"/>
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/pbProgress"
+        android:layout_width="190dp"
+        android:layout_height="25dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_below="@id/ibContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:progress="60"
+        android:progressDrawable="@drawable/progress_update_bar"/>
+
+    <TextView
+        android:id="@+id/tvProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/pbProgress"
+        android:layout_alignBottom="@id/pbProgress"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:text="90/100"/>
+
+</RelativeLayout>

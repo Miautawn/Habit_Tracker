@@ -71,4 +71,7 @@ public class Habit {
         return currentProgress;
     }
 
+    public void setCurrentProgress(int currentProgress) {
+        this.currentProgress = currentProgress;
+    }
 }

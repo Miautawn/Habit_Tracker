@@ -1,4 +1,4 @@
-package vu.mif.habit_tracker.ui;
+package vu.mif.habit_tracker.Views;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -9,10 +9,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -47,13 +45,12 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     private String name;
     private String iconID = "book_white";
     private int colourID = Color.WHITE;
-    private boolean isRepeatble = true;
+    private boolean isRepeatable = true;
     private int repeatNumber = 0;
     private String endDate = "";
-    private int endGoal = 0;
-    private boolean isDaily = false;
-    private int dailyGoal = 0;
-    private boolean hasNotifications = true;
+    private int totalProgress = 1;
+    private int currentProgress = 0;
+
 
     //Cia tas naudojamas listas
     List<Habit> habits;
@@ -96,8 +93,8 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
             iconID = habitIcons[rnd];
 
-            Habit habit = new Habit(name, iconID, colourID, isRepeatble, repeatNumber, endDate,
-                    endGoal, isDaily, dailyGoal, hasNotifications);
+            Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endDate,
+                    totalProgress, currentProgress);
 
             viewModel.insertHabit(habit);
 
@@ -138,18 +135,17 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         switch(view.getId()) {
             case R.id.dailyBtn:
                 if (checked)
-                    isDaily = true;
-                    isRepeatble = true;
+                    isRepeatable = true;
                     repeatNumber = -1;
                     break;
             case R.id.weeklyBtn:
                 if (checked)
-                    isRepeatble = true;
+                    isRepeatable = true;
                     repeatNumber = -2;
                     break;
             case R.id.monthlyBtn:
                 if(checked)
-                    isRepeatble = true;
+                    isRepeatable = true;
                     repeatNumber = -3;
                     break;
         }
@@ -187,23 +183,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                 if (checked)
 
                     break;
-        }
-    }
-
-    public void onSetReminderRBClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.endReminderOn:
-                if (checked)
-                    hasNotifications = true;
-                break;
-            case R.id.endReminderOff:
-                if (checked)
-                    hasNotifications = false;
-                break;
         }
     }
 

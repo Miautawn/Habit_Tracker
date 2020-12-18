@@ -1,10 +1,8 @@
-package vu.mif.habit_tracker.ui;
+package vu.mif.habit_tracker.Views;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -12,15 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import java.util.List;
-
-import vu.mif.habit_tracker.Models.Habit;
-import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.R;
-import vu.mif.habit_tracker.ViewModels.HabitTestViewModel;
-import vu.mif.habit_tracker.ViewModels.PetTestViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
