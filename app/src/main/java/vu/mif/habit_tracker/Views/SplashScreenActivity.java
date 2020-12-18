@@ -29,12 +29,14 @@ public class SplashScreenActivity extends AppCompatActivity {
                 if(user != null)
                 {
                     startActivity(new Intent(SplashScreenActivity.this,
-                            LoginActivity.class));
+                            MainActivity.class));
                     finish();
                 }
                 else
                 {
-                    System.out.println("Nera userio");
+                    startActivity(new Intent(SplashScreenActivity.this,
+                            LoginActivity.class));
+                    finish();
                 }
             }
         });
