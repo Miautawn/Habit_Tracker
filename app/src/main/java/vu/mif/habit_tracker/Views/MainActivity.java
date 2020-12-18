@@ -28,7 +28,7 @@ import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.components.CircularProgressBar;
 import vu.mif.habit_tracker.components.HabitDialog;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, HabitDialog.HabitDialogListener {
 
     private ViewGroup hiddenLeaderBoardOverlay;
     private View overlayTrigger;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     float startX;
     float startY;
+    int currentHabitId;
 
     //Cia habitu listas ir useris
     List<Habit> habits;
@@ -130,6 +131,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void applyChanges(int id, int currentProgress) {
+        for (Habit habit: habits) {
+            if (habit.getId() == id){
+                habit.setDailyGoal(currentProgress);
+                model.updateHabit(habit);
+            }
+        }
+    }
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (touchEventInsideTargetView(progressBarCenter, ev)) {
             switch (ev.getAction()) {
@@ -167,6 +178,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void openDialog() {
         HabitDialog habitDialog = new HabitDialog();
+        Bundle args = new Bundle();
+        for (Habit habit: habits) {
+            if(habit.getId() == currentHabitId) {
+                args.putInt("id", currentHabitId);
+                args.putInt("total_progress", habit.getEndGoal());
+                args.putInt("current_progress", habit.getDailyGoal());
+            }
+        }
+        habitDialog.setArguments(args);
         habitDialog.show(getSupportFragmentManager(), "habit dialog");
     }
 
@@ -197,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Set up current progressBar info
         Habit centerHabit = _habits[2];
+        currentHabitId = centerHabit.getId();
         progressBarCenter.setProgressBarColor(centerHabit.getColourID());
         progressBarCenter.setImage(ResourcesCompat.getDrawable(getResources(),
                 getResId(centerHabit.getIconID(), R.drawable.class), null));

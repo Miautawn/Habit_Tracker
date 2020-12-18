@@ -81,6 +81,10 @@ public class Habit {
         return dailyGoal;
     }
 
+    public void setDailyGoal(int dailyGoal) {
+        this.dailyGoal = dailyGoal ;
+    }
+
     public boolean isHasNotifications() {
         return hasNotifications;
     }
