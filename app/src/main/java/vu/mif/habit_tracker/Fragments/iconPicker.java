@@ -22,7 +22,7 @@ public class iconPicker extends AppCompatDialogFragment {
 
     private Activity context;
     private iconPickerListener listener;
-    private int[] items = {R.drawable.book, R.drawable.juice, R.drawable.alarm_clock, R.drawable.bicycle, R.drawable.cleaning, R.drawable.water, R.drawable.wallet, R.drawable.workplace};
+    public int[] items;
 
     @NonNull
     @Override
@@ -39,7 +39,7 @@ public class iconPicker extends AppCompatDialogFragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.applyIcon(position, items[position]);
+                listener.applyIcon(position);
             }
         });
 
@@ -59,7 +59,7 @@ public class iconPicker extends AppCompatDialogFragment {
 
     public interface iconPickerListener
     {
-        void applyIcon(int position, int resourceID);
+        void applyIcon(int position);
     }
 
 

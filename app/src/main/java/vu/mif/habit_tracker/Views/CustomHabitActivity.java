@@ -31,6 +31,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
     // Color picker
     int[] colors;
+    private int[] pictureID = {R.drawable.book, R.drawable.juice, R.drawable.alarm_clock, R.drawable.bicycle, R.drawable.cleaning, R.drawable.water, R.drawable.wallet, R.drawable.workplace};
 
     AppCompatButton submitCustomHabitBtn;
     CustomHabitViewModel viewModel;
@@ -44,7 +45,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
     // TODO: Update fields when UI will be updated
     private String name;
-    private String iconID = "book_white";
+    private String iconID;
     private int colourID;
     private boolean isRepeatable = true;
     private int repeatNumber = 0;
@@ -67,7 +68,12 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
+        //Setting default icon to be random
+        Random rand = new Random();
+        int iconRandomID = rand.nextInt(getResources().getStringArray(R.array.habit_icons).length);
+        iconID = getResources().getStringArray(R.array.habit_icons)[iconRandomID];
         colourID = getResources().getColor(R.color.initialHabitColor, null);
+        //Setting default icon to be random
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
@@ -77,6 +83,9 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         iconPickerBtn.setOnClickListener(this);
         customHabitName = findViewById(R.id.customHabitName);
         context = this;
+
+        //setting the image button resource
+        iconPickerBtn.setImageResource(pictureID[iconRandomID]);
 
         //initializing viewmodel and obtaining the list of habits
         viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(CustomHabitViewModel.class);
@@ -129,6 +138,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         }else if (view == iconPickerBtn)
         {
             pickerDialog = new iconPicker();
+            pickerDialog.items = pictureID;
             pickerDialog.show(getSupportFragmentManager(), "icon picker");
         }
     }
@@ -207,10 +217,10 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void applyIcon(int position, int recourse_id) {
+    public void applyIcon(int position) {
         iconID =  getResources().getStringArray(R.array.habit_icons)[position];
         System.out.println(iconID);
-        iconPickerBtn.setImageResource(recourse_id);
+        iconPickerBtn.setImageResource(pictureID[position]);
         pickerDialog.dismiss();
     }
 }
