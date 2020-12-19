@@ -68,13 +68,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-        //Setting default icon to be random
-        Random rand = new Random();
-        int iconRandomID = rand.nextInt(getResources().getStringArray(R.array.habit_icons).length);
-        iconID = getResources().getStringArray(R.array.habit_icons)[iconRandomID];
-        colourID = getResources().getColor(R.color.initialHabitColor, null);
-        //Setting default icon to be random
-
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
         colorPickerBtn = findViewById(R.id.ibChooseColor);
@@ -84,8 +77,25 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         customHabitName = findViewById(R.id.customHabitName);
         context = this;
 
-        //setting the image button resource
-        iconPickerBtn.setImageResource(pictureID[iconRandomID]);
+        //checking whether there are any values that are passed and setting them accordingly
+        if (!getIntent().hasExtra("DEFAULT_ICON_ID"))
+        {
+            //Setting default icon to be random
+            Random rand = new Random();
+            int iconRandomID = rand.nextInt(getResources().getStringArray(R.array.habit_icons).length);
+            iconID = getResources().getStringArray(R.array.habit_icons)[iconRandomID];
+            colourID = getResources().getColor(R.color.initialHabitColor, null);
+            iconPickerBtn.setImageResource(pictureID[iconRandomID]);
+            //Setting default icon to be random
+        }
+        else
+        {
+            iconID = getIntent().getStringExtra("DEFAULT_ICON");
+            iconPickerBtn.setImageResource(getIntent().getIntExtra("DEFAULT_ICON_ID", R.drawable.workplace));
+            name = getIntent().getStringExtra("DEFAULT_NAME");
+            customHabitName.setText(name);
+            colourID = getResources().getColor(R.color.initialHabitColor, null);
+        }
 
         //initializing viewmodel and obtaining the list of habits
         viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(CustomHabitViewModel.class);

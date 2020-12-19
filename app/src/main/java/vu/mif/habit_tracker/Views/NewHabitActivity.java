@@ -9,12 +9,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 
 import vu.mif.habit_tracker.R;
 
 public class NewHabitActivity extends AppCompatActivity implements View.OnClickListener {
 
     private AppCompatButton createCustomHabitBtn;
+
+    private ImageButton defaultAlarmBtn;
+    private ImageButton defaultBicycleBtn;
+    private ImageButton defaultBookBtn;
+    private ImageButton defaultCleaningBtn;
+    private ImageButton defaultWaterBtn;
+    private ImageButton defaultWalletBtn;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +37,21 @@ public class NewHabitActivity extends AppCompatActivity implements View.OnClickL
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
+        //setting up default buttons
+        defaultAlarmBtn = findViewById(R.id.alarmBtn);
+        defaultAlarmBtn.setOnClickListener(this);
+        defaultBicycleBtn = findViewById(R.id.bicycleBtn);
+        defaultBicycleBtn.setOnClickListener(this);
+        defaultBookBtn = findViewById(R.id.bookBtn);
+        defaultBookBtn.setOnClickListener(this);
+        defaultCleaningBtn = findViewById(R.id.cleaningBtn);
+        defaultCleaningBtn.setOnClickListener(this);
+        defaultWaterBtn = findViewById(R.id.waterBtn);
+        defaultWaterBtn.setOnClickListener(this);
+        defaultWalletBtn = findViewById(R.id.walletBtn);
+        defaultWalletBtn.setOnClickListener(this);
+        //setting up default buttons
+
         createCustomHabitBtn = findViewById(R.id.createCustomHabitBtn);
         createCustomHabitBtn.setOnClickListener(this);
     }
@@ -35,6 +60,55 @@ public class NewHabitActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         if (view == createCustomHabitBtn) {
             Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            startActivity(intent);
+        }
+
+        else if (view == defaultAlarmBtn)
+        {
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            intent.putExtra("DEFAULT_ICON", getResources().getStringArray(R.array.habit_icons)[2]);
+            intent.putExtra("DEFAULT_ICON_ID", R.drawable.alarm_clock);
+            intent.putExtra("DEFAULT_NAME", "Wake up early");
+            startActivity(intent);
+        }
+        else if (view == defaultBicycleBtn)
+        {
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            intent.putExtra("DEFAULT_ICON", getResources().getStringArray(R.array.habit_icons)[3]);
+            intent.putExtra("DEFAULT_ICON_ID", R.drawable.bicycle);
+            intent.putExtra("DEFAULT_NAME", "Workout");
+            startActivity(intent);
+        }
+        else if (view == defaultBookBtn)
+        {
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            intent.putExtra("DEFAULT_ICON", getResources().getStringArray(R.array.habit_icons)[0]);
+            intent.putExtra("DEFAULT_ICON_ID", R.drawable.book);
+            intent.putExtra("DEFAULT_NAME", "Study");
+            startActivity(intent);
+        }
+        else if (view == defaultCleaningBtn)
+        {
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            intent.putExtra("DEFAULT_ICON", getResources().getStringArray(R.array.habit_icons)[4]);
+            intent.putExtra("DEFAULT_ICON_ID", R.drawable.cleaning);
+            intent.putExtra("DEFAULT_NAME", "Clean up");
+            startActivity(intent);
+        }
+        else if (view == defaultWaterBtn)
+        {
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            intent.putExtra("DEFAULT_ICON", getResources().getStringArray(R.array.habit_icons)[5]);
+            intent.putExtra("DEFAULT_ICON_ID", R.drawable.water);
+            intent.putExtra("DEFAULT_NAME", "Hydrate");
+            startActivity(intent);
+        }
+        else if (view == defaultWalletBtn)
+        {
+            Intent intent = new Intent(NewHabitActivity.this, CustomHabitActivity.class);
+            intent.putExtra("DEFAULT_ICON", getResources().getStringArray(R.array.habit_icons)[6]);
+            intent.putExtra("DEFAULT_ICON_ID", R.drawable.wallet);
+            intent.putExtra("DEFAULT_NAME", "Donate to a Nigerian Prince");
             startActivity(intent);
         }
     }
