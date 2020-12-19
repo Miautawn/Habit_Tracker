@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView currentHabitName;
     private TextView tvCurrentHabitPercentage;
     private TextView tvCurrentHabitInfo;
+    private TextView tvUsername;
     private DrawerLayout drawerLayout;
     private AppCompatButton btnLogOut;
     private ImageView ivAccountPic;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvCurrentHabitInfo = findViewById(R.id.tvCurrentHabitInfo);
         btnLogOut = findViewById(R.id.btnLogOut);
         ivAccountPic = findViewById(R.id.ivAccountPic);
+        tvUsername = findViewById(R.id.tvUsername);
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -101,12 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 context.habits = habits;
             }
         });
-        model.getUser().observe(context, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                context.user = user;
-            }
-        });
+        model.getUser().observe(context, this::updateUserDetails);
         model.getHabitCards().observe(context, this::updateCards);
 
         motionLayout.setTransitionListener(new TransitionAdapter() {
@@ -227,6 +224,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return isClickHandled;
     }
+
+    private void updateUserDetails(User user)
+    {
+        this.user = user;
+        tvUsername.setText(this.user.getUsername());
+        //TODO: do all of these user updates
+        //ivAccountPic.setImageResource();
+    }
+
 
     private void updateCards(Habit[] _habits) {
         if (_habits[2] == null) return;
