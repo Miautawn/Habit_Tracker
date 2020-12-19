@@ -20,6 +20,8 @@ public class UserTestViewModel extends AndroidViewModel {
         super(application);
         repo = new UserRepository(application);
         user = repo.getUser();
+
+
     }
 
     public void insertUser(User user)

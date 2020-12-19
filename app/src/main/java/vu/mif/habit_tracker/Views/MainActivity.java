@@ -147,7 +147,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (view == moreInfoBtn){
             drawerLayout.openDrawer(GravityCompat.START);
         } else if (view == btnLogOut){
-            Toast.makeText(this, "You have pressed logout button!", Toast.LENGTH_SHORT).show();
+            model.LogOut();
+            if(!model.isLoggedIn())
+            {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else Toast.makeText(this, "An error occurred :(", Toast.LENGTH_SHORT).show();
+
         } else if (view == ivAccountPic) {
             Toast.makeText(this, "You tried to click image!", Toast.LENGTH_SHORT).show();
         }

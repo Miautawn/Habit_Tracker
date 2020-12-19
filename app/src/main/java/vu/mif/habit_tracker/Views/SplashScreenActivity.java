@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
@@ -28,23 +29,33 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void onChanged(User user) {
                 if(user != null)
                 {
-                    //if user exists, proceed to main screen
-                    startActivity(new Intent(SplashScreenActivity.this,
-                            MainActivity.class));
-                    finish();
+                    if(viewModel.isLogedIn())
+                    {
+                        //if user exists, and is logged in
+                        startActivity(new Intent(SplashScreenActivity.this,
+                                MainActivity.class));
+                        finish();
+
+                    }else
+                    {
+                        //if user exists, but is not logged in
+                        LogIn();
+                    }
+
                 }
                 else
                 {
                     //if user does not exist, proceed to login screen
-                    startActivity(new Intent(SplashScreenActivity.this,
-                            LoginActivity.class));
-                    finish();
+                    LogIn();
                 }
             }
         });
-
-
-
-
     }
+    private void LogIn()
+    {
+        startActivity(new Intent(SplashScreenActivity.this,
+                LoginActivity.class));
+        finish();
+    }
+
 }

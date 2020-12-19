@@ -87,11 +87,15 @@ public class MainActivityViewModel extends AndroidViewModel {
     {
         return user;
     }
+    public void LogOut() {userRepo.disconnectUser();}
+    public boolean isLoggedIn() {return userRepo.isLogedIn();}
+    public String getUID() {return  userRepo.getUID();}
 
 
     public LiveData<Habit[]> getHabitCards() {
         return habitCards;
     }
+
 
     private void updateData() {
         if (habitCardList.size() != 0) {

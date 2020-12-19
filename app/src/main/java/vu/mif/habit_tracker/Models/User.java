@@ -12,15 +12,17 @@ public class User {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    private String UID;
     private String username;
     private int currency;
     private String pictureURL;
 
 
-    public User(String username, int currency, String pictureURL) {
+    public User(String username, int currency, String pictureURL, String UID) {
         this.username = username;
         this.currency = currency;
         this.pictureURL = pictureURL;
+        this.UID = UID;
     }
 
     public void setId(int id) {
@@ -40,4 +42,6 @@ public class User {
     public String getPictureURL() {
         return pictureURL;
     }
+
+    public String getUID() {return UID;}
 }

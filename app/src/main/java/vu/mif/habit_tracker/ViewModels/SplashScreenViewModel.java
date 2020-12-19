@@ -23,4 +23,5 @@ public class SplashScreenViewModel extends AndroidViewModel {
     {
         return user;
     }
+    public boolean isLogedIn() { return repo.isLogedIn();}
 }

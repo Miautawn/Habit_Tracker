@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }else if(view == btnLogIn)
         {
-            viewmodel.registerUser(email.getText().toString(), password.getText().toString(), this);
+            viewmodel.logInUser(email.getText().toString(), password.getText().toString(), this);
         } else if (view == btnSignIn) {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
