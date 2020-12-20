@@ -44,15 +44,7 @@ public class UserRepository {
     public boolean isLogedIn() { return auth.getCurrentUser() != null; };
     public void disconnectUser() { if(isLogedIn()) auth.signOut(); }
     public String getUID() {if(isLogedIn()) return auth.getCurrentUser().getUid(); return null;}
-    public int getCount() {
-        try {
-            return new CountUsersTask(userDAO).execute().get();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        return -1;
-    }
+
 
     private static class CountUsersTask extends AsyncTask<Void, Void, Integer> {
 

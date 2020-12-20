@@ -28,8 +28,4 @@ public interface userDAO {
     @Query("SELECT *  FROM User LIMIT 1")
     LiveData<User> getUser();
 
-    @Query("SELECT COUNT(*) FROM User")
-    int getUserCount();
-
-
 }

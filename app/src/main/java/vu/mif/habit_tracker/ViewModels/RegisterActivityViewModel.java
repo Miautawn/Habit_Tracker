@@ -34,7 +34,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
                     {
                         //TODO: implementuot data upload to FireBase
                         repo.purge();
-                        repo.insertUser(new User(username, 100, "nera", repo.getUID()));
+                        repo.insertUser(new User(username, 100, null, repo.getUID()));
                         context.startActivity(new Intent(context, MainActivity.class));
                         context.finish();
                     }else

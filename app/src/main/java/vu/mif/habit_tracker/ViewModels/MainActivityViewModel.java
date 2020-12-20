@@ -1,18 +1,26 @@
 package vu.mif.habit_tracker.ViewModels;
 
+import android.app.Activity;
 import android.app.Application;
-import android.graphics.Color;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.List;
 
 import vu.mif.habit_tracker.Models.Habit;
@@ -130,4 +138,71 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void updateCards() {
         habitCards.postValue(_habitCards);
     }
+
+
+//    public String GetAndCopyImage(Activity context, Intent data)
+//    {
+//        Uri uri = data.getData();
+//        File source = new File(getPath(uri, context));
+//        String filename = source.getName();
+//
+//        File destination_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/");
+//        File destination = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/" + filename);
+//
+//        boolean success = true;
+//        try
+//        {
+//            checkDestination(destination_path, context);
+//            copy(source, destination, context);
+//        }catch (Exception e)
+//        {
+//            System.out.println(e.getMessage());
+//            success = false;
+//        }
+//        if(success) return destination.getAbsolutePath();
+//        return null;
+//    }
+
+    public String getPath(Uri uri, Activity context) {
+
+        String path = null;
+        String[] projection = { MediaStore.Files.FileColumns.DATA };
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+
+        if(cursor == null){
+            path = uri.getPath();
+        }
+        else{
+            cursor.moveToFirst();
+            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
+            path = cursor.getString(column_index);
+            cursor.close();
+        }
+
+        return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
+    }
+
+//    private void copy(File source, File destination, Activity context) throws IOException {
+//            FileChannel in = new FileInputStream(source).getChannel();
+//            FileChannel out = new FileOutputStream(destination).getChannel();
+//            in.transferTo(0, in.size(), out);
+//            if (in != null)
+//                in.close();
+//            if (out != null)
+//                out.close();
+//    }
+//
+
+//    private void checkDestination(File destination, Activity context)
+//    {
+//        if(!destination.isDirectory())
+//        {
+//            if(!destination.mkdirs())
+//            {
+//                Toast.makeText(context, "Failed to create a directory", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
+
+
 }
