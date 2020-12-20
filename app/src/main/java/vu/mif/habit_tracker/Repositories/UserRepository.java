@@ -39,11 +39,14 @@ public class UserRepository {
     }
     public void deleteUser() { new DeleteUserTask(userDAO).execute(); }
     public LiveData<User> getUser() { return user; }
-    public Task<AuthResult> loginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
-    public Task<AuthResult> registerUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
     public boolean isLogedIn() { return auth.getCurrentUser() != null; };
     public void disconnectUser() { if(isLogedIn()) auth.signOut(); }
     public String getUID() {if(isLogedIn()) return auth.getCurrentUser().getUid(); return null;}
+
+    //Firebase methods
+    public Task<AuthResult> loginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
+    public Task<AuthResult> registerUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
+    public void uploadUser(User user) {  }
 
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
