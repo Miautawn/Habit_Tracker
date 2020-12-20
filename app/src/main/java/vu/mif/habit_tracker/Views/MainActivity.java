@@ -1,18 +1,29 @@
 package vu.mif.habit_tracker.Views;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.motion.widget.TransitionAdapter;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +46,9 @@ import vu.mif.habit_tracker.components.CircularProgressBar;
 import vu.mif.habit_tracker.components.HabitDialog;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, HabitDialog.HabitDialogListener {
+
+    private final int USER_PICTURE_ACTIVITY = 1;
+    private final int STORAGE_PERMISION_REQUEST = 3;
 
     private ViewGroup hiddenLeaderBoardOverlay;
     private View overlayTrigger;
@@ -157,7 +171,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             else Toast.makeText(this, "An error occurred :(", Toast.LENGTH_SHORT).show();
 
         } else if (view == ivAccountPic) {
-            Toast.makeText(this, "You tried to click image!", Toast.LENGTH_SHORT).show();
+            if(CheckPermision())
+            {
+                pickImage();
+            }
         }
     }
 
@@ -338,4 +355,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+    private boolean CheckPermision()
+    {
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+        {
+            return true;
+        }
+        else
+        {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            {
+                new AlertDialog.Builder(this).setTitle("Permision Needed").setMessage("These permissions are needed in order to set your profile picture").setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISION_REQUEST);
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+                return false;
+            }else
+            {
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISION_REQUEST);
+                return false;
+            }
+
+        }
+
+    }
+
+
+    private void pickImage()
+    {
+        Intent chooseFile = new Intent(Intent.ACTION_PICK);
+        chooseFile.setType("image/png");
+        startActivityForResult(Intent.createChooser(chooseFile, "Choose a file"), USER_PICTURE_ACTIVITY);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == STORAGE_PERMISION_REQUEST)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "PERMISIONS GRANTED", Toast.LENGTH_SHORT).show();
+                pickImage();
+            } else Toast.makeText(this, "PERMISIONS NOT GRANTED", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == USER_PICTURE_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            model.GetAndCopyImage(context, data);
+        }
+    }
+
 }
