@@ -44,21 +44,7 @@ public class UserRepository {
     public boolean isLogedIn() { return auth.getCurrentUser() != null; };
     public void disconnectUser() { if(isLogedIn()) auth.signOut(); }
     public String getUID() {if(isLogedIn()) return auth.getCurrentUser().getUid(); return null;}
-
-
-    private static class CountUsersTask extends AsyncTask<Void, Void, Integer> {
-
-        private userDAO userDAO;
-        private CountUsersTask(userDAO userDAO)
-        {
-            this.userDAO = userDAO;
-        }
-
-        @Override
-        protected Integer doInBackground(Void... notes) {
-            return userDAO.getUserCount();
-        }
-    }
+    
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
     {
