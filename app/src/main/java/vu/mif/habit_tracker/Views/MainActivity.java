@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
@@ -254,8 +255,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         this.user = user;
         tvUsername.setText(this.user.getUsername());
-        //TODO: do all of these user updates
-        //ivAccountPic.setImageResource();
+        if(user.getPictureURL() != null) ivAccountPic.setImageURI(Uri.fromFile(new File(user.getPictureURL())));
+        else ivAccountPic.setImageResource(R.drawable.default_account_pic);
+
     }
 
 
@@ -414,7 +416,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == USER_PICTURE_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            model.GetAndCopyImage(context, data);
+            String destination = model.GetAndCopyImage(context, data);
+            if(destination != null)
+            {
+                System.out.println("Destuination:"+ destination);
+                User newUser = new User(user.getUsername(), user.getCurrency(), destination, user.getUID());
+                newUser.setId(user.getId());
+                model.updateUser(newUser);
+            }
         }
     }
 

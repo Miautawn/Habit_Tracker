@@ -17,6 +17,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -139,17 +140,27 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
 
-    public void GetAndCopyImage(Activity context, Intent data)
+    public String GetAndCopyImage(Activity context, Intent data)
     {
         Uri uri = data.getData();
         File source = new File(getPath(uri, context));
         String filename = source.getName();
 
         File destination_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/");
-        File destination = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/" + "userImage.png");
+        File destination = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/" + filename);
 
-        checkDestination(destination_path, context);
-        copy(source, destination, context);
+        boolean success = true;
+        try
+        {
+            checkDestination(destination_path, context);
+            copy(source, destination, context);
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            success = false;
+        }
+        if(success) return destination.getAbsolutePath();
+        return null;
     }
 
     private String getPath(Uri uri, Activity context) {
@@ -171,9 +182,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
     }
 
-    private void copy(File source, File destination, Activity context){
-        try
-        {
+    private void copy(File source, File destination, Activity context) throws IOException {
             FileChannel in = new FileInputStream(source).getChannel();
             FileChannel out = new FileOutputStream(destination).getChannel();
             in.transferTo(0, in.size(), out);
@@ -181,9 +190,6 @@ public class MainActivityViewModel extends AndroidViewModel {
                 in.close();
             if (out != null)
                 out.close();
-        }catch (Exception e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
     }
 
     private void checkDestination(File destination, Activity context)

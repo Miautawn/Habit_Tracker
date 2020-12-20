@@ -71,7 +71,7 @@ public class LoginActivityViewModel extends AndroidViewModel   {
             {
                 //TODO: implement data download from firebase
                 //jei nera, downloadinti is web
-                repo.insertUser(new User("Downloaded User", 110, "nera", repo.getUID()));
+                repo.insertUser(new User("Downloaded User", 110, null, repo.getUID()));
                 context.startActivity(new Intent(getApplication(), MainActivity.class));
                 context.finish();
             }else
@@ -87,7 +87,7 @@ public class LoginActivityViewModel extends AndroidViewModel   {
                     //Prisijunge naujas
                     //TODO: implement data download from firebase
                     repo.purge();
-                    repo.insertUser(new User("Foreign User", 112, "nera", repo.getUID()));
+                    repo.insertUser(new User("Foreign User", 112, null, repo.getUID()));
                     context.startActivity(new Intent(context, MainActivity.class));
                     context.finish();
                 }
