@@ -417,15 +417,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == USER_PICTURE_ACTIVITY && resultCode == Activity.RESULT_OK) {
-//            String destination = model.GetAndCopyImage(context, data);
-//            if(destination != null)
-//            {
-//                System.out.println("Destuination:"+ destination);
-//                User newUser = new User(user.getUsername(), user.getCurrency(), destination, user.getUID());
-//                newUser.setId(user.getId());
-//                model.updateUser(newUser);
-//            }
-
             String path = model.getPath(data.getData(), context);
             User newUser = new User(user.getUsername(), user.getCurrency(), path, user.getUID());
             newUser.setId(user.getId());
