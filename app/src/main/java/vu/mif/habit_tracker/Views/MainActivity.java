@@ -416,15 +416,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == USER_PICTURE_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            String destination = model.GetAndCopyImage(context, data);
-            if(destination != null)
-            {
-                System.out.println("Destuination:"+ destination);
-                User newUser = new User(user.getUsername(), user.getCurrency(), destination, user.getUID());
-                newUser.setId(user.getId());
-                model.updateUser(newUser);
-            }
+//            String destination = model.GetAndCopyImage(context, data);
+//            if(destination != null)
+//            {
+//                System.out.println("Destuination:"+ destination);
+//                User newUser = new User(user.getUsername(), user.getCurrency(), destination, user.getUID());
+//                newUser.setId(user.getId());
+//                model.updateUser(newUser);
+//            }
+
+            String path = getPath(data.getData(), context);
+            User newUser = new User(user.getUsername(), user.getCurrency(), path, user.getUID());
+            newUser.setId(user.getId());
+            model.updateUser(newUser);
         }
+    }
+
+    private String getPath(Uri uri, Activity context) {
+
+        String path = null;
+        String[] projection = { MediaStore.Files.FileColumns.DATA };
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+
+        if(cursor == null){
+            path = uri.getPath();
+        }
+        else{
+            cursor.moveToFirst();
+            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
+            path = cursor.getString(column_index);
+            cursor.close();
+        }
+
+        return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
     }
 
 }
