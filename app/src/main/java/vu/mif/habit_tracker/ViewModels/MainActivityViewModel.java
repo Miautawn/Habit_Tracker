@@ -140,30 +140,30 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
 
-    public String GetAndCopyImage(Activity context, Intent data)
-    {
-        Uri uri = data.getData();
-        File source = new File(getPath(uri, context));
-        String filename = source.getName();
+//    public String GetAndCopyImage(Activity context, Intent data)
+//    {
+//        Uri uri = data.getData();
+//        File source = new File(getPath(uri, context));
+//        String filename = source.getName();
+//
+//        File destination_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/");
+//        File destination = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/" + filename);
+//
+//        boolean success = true;
+//        try
+//        {
+//            checkDestination(destination_path, context);
+//            copy(source, destination, context);
+//        }catch (Exception e)
+//        {
+//            System.out.println(e.getMessage());
+//            success = false;
+//        }
+//        if(success) return destination.getAbsolutePath();
+//        return null;
+//    }
 
-        File destination_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/");
-        File destination = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/" + filename);
-
-        boolean success = true;
-        try
-        {
-            checkDestination(destination_path, context);
-            copy(source, destination, context);
-        }catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            success = false;
-        }
-        if(success) return destination.getAbsolutePath();
-        return null;
-    }
-
-    private String getPath(Uri uri, Activity context) {
+    public String getPath(Uri uri, Activity context) {
 
         String path = null;
         String[] projection = { MediaStore.Files.FileColumns.DATA };
@@ -182,26 +182,27 @@ public class MainActivityViewModel extends AndroidViewModel {
         return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
     }
 
-    private void copy(File source, File destination, Activity context) throws IOException {
-            FileChannel in = new FileInputStream(source).getChannel();
-            FileChannel out = new FileOutputStream(destination).getChannel();
-            in.transferTo(0, in.size(), out);
-            if (in != null)
-                in.close();
-            if (out != null)
-                out.close();
-    }
+//    private void copy(File source, File destination, Activity context) throws IOException {
+//            FileChannel in = new FileInputStream(source).getChannel();
+//            FileChannel out = new FileOutputStream(destination).getChannel();
+//            in.transferTo(0, in.size(), out);
+//            if (in != null)
+//                in.close();
+//            if (out != null)
+//                out.close();
+//    }
+//
 
-    private void checkDestination(File destination, Activity context)
-    {
-        if(!destination.isDirectory())
-        {
-            if(!destination.mkdirs())
-            {
-                Toast.makeText(context, "Failed to create a directory", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+//    private void checkDestination(File destination, Activity context)
+//    {
+//        if(!destination.isDirectory())
+//        {
+//            if(!destination.mkdirs())
+//            {
+//                Toast.makeText(context, "Failed to create a directory", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
 
 
 }

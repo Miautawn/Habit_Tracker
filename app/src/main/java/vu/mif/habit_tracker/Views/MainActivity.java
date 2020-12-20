@@ -255,7 +255,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         this.user = user;
         tvUsername.setText(this.user.getUsername());
-        if(user.getPictureURL() != null) ivAccountPic.setImageURI(Uri.fromFile(new File(user.getPictureURL())));
+        File userPicture = new File(user.getPictureURL());
+        if(user.getPictureURL() != null && userPicture.exists()) ivAccountPic.setImageURI(Uri.fromFile(userPicture));
         else ivAccountPic.setImageResource(R.drawable.default_account_pic);
 
     }
@@ -425,30 +426,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                model.updateUser(newUser);
 //            }
 
-            String path = getPath(data.getData(), context);
+            String path = model.getPath(data.getData(), context);
             User newUser = new User(user.getUsername(), user.getCurrency(), path, user.getUID());
             newUser.setId(user.getId());
             model.updateUser(newUser);
         }
-    }
-
-    private String getPath(Uri uri, Activity context) {
-
-        String path = null;
-        String[] projection = { MediaStore.Files.FileColumns.DATA };
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-
-        if(cursor == null){
-            path = uri.getPath();
-        }
-        else{
-            cursor.moveToFirst();
-            int column_index = cursor.getColumnIndexOrThrow(projection[0]);
-            path = cursor.getString(column_index);
-            cursor.close();
-        }
-
-        return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
     }
 
 }
