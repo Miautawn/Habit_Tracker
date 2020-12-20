@@ -15,6 +15,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -203,6 +207,19 @@ public class MainActivityViewModel extends AndroidViewModel {
 //            }
 //        }
 //    }
+
+    public void UploadProfilePicture(File image, Activity context)
+    {
+        UploadTask mTask = userRepo.UploadProfilePicture(Uri.fromFile(image));
+
+        mTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(!task.isSuccessful()) Toast.makeText(context, "Could not upload image", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
 }

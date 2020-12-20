@@ -1,6 +1,7 @@
 package vu.mif.habit_tracker.Repositories;
 
 import android.app.Application;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
@@ -8,13 +9,17 @@ import androidx.lifecycle.LiveData;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.concurrent.ExecutionException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import vu.mif.habit_tracker.DAOs.userDAO;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
+
 
 //This repository will be linked to the RegisterActivity and will provide the methods while doing all the work
 public class UserRepository {
@@ -22,6 +27,8 @@ public class UserRepository {
     private LiveData<User> user;
     private FirebaseAuth auth;
     private roomDB database;
+    private FirebaseDatabase fireDB;
+    private FirebaseStorage fireStorage;
 
     public UserRepository(Application application)
     {
@@ -29,6 +36,8 @@ public class UserRepository {
         this.userDAO = database.getUserDAO();
         this.user = userDAO.getUser();
         this.auth = firebaseDB.getAuthInstance();
+        this.fireDB = FirebaseDatabase.getInstance();
+        this.fireStorage = FirebaseStorage.getInstance();
     }
 
     // These methods are the only thing that view model will see and they have such shit structure because they need to be run on a background task
@@ -46,7 +55,18 @@ public class UserRepository {
     //Firebase methods
     public Task<AuthResult> loginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
     public Task<AuthResult> registerUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
-    public void uploadUser(User user) {  }
+    public DatabaseReference uploadUser()
+    {
+        DatabaseReference myRef = fireDB.getReference("/Users");
+        return myRef.child(auth.getCurrentUser().getUid());
+    }
+    public UploadTask UploadProfilePicture(Uri image)
+    {
+        StorageReference storageRef = fireStorage.getReference();
+        StorageReference myRef = storageRef.child("UserImages/"+auth.getCurrentUser().getUid());
+        return myRef.putFile(image);
+    }
+
 
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>

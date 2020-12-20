@@ -412,9 +412,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)
             {
-                Toast.makeText(this, "PERMISIONS GRANTED", Toast.LENGTH_SHORT).show();
                 pickImage();
-            } else Toast.makeText(this, "PERMISIONS NOT GRANTED", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -426,6 +425,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             User newUser = new User(user.getUsername(), user.getCurrency(), path, user.getUID());
             newUser.setId(user.getId());
             model.updateUser(newUser);
+            //Update image to Firebase
+            model.UploadProfilePicture(new File(model.getPath(data.getData(), context)) , context);
         }
     }
 

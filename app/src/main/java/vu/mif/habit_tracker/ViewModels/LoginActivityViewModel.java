@@ -58,11 +58,11 @@ public class LoginActivityViewModel extends AndroidViewModel   {
 
     private void SuccessfulLogin() {
 
-        repo.getUser().observe((LoginActivity)context, this::tesinys);
+        repo.getUser().observe((LoginActivity)context, this::LoginResult);
 
     }
 
-    private void tesinys(User user)
+    private void LoginResult(User user)
     {
         if(!hasCalledCheck)
         {
