@@ -255,10 +255,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         this.user = user;
         tvUsername.setText(this.user.getUsername());
-        File userPicture = new File(user.getPictureURL());
-        if(user.getPictureURL() != null && userPicture.exists()) ivAccountPic.setImageURI(Uri.fromFile(userPicture));
-        else ivAccountPic.setImageResource(R.drawable.default_account_pic);
 
+        if(user.getPictureURL() != null)
+        {
+            File userPicture = new File(user.getPictureURL());
+            if(userPicture.exists())
+            {
+                ivAccountPic.setImageURI(Uri.fromFile(userPicture));
+            }else ivAccountPic.setImageResource(R.drawable.default_account_pic);
+        }else ivAccountPic.setImageResource(R.drawable.default_account_pic);
     }
 
 
