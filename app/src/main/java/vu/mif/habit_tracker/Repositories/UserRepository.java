@@ -1,29 +1,23 @@
 package vu.mif.habit_tracker.Repositories;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import vu.mif.habit_tracker.DAOs.userDAO;
 import vu.mif.habit_tracker.Models.User;
-import vu.mif.habit_tracker.Views.MainActivity;
 import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
 
@@ -62,18 +56,26 @@ public class UserRepository {
     //Firebase methods
     public Task<AuthResult> loginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
     public Task<AuthResult> registerUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
-    public DatabaseReference uploadUser()
-    {
+    public DatabaseReference uploadUser() {
         DatabaseReference myRef = fireDB.getReference("/Users");
         return myRef.child(auth.getCurrentUser().getUid());
     }
-
-    public UploadTask UploadProfilePicture(Uri image)
-    {
+    public UploadTask UploadProfilePicture(Uri image) {
         StorageReference storageRef = fireStorage.getReference();
         StorageReference myRef = storageRef.child("UserImages/"+ auth.getCurrentUser().getUid());
         return myRef.putFile(image);
     }
+    public Query DownloadPotentialFriends(String typed_username) {
+        DatabaseReference myRef = fireDB.getReference("/Users/");
+        return myRef.orderByChild("username").startAt(typed_username).endAt(typed_username+"\uf8ff").limitToFirst(5);
+    }
+    public DatabaseReference UploadNewFriend(String new_UID) {
+        DatabaseReference myRef = fireDB.getReference("/Friends/"+getUID());
+        return myRef.child(new_UID);
+    }
+    public Query DownloadFriends() { DatabaseReference myRef = fireDB.getReference("/Friends/"+getUID());
+        return myRef.orderByKey();}
+
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
     {

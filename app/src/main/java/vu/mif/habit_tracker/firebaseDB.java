@@ -2,8 +2,11 @@ package vu.mif.habit_tracker;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -13,12 +16,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.Views.MainActivity;
 
     public abstract class firebaseDB {
     private static FirebaseAuth auth;
     private static FirebaseDatabase database;
     private static FirebaseStorage storage;
+    public static List<User> Friends = new ArrayList<>();
+    public static boolean areFriendsDownloaded = false;
 
     public static synchronized FirebaseAuth getAuthInstance()
     {
@@ -83,6 +92,14 @@ import vu.mif.habit_tracker.Views.MainActivity;
         }
 
     }
+
+    public static boolean CheckOnlineStatus(Activity context)
+    {
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 
 
 
