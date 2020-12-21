@@ -29,8 +29,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +69,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvUsername;
     private DrawerLayout drawerLayout;
     private AppCompatButton btnLogOut;
+    private RelativeLayout friendListLayout;
     private ImageView ivAccountPic;
+    private EditText friendsSearchEditText;
+    private Button btnSearchFriends;
+    private ListView friendList;
+    private ArrayAdapter<String> FriendAdapter;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -106,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLogOut = findViewById(R.id.btnLogOut);
         ivAccountPic = findViewById(R.id.ivAccountPic);
         tvUsername = findViewById(R.id.tvUsername);
+        friendsSearchEditText = findViewById(R.id.friendsSearch_EditText);
+        btnSearchFriends = findViewById(R.id.btnFriendSearch);
+        friendListLayout = findViewById(R.id.friendListLayout);
+        friendList = findViewById(R.id.friendList);
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -138,6 +153,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        friendList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                model.FriendAdapterClicked(MainActivity.this, position, friendList,FriendAdapter);
+            }
+        });
+
         // TODO: Fix onClick issue
         overlayTrigger.setOnClickListener(this);
         hiddenLeaderBoardOverlay.setOnClickListener(this);
@@ -145,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         moreInfoBtn.setOnClickListener(this);
         btnLogOut.setOnClickListener(this);
         ivAccountPic.setOnClickListener(this);
+        btnSearchFriends.setOnClickListener(this);
     }
 
     @Override
@@ -161,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(MainActivity.this, NewHabitActivity.class);
             startActivity(intent);
         } else if (view == moreInfoBtn){
+            checkFriendListAvailability();
             drawerLayout.openDrawer(GravityCompat.START);
         } else if (view == btnLogOut){
             model.LogOut();
@@ -177,6 +201,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             {
                 pickImage();
             }
+        } else if(view == btnSearchFriends)
+        {
+            model.LookForFriends(this, friendsSearchEditText.getText().toString(), friendList, FriendAdapter);
         }
     }
 
@@ -364,6 +391,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+    private void checkFriendListAvailability()
+    {
+        if(firebaseDB.CheckOnlineStatus(this)) friendListLayout.setVisibility(View.VISIBLE);
+        else friendListLayout.setVisibility(View.INVISIBLE);
+    }
+
 
     private void pickImage()
     {

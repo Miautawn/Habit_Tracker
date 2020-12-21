@@ -1,15 +1,24 @@
 package vu.mif.habit_tracker.ViewModels;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
+import android.app.DownloadManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -17,6 +26,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
@@ -24,11 +38,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.List;
 
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.HabitRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
@@ -38,6 +55,9 @@ public class MainActivityViewModel extends AndroidViewModel {
     private int currentIndex = 0;
     private MutableLiveData<Habit[]> habitCards;
     private Habit[] _habitCards = new Habit[5];
+
+    private List<User> downloaded_users;
+    private List<User> Friends;
 
     private HabitRepository habitRepo;
     private FireBaseRepository fireBaseRepository;
@@ -57,7 +77,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         habits = habitRepo.getAllHabits();
         user = userRepo.getUser();
         fireBaseRepository = new FireBaseRepository(application);
-
+        downloaded_users = new ArrayList<>();
+        Friends = new ArrayList<>();
         //sito nelieciu
         habitCards = new MutableLiveData<>();
     }
@@ -223,6 +244,90 @@ public class MainActivityViewModel extends AndroidViewModel {
         });
     }
 
+    public void LookForFriends(Activity context, String typed_username, ListView friendList, ArrayAdapter<String> adapter)
+    {
+        downloaded_users.clear();
+        if(!typed_username.isEmpty())
+        {
+            Query myQuery = userRepo.DownloadPotentialFriends(typed_username);
+            myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.getChildrenCount() > 0)
+                    {
+                        for(DataSnapshot child : snapshot.getChildren())
+                        {
+                            if(!child.getKey().equals(userRepo.getUID()))
+                            {
+                                User downloaded_friend = child.getValue(User.class);
+                                downloaded_users.add( new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), null , child.getKey()));
+                            }
+                        }
+                    } else downloaded_users.clear();
+                    cleanPossibleFriends(context, adapter, friendList);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    System.out.println(error.getMessage());
+                }
+            });
+        }
+    }
 
+    public void FriendAdapterClicked(Activity context,int position, ListView friendList, ArrayAdapter<String> adapter)
+    {
+        new AlertDialog.Builder(context).setTitle("New Friend").setMessage("Are you sure you want to add\n\"" + downloaded_users.get(position).getUsername() + "\" to friends?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
+                uploadUserToFirebase(downloaded_users.get(position));
+                Friends.add(downloaded_users.get(position));
+                cleanPossibleFriends(context, adapter, friendList);
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).create().show();
+    }
+
+    private void cleanPossibleFriends(Activity context, ArrayAdapter<String> adapter, ListView friendList)
+    {
+        for(int i = 0; i<downloaded_users.size(); i++)
+        {
+            for(int j = 0; j<Friends.size(); j++)
+            {
+                if(downloaded_users.get(i).getUID().equals(Friends.get(j).getUID())) downloaded_users.remove(i);
+            }
+        }
+        updateAdapter(context, adapter, friendList);
+    }
+
+    private void updateAdapter(Activity context, ArrayAdapter<String> adapter, ListView friendList)
+    {
+        List<String> friend_names = new ArrayList<>();
+        for(int i = 0; i<downloaded_users.size(); i++) friend_names.add(downloaded_users.get(i).getUsername());
+        if(adapter == null)
+        {
+            adapter = new ArrayAdapter<String>(context, R.layout.friendlist_item, friend_names);
+            friendList.setAdapter(adapter);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void uploadUserToFirebase(User user)
+    {
+       DatabaseReference myRef = userRepo.UploadNewFriend(user.getUID());
+       myRef.setValue(user, new DatabaseReference.CompletionListener() {
+           @Override
+           public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+               if(error == null)
+               {
+
+               }else System.out.println(error.getMessage());
+           }
+       });
+    }
 }
