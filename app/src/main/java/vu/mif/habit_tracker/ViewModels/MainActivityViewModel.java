@@ -15,6 +15,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,6 +29,7 @@ import java.util.List;
 
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.HabitRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.roomDB;
@@ -35,6 +40,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     private Habit[] _habitCards = new Habit[5];
 
     private HabitRepository habitRepo;
+    private FireBaseRepository fireBaseRepository;
     private LiveData<List<Habit>> habits;
     private UserRepository userRepo;
     private LiveData<User> user;
@@ -50,6 +56,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         userRepo = new UserRepository(application);
         habits = habitRepo.getAllHabits();
         user = userRepo.getUser();
+        fireBaseRepository = new FireBaseRepository(application);
 
         //sito nelieciu
         habitCards = new MutableLiveData<>();
@@ -203,6 +210,19 @@ public class MainActivityViewModel extends AndroidViewModel {
 //            }
 //        }
 //    }
+
+    public void UploadProfilePicture(File image, Activity context)
+    {
+        UploadTask mTask = userRepo.UploadProfilePicture(Uri.fromFile(image));
+
+        mTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(!task.isSuccessful()) Toast.makeText(context, "Could not upload image", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
 }

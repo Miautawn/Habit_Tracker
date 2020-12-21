@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.LoginActivity;
 import vu.mif.habit_tracker.Views.MainActivity;
@@ -24,13 +25,15 @@ import vu.mif.habit_tracker.Views.MainActivity;
 
 
 public class LoginActivityViewModel extends AndroidViewModel   {
-    private UserRepository repo;
+    private UserRepository userRepository;
+    private FireBaseRepository fireBaseRepository;
     private boolean hasCalledCheck = false;
     private Activity context;
 
     public LoginActivityViewModel(@NonNull Application application) {
         super(application);
-        repo = new UserRepository(application);
+        userRepository = new UserRepository(application);
+        fireBaseRepository = new FireBaseRepository(application);
     }
 
     public void logInUser(String email, String password, Activity context)
@@ -38,7 +41,7 @@ public class LoginActivityViewModel extends AndroidViewModel   {
         this.context = context;
         if(!email.isEmpty() && !password.isEmpty())
         {
-            repo.loginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+            userRepository.loginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
@@ -58,11 +61,11 @@ public class LoginActivityViewModel extends AndroidViewModel   {
 
     private void SuccessfulLogin() {
 
-        repo.getUser().observe((LoginActivity)context, this::tesinys);
+        userRepository.getUser().observe((LoginActivity)context, this::LoginResult);
 
     }
 
-    private void tesinys(User user)
+    private void LoginResult(User user)
     {
         if(!hasCalledCheck)
         {
@@ -71,13 +74,11 @@ public class LoginActivityViewModel extends AndroidViewModel   {
             {
                 //TODO: implement data download from firebase
                 //jei nera, downloadinti is web
-                repo.insertUser(new User("Downloaded User", 110, null, repo.getUID()));
-                context.startActivity(new Intent(getApplication(), MainActivity.class));
-                context.finish();
+               fireBaseRepository.downloadAllData(context);
             }else
             {
                 //tikrinam ar naujas useris ar tas kuris yra lokaliai
-                if(user.getUID().equals(repo.getUID()))
+                if(user.getUID().equals(userRepository.getUID()))
                 {
                     //Prisijunge senas useris
                     context.startActivity(new Intent(context, MainActivity.class));
@@ -86,10 +87,8 @@ public class LoginActivityViewModel extends AndroidViewModel   {
                 {
                     //Prisijunge naujas
                     //TODO: implement data download from firebase
-                    repo.purge();
-                    repo.insertUser(new User("Foreign User", 112, null, repo.getUID()));
-                    context.startActivity(new Intent(context, MainActivity.class));
-                    context.finish();
+                    userRepository.purge();
+                    fireBaseRepository.downloadAllData(context);
                 }
             }
 

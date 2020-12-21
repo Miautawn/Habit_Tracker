@@ -1,16 +1,19 @@
 package vu.mif.habit_tracker.Views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.ViewModels.SplashScreenViewModel;
+import vu.mif.habit_tracker.firebaseDB;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -53,9 +56,10 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
     private void LogIn()
     {
-        startActivity(new Intent(SplashScreenActivity.this,
-                LoginActivity.class));
-        finish();
+            startActivity(new Intent(SplashScreenActivity.this,
+                    LoginActivity.class));
+            finish();
     }
+
 
 }

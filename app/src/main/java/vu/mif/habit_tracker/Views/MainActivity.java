@@ -45,6 +45,7 @@ import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.components.CircularProgressBar;
 import vu.mif.habit_tracker.components.HabitDialog;
+import vu.mif.habit_tracker.firebaseDB;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, HabitDialog.HabitDialogListener {
 
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             else Toast.makeText(this, "An error occurred :(", Toast.LENGTH_SHORT).show();
 
         } else if (view == ivAccountPic) {
-            if(CheckPermision())
+            if(firebaseDB.CheckPermission(this, STORAGE_PERMISION_REQUEST))
             {
                 pickImage();
             }
@@ -364,40 +365,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean CheckPermision()
-    {
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-        {
-            return true;
-        }
-        else
-        {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            {
-                new AlertDialog.Builder(this).setTitle("Permision Needed").setMessage("These permissions are needed in order to set your profile picture").setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISION_REQUEST);
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create().show();
-                return false;
-            }else
-            {
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISION_REQUEST);
-                return false;
-            }
-
-        }
-
-    }
-
-
     private void pickImage()
     {
         Intent chooseFile = new Intent(Intent.ACTION_PICK);
@@ -412,9 +379,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)
             {
-                Toast.makeText(this, "PERMISIONS GRANTED", Toast.LENGTH_SHORT).show();
                 pickImage();
-            } else Toast.makeText(this, "PERMISIONS NOT GRANTED", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -426,6 +392,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             User newUser = new User(user.getUsername(), user.getCurrency(), path, user.getUID());
             newUser.setId(user.getId());
             model.updateUser(newUser);
+            //Update image to Firebase
+            model.UploadProfilePicture(new File(model.getPath(data.getData(), context)) , context);
         }
     }
 
