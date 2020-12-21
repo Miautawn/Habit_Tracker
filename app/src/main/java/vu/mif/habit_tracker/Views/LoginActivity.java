@@ -1,23 +1,29 @@
 package vu.mif.habit_tracker.Views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.LoginActivityViewModel;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
 import vu.mif.habit_tracker.Views.MainActivity;
+import  vu.mif.habit_tracker.firebaseDB;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private int STORAGE_PERMISION_CODE = 15;
 
     AppCompatButton emailBtn;
     TextView loginTextRedirect;
@@ -61,7 +67,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }else if(view == btnLogIn)
         {
-            viewmodel.logInUser(email.getText().toString(), password.getText().toString(), this);
+            if(firebaseDB.CheckPermission(this, STORAGE_PERMISION_CODE))
+            {
+                viewmodel.logInUser(email.getText().toString(), password.getText().toString(), this);
+            }
         } else if (view == btnSignIn) {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);

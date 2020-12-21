@@ -1,13 +1,17 @@
 package vu.mif.habit_tracker.ViewModels;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Contacts;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -71,7 +75,13 @@ public class RegisterActivityViewModel extends AndroidViewModel {
                     context.finish();
                 }else
                 {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                    new AlertDialog.Builder(context).setTitle("Something went wrong").setMessage("There has been an error when uploading your data in Firestore, but you can  still procced to use this app freely").setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            context.startActivity(new Intent(context, MainActivity.class));
+                            context.finish();
+                        }
+                    }).create().show();
                 }
             }
         });

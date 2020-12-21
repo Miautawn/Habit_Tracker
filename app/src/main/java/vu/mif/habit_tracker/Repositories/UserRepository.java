@@ -1,22 +1,29 @@
 package vu.mif.habit_tracker.Repositories;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import vu.mif.habit_tracker.DAOs.userDAO;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.Views.MainActivity;
 import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
 
@@ -36,8 +43,8 @@ public class UserRepository {
         this.userDAO = database.getUserDAO();
         this.user = userDAO.getUser();
         this.auth = firebaseDB.getAuthInstance();
-        this.fireDB = FirebaseDatabase.getInstance();
-        this.fireStorage = FirebaseStorage.getInstance();
+        this.fireStorage = firebaseDB.getStorageInstance();
+        this.fireDB = firebaseDB.getDatabaseInstance();
     }
 
     // These methods are the only thing that view model will see and they have such shit structure because they need to be run on a background task
@@ -60,14 +67,13 @@ public class UserRepository {
         DatabaseReference myRef = fireDB.getReference("/Users");
         return myRef.child(auth.getCurrentUser().getUid());
     }
+
     public UploadTask UploadProfilePicture(Uri image)
     {
         StorageReference storageRef = fireStorage.getReference();
-        StorageReference myRef = storageRef.child("UserImages/"+auth.getCurrentUser().getUid());
+        StorageReference myRef = storageRef.child("UserImages/"+ auth.getCurrentUser().getUid());
         return myRef.putFile(image);
     }
-
-
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>
     {

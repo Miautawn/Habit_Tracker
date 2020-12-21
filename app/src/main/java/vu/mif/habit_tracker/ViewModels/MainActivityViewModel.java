@@ -29,6 +29,7 @@ import java.util.List;
 
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.HabitRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.roomDB;
@@ -39,6 +40,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     private Habit[] _habitCards = new Habit[5];
 
     private HabitRepository habitRepo;
+    private FireBaseRepository fireBaseRepository;
     private LiveData<List<Habit>> habits;
     private UserRepository userRepo;
     private LiveData<User> user;
@@ -54,6 +56,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         userRepo = new UserRepository(application);
         habits = habitRepo.getAllHabits();
         user = userRepo.getUser();
+        fireBaseRepository = new FireBaseRepository(application);
 
         //sito nelieciu
         habitCards = new MutableLiveData<>();
