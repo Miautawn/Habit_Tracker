@@ -49,6 +49,7 @@ import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.HabitRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
+import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
 
 public class MainActivityViewModel extends AndroidViewModel {
@@ -57,7 +58,6 @@ public class MainActivityViewModel extends AndroidViewModel {
     private Habit[] _habitCards = new Habit[5];
 
     private List<User> downloaded_users;
-    private List<User> Friends;
 
     private HabitRepository habitRepo;
     private FireBaseRepository fireBaseRepository;
@@ -78,7 +78,6 @@ public class MainActivityViewModel extends AndroidViewModel {
         user = userRepo.getUser();
         fireBaseRepository = new FireBaseRepository(application);
         downloaded_users = new ArrayList<>();
-        Friends = new ArrayList<>();
         //sito nelieciu
         habitCards = new MutableLiveData<>();
     }
@@ -249,29 +248,57 @@ public class MainActivityViewModel extends AndroidViewModel {
         downloaded_users.clear();
         if(!typed_username.isEmpty())
         {
-            Query myQuery = userRepo.DownloadPotentialFriends(typed_username);
-            myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.getChildrenCount() > 0)
-                    {
-                        for(DataSnapshot child : snapshot.getChildren())
+            //download olf friends, if not yet downloaded
+            if(!firebaseDB.areFriendsDownloaded)
+            {
+                Query myQuery = userRepo.DownloadFriends();
+                myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.getChildrenCount() > 0)
                         {
-                            if(!child.getKey().equals(userRepo.getUID()))
+                            for(DataSnapshot child : snapshot.getChildren())
                             {
                                 User downloaded_friend = child.getValue(User.class);
-                                downloaded_users.add( new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), null , child.getKey()));
+                                firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), null, child.getKey()));
                             }
+                            firebaseDB.areFriendsDownloaded = true;
                         }
-                    } else downloaded_users.clear();
-                    cleanPossibleFriends(context, adapter, friendList);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    System.out.println(error.getMessage());
-                }
-            });
+                        DownloadNewFriends(context, typed_username, friendList, adapter);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        System.out.println(error.getMessage());
+                    }
+                });
+            } else DownloadNewFriends(context, typed_username, friendList, adapter);
         }
+    }
+
+    private void DownloadNewFriends(Activity context, String typed_username, ListView friendList, ArrayAdapter<String> adapter)
+    {
+        Query myQuery = userRepo.DownloadPotentialFriends(typed_username);
+        myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getChildrenCount() > 0)
+                {
+                    for(DataSnapshot child : snapshot.getChildren())
+                    {
+                        if(!child.getKey().equals(userRepo.getUID()))
+                        {
+                            User downloaded_possible_friend = child.getValue(User.class);
+                            downloaded_users.add( new User(downloaded_possible_friend.getUsername(), downloaded_possible_friend.getCurrency(), null , child.getKey()));
+                        }
+                    }
+                } else downloaded_users.clear();
+                cleanPossibleFriends(context, adapter, friendList);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println(error.getMessage());
+            }
+        });
     }
 
     public void FriendAdapterClicked(Activity context,int position, ListView friendList, ArrayAdapter<String> adapter)
@@ -282,7 +309,7 @@ public class MainActivityViewModel extends AndroidViewModel {
             public void onClick(DialogInterface dialog, int which) {
 
                 uploadUserToFirebase(downloaded_users.get(position));
-                Friends.add(downloaded_users.get(position));
+                firebaseDB.Friends.add(downloaded_users.get(position));
                 cleanPossibleFriends(context, adapter, friendList);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -295,11 +322,14 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     private void cleanPossibleFriends(Activity context, ArrayAdapter<String> adapter, ListView friendList)
     {
-        for(int i = 0; i<downloaded_users.size(); i++)
+        if(downloaded_users.size() != 0 && firebaseDB.Friends.size() != 0)
         {
-            for(int j = 0; j<Friends.size(); j++)
+            for(int i = 0; i<downloaded_users.size(); i++)
             {
-                if(downloaded_users.get(i).getUID().equals(Friends.get(j).getUID())) downloaded_users.remove(i);
+                for(int j = 0; j< firebaseDB.Friends.size(); j++)
+                {
+                    if(downloaded_users.get(i).getUID().equals(firebaseDB.Friends.get(j).getUID())) downloaded_users.remove(i);
+                }
             }
         }
         updateAdapter(context, adapter, friendList);

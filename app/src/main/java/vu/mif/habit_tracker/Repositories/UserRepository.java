@@ -69,11 +69,12 @@ public class UserRepository {
         DatabaseReference myRef = fireDB.getReference("/Users/");
         return myRef.orderByChild("username").startAt(typed_username).endAt(typed_username+"\uf8ff").limitToFirst(5);
     }
-    public DatabaseReference UploadNewFriend(String new_UID)
-    {
+    public DatabaseReference UploadNewFriend(String new_UID) {
         DatabaseReference myRef = fireDB.getReference("/Friends/"+getUID());
         return myRef.child(new_UID);
     }
+    public Query DownloadFriends() { DatabaseReference myRef = fireDB.getReference("/Friends/"+getUID());
+        return myRef.orderByKey();}
 
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>

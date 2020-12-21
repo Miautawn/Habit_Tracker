@@ -16,12 +16,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.Views.MainActivity;
 
     public abstract class firebaseDB {
     private static FirebaseAuth auth;
     private static FirebaseDatabase database;
     private static FirebaseStorage storage;
+    public static List<User> Friends = new ArrayList<>();
+    public static boolean areFriendsDownloaded = false;
 
     public static synchronized FirebaseAuth getAuthInstance()
     {
