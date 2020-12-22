@@ -324,11 +324,16 @@ public class MainActivityViewModel extends AndroidViewModel {
     {
         if(downloaded_users.size() != 0 && firebaseDB.Friends.size() != 0)
         {
-            for(int i = 0; i<downloaded_users.size(); i++)
+            int size = downloaded_users.size();
+            for(int i = 0; i<size; i++)
             {
                 for(int j = 0; j< firebaseDB.Friends.size(); j++)
                 {
-                    if(downloaded_users.get(i).getUID().equals(firebaseDB.Friends.get(j).getUID())) downloaded_users.remove(i);
+                    if(downloaded_users.get(0).getUID().equals(firebaseDB.Friends.get(j).getUID()))
+                    {
+                        downloaded_users.remove(0);
+                        break;
+                    }
                 }
             }
         }
@@ -359,5 +364,29 @@ public class MainActivityViewModel extends AndroidViewModel {
                }else System.out.println(error.getMessage());
            }
        });
+    }
+
+    public void downloadFriends()
+    {
+        Query myQuery = userRepo.DownloadFriends();
+        myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getChildrenCount() > 0)
+                {
+                    firebaseDB.Friends.clear();
+                    for(DataSnapshot child : snapshot.getChildren())
+                    {
+                        User downloaded_friend = child.getValue(User.class);
+                        firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), null, child.getKey()));
+                    }
+                    firebaseDB.areFriendsDownloaded = true;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println(error.getMessage());
+            }
+        });
     }
 }

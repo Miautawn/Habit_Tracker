@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnSearchFriends;
     private ListView friendList;
     private ArrayAdapter<String> FriendAdapter;
+    private ListView leaderBoard;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSearchFriends = findViewById(R.id.btnFriendSearch);
         friendListLayout = findViewById(R.id.friendListLayout);
         friendList = findViewById(R.id.friendList);
+        leaderBoard = findViewById(R.id.leaderBoard);
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == overlayTrigger) {
             if(!isPanelShown()) {
                 slideUpDown(hiddenLeaderBoardOverlay);
+                updateLeaderBoard();
             }
         } else if(view == hiddenLeaderBoardOverlay) {
             if(isPanelShown()) {
@@ -389,6 +392,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
+    private void updateLeaderBoard()
+    {
+        if(firebaseDB.CheckOnlineStatus(context))
+        {
+            model.downloadFriends();
         }
     }
 
