@@ -62,7 +62,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
 
     private void InsertAndUpload(String username, String UID, Activity context)
     {
-        User newUser = new User(username, 0, null, UID);
+        User newUser = new User(username, 0, 0, null, UID);
         repo.insertUser(newUser);
         DatabaseReference ref = repo.uploadUser();
         ref.setValue(newUser, new DatabaseReference.CompletionListener() {

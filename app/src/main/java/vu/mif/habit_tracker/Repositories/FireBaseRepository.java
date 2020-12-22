@@ -72,7 +72,7 @@ public class FireBaseRepository {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User downloadedUser = snapshot.getValue(User.class);
-                userRepository.insertUser(new User(downloadedUser.getUsername(), downloadedUser.getCurrency(), imagePath, userRepository.getUID()));
+                userRepository.insertUser(new User(downloadedUser.getUsername(), downloadedUser.getCurrency(), downloadedUser.getPoints(), imagePath, userRepository.getUID()));
                 //TODO: continue to download habits and pet data
                 login_context.startActivity(new Intent(login_context, MainActivity.class));
                 login_context.finish();
