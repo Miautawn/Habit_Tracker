@@ -18,6 +18,7 @@ public class User {
 
     private String username;
     private int currency;
+    private int points;
     private String pictureURL;
     private String UID;
 
@@ -25,9 +26,10 @@ public class User {
     @Ignore
     public User(){}
 
-    public User(String username, int currency, String pictureURL, String UID) {
+    public User(String username, int currency, int points, String pictureURL, String UID) {
         this.username = username;
         this.currency = currency;
+        this.points = points;
         this.pictureURL = pictureURL;
         this.UID = UID;
     }
@@ -46,6 +48,8 @@ public class User {
     public int getCurrency() {
         return currency;
     }
+
+    public int getPoints() { return points; }
 
     @Exclude
     public String getPictureURL() {

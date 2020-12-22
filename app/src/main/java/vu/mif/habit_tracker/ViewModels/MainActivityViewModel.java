@@ -262,7 +262,7 @@ public class MainActivityViewModel extends AndroidViewModel {
                             for(DataSnapshot child : snapshot.getChildren())
                             {
                                 User downloaded_friend = child.getValue(User.class);
-                                firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), null, child.getKey()));
+                                firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), downloaded_friend.getPoints(),null, child.getKey()));
                             }
                             firebaseDB.areFriendsDownloaded = true;
                         }
@@ -290,7 +290,7 @@ public class MainActivityViewModel extends AndroidViewModel {
                         if(!child.getKey().equals(userRepo.getUID()))
                         {
                             User downloaded_possible_friend = child.getValue(User.class);
-                            downloaded_users.add( new User(downloaded_possible_friend.getUsername(), downloaded_possible_friend.getCurrency(), null , child.getKey()));
+                            downloaded_users.add( new User(downloaded_possible_friend.getUsername(), downloaded_possible_friend.getCurrency(), downloaded_possible_friend.getPoints(),null , child.getKey()));
                         }
                     }
                 } else downloaded_users.clear();
