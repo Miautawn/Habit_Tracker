@@ -5,29 +5,39 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
+import vu.mif.habit_tracker.Fragments.DatePickerFragment;
 import vu.mif.habit_tracker.Fragments.iconPicker;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.CustomHabitViewModel;
 
-public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener, iconPicker.iconPickerListener {
+public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener, iconPicker.iconPickerListener, DatePickerDialog.OnDateSetListener {
 
     // Color picker
     int[] colors;
@@ -40,18 +50,28 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     ImageButton colorPickerBtn;
     ImageButton iconPickerBtn;
     iconPicker pickerDialog;
+    private EditText etDays;
+    private EditText etTotal;
+    private TextView tvDate;
 
     CustomHabitActivity context;
 
-    // TODO: Update fields when UI will be updated
+    private LinearLayout containerRepeatableOn;
+    private LinearLayout containerRepeatableOff;
+    private LinearLayout containerDate;
+
     private String name;
     private String iconID;
     private int colourID;
-    private boolean isRepeatable = true;
-    private int repeatNumber = 0;
-    private String endDate = "";
+    private boolean isRepeatable = false;
+    private int repeatNumber = 1;
+    private int endYear = 0;
+    private int endMonth = 0;
+    private int endDayOfMonth = 0;
     private int totalProgress = 1;
     private int currentProgress = 0;
+
+    private boolean useDate = false;
 
 
     //Cia tas naudojamas listas
@@ -67,6 +87,16 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         toolbar.setNavigationIcon(R.drawable.ic_navigate_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+
+        containerRepeatableOn = findViewById(R.id.containerRepeatableOn);
+        containerRepeatableOff = findViewById(R.id.containerRepeatableOff);
+        containerDate = findViewById(R.id.containerDate);
+
+        etDays = findViewById(R.id.etDays);
+        etTotal = findViewById(R.id.etTotal);
+
+        tvDate = findViewById(R.id.tvDate);
+        tvDate.setOnClickListener(this);
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
@@ -111,11 +141,67 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         if (view == submitCustomHabitBtn) {
+
             name = customHabitName.getText().toString();
 
+            if (name.equals("")) {
+                sendShortText("Please fill in name field.");
+                return;
+            }
 
-            Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endDate,
-                    totalProgress, currentProgress);
+            String totalAmount = etTotal.getText().toString();
+
+            if (totalAmount.equals("") || Integer.parseInt(totalAmount) <= 0){
+                sendShortText("Goal must be higher than 0!");
+                return;
+            }
+
+            String numberOfDays = etDays.getText().toString();
+
+            if (isRepeatable) {
+                if (!numberOfDays.equals("")){
+                    if (Integer.parseInt(numberOfDays) <= 0){
+                        sendShortText("Days must be higher than 0!");
+                        return;
+                    }
+                    repeatNumber = Integer.parseInt(numberOfDays);
+
+                    Calendar dateNow = Calendar.getInstance();
+                    dateNow.add(Calendar.DATE, repeatNumber);
+
+                    endYear = dateNow.get(Calendar.YEAR);
+                    endMonth = dateNow.get(Calendar.MONTH);
+                    endDayOfMonth = dateNow.get(Calendar.DAY_OF_MONTH);
+                } else {
+                    Calendar dateNow = Calendar.getInstance();
+                    dateNow.add(Calendar.DATE, repeatNumber);
+
+                    endYear = dateNow.get(Calendar.YEAR);
+                    endMonth = dateNow.get(Calendar.MONTH);
+                    endDayOfMonth = dateNow.get(Calendar.DAY_OF_MONTH);
+                }
+            } else if (useDate) {
+                Calendar habitDate = Calendar.getInstance();
+                habitDate.set(Calendar.YEAR, endYear);
+                habitDate.set(Calendar.MONTH, endMonth);
+                habitDate.set(Calendar.DAY_OF_MONTH, endDayOfMonth);
+
+                Calendar dateNow = Calendar.getInstance();
+
+                if (habitDate.get(Calendar.YEAR) == dateNow.get(Calendar.YEAR) &&
+                        habitDate.get(Calendar.DAY_OF_YEAR) == dateNow.get(Calendar.DAY_OF_YEAR)){
+                    sendShortText("Date must be after this day!");
+                    return;
+                } else if (dateNow.after(habitDate)){
+                        sendShortText("Date must be after this day!");
+                        return;
+                }
+            }
+
+            totalProgress = Integer.parseInt(totalAmount);
+
+            Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endYear,
+                    endMonth, endDayOfMonth, totalProgress, currentProgress);
 
             viewModel.insertHabit(habit);
 
@@ -145,11 +231,57 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
                     }
                 }).show();
-        }else if (view == iconPickerBtn)
+        } else if (view == iconPickerBtn)
         {
             pickerDialog = new iconPicker();
             pickerDialog.items = pictureID;
             pickerDialog.show(getSupportFragmentManager(), "icon picker");
+        } else if (view == tvDate) {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getSupportFragmentManager(), "date picker");
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        String currentDateString = DateFormat.getDateInstance().format(calendar.getTime());
+
+        endYear = year;
+        endMonth = month;
+        endDayOfMonth = dayOfMonth;
+
+        tvDate.setText(currentDateString);
+    }
+
+    private void sendShortText(String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void onRepeatableRBClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.repeatableOn:
+                if (checked) {
+                    isRepeatable = true;
+                    containerRepeatableOff.setVisibility(View.GONE);
+                    containerRepeatableOn.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.repeatableOff:
+                if (checked) {
+                    isRepeatable = false;
+                    containerRepeatableOn.setVisibility(View.GONE);
+                    containerRepeatableOff.setVisibility(View.VISIBLE);
+                }
+                break;
         }
     }
 
@@ -161,18 +293,15 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         switch(view.getId()) {
             case R.id.dailyBtn:
                 if (checked)
-                    isRepeatable = true;
-                    repeatNumber = -1;
+                    repeatNumber = 1;
                     break;
             case R.id.weeklyBtn:
                 if (checked)
-                    isRepeatable = true;
-                    repeatNumber = -2;
+                    repeatNumber = 7;
                     break;
             case R.id.monthlyBtn:
                 if(checked)
-                    isRepeatable = true;
-                    repeatNumber = -3;
+                    repeatNumber = 30;
                     break;
         }
 
@@ -185,35 +314,18 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         // Check which radio button was clicked
         switch(view.getId()) {
             case R.id.endDateOn:
-                if (checked)
-
+                if (checked){
+                    containerDate.setVisibility(View.VISIBLE);
+                    useDate = true;
+                }
                 break;
             case R.id.endDateOff:
-                if (checked)
-
+                if (checked){
+                    containerDate.setVisibility(View.GONE);
+                    useDate = false;
+                }
                 break;
         }
-    }
-
-    public void onSetGoalRBClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.endGoalOn:
-                if (checked)
-
-                    break;
-            case R.id.endGoalOff:
-                if (checked)
-
-                    break;
-        }
-    }
-
-    private void setColor(@ColorInt int color) {
-        Toast.makeText(this, "Changed color", Toast.LENGTH_SHORT);
     }
 
     @Override

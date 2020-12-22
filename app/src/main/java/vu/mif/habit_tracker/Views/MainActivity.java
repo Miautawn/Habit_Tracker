@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvCurrentHabitPercentage;
     private TextView tvCurrentHabitInfo;
     private TextView tvUsername;
+    private TextView tvCoins;
     private DrawerLayout drawerLayout;
     private AppCompatButton btnLogOut;
     private RelativeLayout friendListLayout;
@@ -82,8 +83,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainActivity context;
     private MotionLayout motionLayout;
     private MainActivityViewModel model;
+    private HabitDialog habitDialog;
 
     private boolean leaderBoardOpen;
+    private boolean cardsPopulated = false;
 
     private float startX;
     private float startY;
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLogOut = findViewById(R.id.btnLogOut);
         ivAccountPic = findViewById(R.id.ivAccountPic);
         tvUsername = findViewById(R.id.tvUsername);
+        tvCoins = findViewById(R.id.tvCoins);
         friendsSearchEditText = findViewById(R.id.friendsSearch_EditText);
         btnSearchFriends = findViewById(R.id.btnFriendSearch);
         friendListLayout = findViewById(R.id.friendListLayout);
@@ -223,8 +227,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void applyChanges(int id, int currentProgress) {
         for (Habit habit: habits) {
             if (habit.getId() == id){
-                habit.setCurrentProgress(currentProgress);
-                model.updateHabit(habit);
+                if (!habit.isRepeatble()){
+                    if (currentProgress >= habit.getTotalProgress()) {
+                        user.addCurrency(10);
+                        user.addPoints(10);
+                        model.updateUser(user);
+                        model.deleteHabit(habit);
+                        habitDialog.dismiss();
+                    } else {
+                        habit.setCurrentProgress(currentProgress);
+                        model.updateHabit(habit);
+                    }
+                } else {
+                    if (currentProgress >= habit.getTotalProgress()) {
+                        user.addCurrency(10);
+                        user.addPoints(10);
+                        model.updateUser(user);
+                        habit.setCurrentProgress(currentProgress);
+                        model.updateHabit(habit);
+                        habitDialog.dismiss();
+                    } else {
+                        habit.setCurrentProgress(currentProgress);
+                        model.updateHabit(habit);
+                    }
+                }
             }
         }
     }
@@ -269,10 +295,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void openDialog() {
-        HabitDialog habitDialog = new HabitDialog();
+        habitDialog = new HabitDialog();
         Bundle args = new Bundle();
         for (Habit habit: habits) {
             if(habit.getId() == currentHabitId) {
+                if (habit.getCurrentProgress() >= habit.getTotalProgress()){
+                    return;
+                }
                 args.putInt("id", currentHabitId);
                 args.putInt("total_progress", habit.getTotalProgress());
                 args.putInt("current_progress", habit.getCurrentProgress());
@@ -284,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean doClickTransition(){
         boolean isClickHandled = false;
-        if (motionLayout.getProgress() < 0.05F) {
+        if (motionLayout.getProgress() < 0.05F && cardsPopulated) {
             openDialog();
             isClickHandled = true;
         }
@@ -297,6 +326,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         model.myUser = user;
         tvUsername.setText(this.user.getUsername());
 
+        tvCoins.setText(String.valueOf(this.user.getCurrency()));
+
         if(user.getPictureURL() != null)
         {
             File userPicture = new File(user.getPictureURL());
@@ -307,9 +338,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else ivAccountPic.setImageResource(R.drawable.default_account_pic);
     }
 
+    private void resetCards(){
+        progressBarLeftTwo.setProgress(0f);
+        progressBarLeftOne.setProgress(0f);
+        progressBarCenter.setProgress(0f);
+        progressBarRightOne.setProgress(0f);
+        progressBarRightTwo.setProgress(0f);
+        progressBarLeftTwo.setImage(null);
+        progressBarLeftOne.setImage(null);
+        progressBarCenter.setImage(null);
+        progressBarRightOne.setImage(null);
+        progressBarRightTwo.setImage(null);
+        currentHabitName.setText("");
+        tvCurrentHabitPercentage.setText("Create new habit");
+        tvCurrentHabitInfo.setText("");
+        cardsPopulated = false;
+    }
 
     private void updateCards(Habit[] _habits) {
-        if (_habits[2] == null) return;
+        if (habits.isEmpty()){
+            resetCards();
+            return;
+        }
+        if (_habits[2] == null) {
+            cardsPopulated = false;
+            return;
+        }
         Habit leftTwoHabit = _habits[0];
         progressBarLeftTwo.setProgressBarColor(leftTwoHabit.getColourID());
         progressBarLeftTwo.setImage(ResourcesCompat.getDrawable(getResources(),
@@ -335,8 +389,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int currentPercentage = (centerHabit.getCurrentProgress() * 100 / centerHabit.getTotalProgress());
         tvCurrentHabitPercentage.setText(String.format(Locale.ENGLISH, "%d%%",
                 currentPercentage));
-        tvCurrentHabitInfo.setText(String.format(Locale.ENGLISH, "%d / %d %s",
-                centerHabit.getCurrentProgress(), centerHabit.getTotalProgress(), "pages"));
+        tvCurrentHabitInfo.setText(String.format(Locale.ENGLISH, "%d / %d",
+                centerHabit.getCurrentProgress(), centerHabit.getTotalProgress()));
         progressBarCenter.setProgress(currentPercentage);
 
         Habit rightOneHabit = _habits[3];
@@ -352,6 +406,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getResId(rightTwoHabit.getIconID(), R.drawable.class), null));
         int rightTwoPercentage = (rightTwoHabit.getCurrentProgress() * 100 / rightTwoHabit.getTotalProgress());
         progressBarRightTwo.setProgress(rightTwoPercentage);
+
+        cardsPopulated = true;
     }
 
     public int getResId(String resName, Class<?> c) {

@@ -200,12 +200,12 @@
                         android:id="@+id/coinImg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/coins"
+                        android:layout_toStartOf="@+id/tvCoins"
                         android:src="@drawable/coin"
                         android:layout_centerVertical="true"/>
 
                     <TextView
-                        android:id="@+id/coins"
+                        android:id="@+id/tvCoins"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"

@@ -49,6 +49,14 @@ public class User {
         return currency;
     }
 
+    public void addCurrency(int currency) {
+        this.currency += currency;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
     public int getPoints() { return points; }
 
     @Exclude

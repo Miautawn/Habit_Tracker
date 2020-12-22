@@ -29,7 +29,7 @@ public class iconPicker extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         context = getActivity();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogTheme_transparent);
         LayoutInflater inflater = context.getLayoutInflater();
 
         View mView = inflater.inflate(R.layout.icon_picker_dialog, null);
