@@ -51,7 +51,9 @@ public class LeaderBoardAdapter extends BaseAdapter {
         else mView = (View)convertView;
         ImageView userProfile = mView.findViewById(R.id.leaderboard_userImage);
         TextView userName = mView.findViewById(R.id.leaderboard_userName);
+        userName.setText(friends.get(position).getUsername());
         TextView userScore = mView.findViewById(R.id.leaderboard_userScore);
+        userScore.setText(String.valueOf(friends.get(position).getCurrency()));
         //if(user has no image dsadfa)
         return mView;
     }

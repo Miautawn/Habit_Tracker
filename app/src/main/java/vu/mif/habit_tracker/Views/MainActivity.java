@@ -45,6 +45,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
+import vu.mif.habit_tracker.Adapters.LeaderBoardAdapter;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ListView friendList;
     private ArrayAdapter<String> FriendAdapter;
     private ListView leaderBoard;
+    private LeaderBoardAdapter leaderBoardAdapter;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -399,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if(firebaseDB.CheckOnlineStatus(context))
         {
-            model.downloadFriends();
+            model.downloadFriends(this, leaderBoard, leaderBoardAdapter);
         }
     }
 

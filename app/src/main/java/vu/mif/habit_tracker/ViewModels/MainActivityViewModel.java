@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -43,6 +44,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import vu.mif.habit_tracker.Adapters.LeaderBoardAdapter;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
@@ -337,10 +339,10 @@ public class MainActivityViewModel extends AndroidViewModel {
                 }
             }
         }
-        updateAdapter(context, adapter, friendList);
+        updateFriend_search(context, adapter, friendList);
     }
 
-    private void updateAdapter(Activity context, ArrayAdapter<String> adapter, ListView friendList)
+    private void updateFriend_search(Activity context, ArrayAdapter<String> adapter, ListView friendList)
     {
         List<String> friend_names = new ArrayList<>();
         for(int i = 0; i<downloaded_users.size(); i++) friend_names.add(downloaded_users.get(i).getUsername());
@@ -366,7 +368,7 @@ public class MainActivityViewModel extends AndroidViewModel {
        });
     }
 
-    public void downloadFriends()
+    public void downloadFriends(Activity context, ListView FriendList, LeaderBoardAdapter adapter)
     {
         Query myQuery = userRepo.DownloadFriends();
         myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -382,11 +384,22 @@ public class MainActivityViewModel extends AndroidViewModel {
                     }
                     firebaseDB.areFriendsDownloaded = true;
                 }
+                updateLeaderBoard(context, FriendList, adapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 System.out.println(error.getMessage());
             }
         });
+    }
+
+    private void updateLeaderBoard(Activity context, ListView FriendList, LeaderBoardAdapter adapter)
+    {
+        if(adapter == null)
+        {
+            adapter = new LeaderBoardAdapter(context, firebaseDB.Friends);
+            FriendList.setAdapter(adapter);
+        }
+        adapter.notifyDataSetChanged();
     }
 }
