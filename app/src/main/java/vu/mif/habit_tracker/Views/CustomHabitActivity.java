@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -40,18 +41,26 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     ImageButton colorPickerBtn;
     ImageButton iconPickerBtn;
     iconPicker pickerDialog;
+    private EditText etDays;
+    private EditText etTotal;
 
     CustomHabitActivity context;
+
+    private LinearLayout containerRepeatableOn;
+    private LinearLayout containerRepeatableOff;
+    private LinearLayout containerDate;
 
     // TODO: Update fields when UI will be updated
     private String name;
     private String iconID;
     private int colourID;
-    private boolean isRepeatable = true;
-    private int repeatNumber = 0;
+    private boolean isRepeatable = false;
+    private int repeatNumber = 1;
     private String endDate = "";
     private int totalProgress = 1;
     private int currentProgress = 0;
+
+    private int days = 0;
 
 
     //Cia tas naudojamas listas
@@ -67,6 +76,13 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         toolbar.setNavigationIcon(R.drawable.ic_navigate_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+
+        containerRepeatableOn = findViewById(R.id.containerRepeatableOn);
+        containerRepeatableOff = findViewById(R.id.containerRepeatableOff);
+        containerDate = findViewById(R.id.containerDate);
+
+        etDays = findViewById(R.id.etDays);
+        etTotal = findViewById(R.id.etTotal);
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
@@ -111,8 +127,34 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         if (view == submitCustomHabitBtn) {
+
             name = customHabitName.getText().toString();
 
+            if (name.equals("")) {
+                sendShortText("Please fill in name field.");
+                return;
+            }
+
+            String totalAmount = etTotal.getText().toString();
+
+            if (totalAmount.equals("") || Integer.parseInt(totalAmount) <= 0){
+                sendShortText("Goal must be higher than 0!");
+                return;
+            }
+
+            String numberOfDays = etDays.getText().toString();
+
+            if (isRepeatable) {
+                if (!numberOfDays.equals("")){
+                    if (Integer.parseInt(numberOfDays) <= 0){
+                        sendShortText("Days must be higher than 0!");
+                        return;
+                    }
+                    repeatNumber = Integer.parseInt(numberOfDays);
+                }
+            }
+
+            totalProgress = Integer.parseInt(totalAmount);
 
             Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endDate,
                     totalProgress, currentProgress);
@@ -153,6 +195,36 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    private void sendShortText(String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // TODO: delete toast
+    public void onRepeatableRBClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.repeatableOn:
+                if (checked) {
+                    isRepeatable = true;
+                    containerRepeatableOff.setVisibility(View.GONE);
+                    containerRepeatableOn.setVisibility(View.VISIBLE);
+                    //Toast.makeText(context, "You clicked on", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.repeatableOff:
+                if (checked) {
+                    isRepeatable = false;
+                    containerRepeatableOn.setVisibility(View.GONE);
+                    containerRepeatableOff.setVisibility(View.VISIBLE);
+                    //Toast.makeText(context, "You clicked off", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
     public void onRepeatRBClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
@@ -161,18 +233,15 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         switch(view.getId()) {
             case R.id.dailyBtn:
                 if (checked)
-                    isRepeatable = true;
-                    repeatNumber = -1;
+                    repeatNumber = 1;
                     break;
             case R.id.weeklyBtn:
                 if (checked)
-                    isRepeatable = true;
-                    repeatNumber = -2;
+                    repeatNumber = 7;
                     break;
             case R.id.monthlyBtn:
                 if(checked)
-                    isRepeatable = true;
-                    repeatNumber = -3;
+                    repeatNumber = 30;
                     break;
         }
 
@@ -185,30 +254,15 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         // Check which radio button was clicked
         switch(view.getId()) {
             case R.id.endDateOn:
-                if (checked)
-
+                if (checked){
+                    containerDate.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.endDateOff:
-                if (checked)
-
+                if (checked){
+                    containerDate.setVisibility(View.GONE);
+                }
                 break;
-        }
-    }
-
-    public void onSetGoalRBClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.endGoalOn:
-                if (checked)
-
-                    break;
-            case R.id.endGoalOff:
-                if (checked)
-
-                    break;
         }
     }
 
