@@ -1,6 +1,7 @@
 package vu.mif.habit_tracker.Adapters;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,13 @@ import vu.mif.habit_tracker.R;
 public class LeaderBoardAdapter extends BaseAdapter {
     private Activity context;
     private List<User> friends;
+    private List<Bitmap> friendImages;
 
-    public LeaderBoardAdapter(Activity context, List<User> friends)
+    public LeaderBoardAdapter(Activity context, List<User> friends, List<Bitmap> friendImages)
     {
         this.context = context;
         this.friends = friends;
+        this.friendImages = friendImages;
     }
 
     @Override
@@ -53,8 +56,12 @@ public class LeaderBoardAdapter extends BaseAdapter {
         TextView userName = mView.findViewById(R.id.leaderboard_userName);
         userName.setText(friends.get(position).getUsername());
         TextView userScore = mView.findViewById(R.id.leaderboard_userScore);
-        userScore.setText(String.valueOf(friends.get(position).getCurrency()));
-        //if(user has no image dsadfa)
+        userScore.setText(String.valueOf(friends.get(position).getPoints()));
+        if(friendImages.get(position) == null)
+        {
+            userProfile.setImageResource(R.drawable.default_account_pic);
+        }else userProfile.setImageBitmap(friendImages.get(position));
+
         return mView;
     }
 }

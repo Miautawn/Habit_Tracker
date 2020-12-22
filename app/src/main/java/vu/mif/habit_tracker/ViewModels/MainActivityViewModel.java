@@ -7,11 +7,14 @@ import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,12 +29,15 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
@@ -380,11 +386,11 @@ public class MainActivityViewModel extends AndroidViewModel {
                     for(DataSnapshot child : snapshot.getChildren())
                     {
                         User downloaded_friend = child.getValue(User.class);
-                        firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), null, child.getKey()));
+                        firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), downloaded_friend.getPoints(), null, child.getKey()));
                     }
                     firebaseDB.areFriendsDownloaded = true;
+                    downloadFriendImages(context, FriendList, adapter, firebaseDB.Friends, firebaseDB.getStorageInstance().getReference().child("UserImages"));
                 }
-                updateLeaderBoard(context, FriendList, adapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -393,11 +399,44 @@ public class MainActivityViewModel extends AndroidViewModel {
         });
     }
 
+    private void downloadFriendImages(Activity context, ListView FriendList, LeaderBoardAdapter adapter, List<User> friends, StorageReference myRef)
+    {
+        List<User> tempFriends = new ArrayList<>(friends);
+       StorageReference tempRef = myRef.child(tempFriends.get(0).getUID());
+       tempRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+           @Override
+           public void onSuccess(byte[] bytes) {
+               Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                firebaseDB.FriendImages.add(bmp);
+                tempFriends.remove(0);
+                if(tempFriends.size() != 0)
+                {
+                   downloadFriendImages(context, FriendList, adapter, tempFriends, firebaseDB.getStorageInstance().getReference().child("UserImages"));
+                }else{
+                    updateLeaderBoard(context, FriendList, adapter);
+                }
+           }
+       }).addOnFailureListener(new OnFailureListener() {
+           @Override
+           public void onFailure(@NonNull Exception e) {
+               System.out.println(e.getMessage());
+               firebaseDB.FriendImages.add(null);
+               tempFriends.remove(0);
+               if(tempFriends.size() != 0)
+               {
+                   downloadFriendImages(context, FriendList, adapter, tempFriends, firebaseDB.getStorageInstance().getReference().child("UserImages"));
+               }else{
+                   updateLeaderBoard(context, FriendList, adapter);
+               }
+           }
+       });
+    }
+
     private void updateLeaderBoard(Activity context, ListView FriendList, LeaderBoardAdapter adapter)
     {
         if(adapter == null)
         {
-            adapter = new LeaderBoardAdapter(context, firebaseDB.Friends);
+            adapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
             FriendList.setAdapter(adapter);
         }
         adapter.notifyDataSetChanged();
