@@ -60,7 +60,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout containerRepeatableOff;
     private LinearLayout containerDate;
 
-    // TODO: Update fields when UI will be updated
     private String name;
     private String iconID;
     private int colourID;
@@ -181,7 +180,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                     endMonth = dateNow.get(Calendar.MONTH);
                     endDayOfMonth = dateNow.get(Calendar.DAY_OF_MONTH);
                 }
-            } else {
+            } else if (useDate) {
                 Calendar habitDate = Calendar.getInstance();
                 habitDate.set(Calendar.YEAR, endYear);
                 habitDate.set(Calendar.MONTH, endMonth);
@@ -256,21 +255,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         endMonth = month;
         endDayOfMonth = dayOfMonth;
 
-        Calendar dateNow = Calendar.getInstance();
-
-        int index = -2;
-
-        if (calendar.get(Calendar.YEAR) == dateNow.get(Calendar.YEAR) &&
-                calendar.get(Calendar.DAY_OF_YEAR) == dateNow.get(Calendar.DAY_OF_YEAR)){
-            index = 0;
-        } else if (dateNow.before(calendar)) {
-            index = 1;
-        } else {
-            index = -1;
-        }
-
-        sendShortText(String.valueOf(index));
-
         tvDate.setText(currentDateString);
     }
 
@@ -278,7 +262,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    // TODO: delete toast
     public void onRepeatableRBClicked(View view) {
         // Is the button now checked?
         boolean checked = ((RadioButton) view).isChecked();
@@ -290,7 +273,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                     isRepeatable = true;
                     containerRepeatableOff.setVisibility(View.GONE);
                     containerRepeatableOn.setVisibility(View.VISIBLE);
-                    //Toast.makeText(context, "You clicked on", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.repeatableOff:
@@ -298,7 +280,6 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                     isRepeatable = false;
                     containerRepeatableOn.setVisibility(View.GONE);
                     containerRepeatableOff.setVisibility(View.VISIBLE);
-                    //Toast.makeText(context, "You clicked off", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
