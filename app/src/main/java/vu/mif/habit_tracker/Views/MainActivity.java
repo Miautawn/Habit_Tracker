@@ -126,6 +126,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         friendList = findViewById(R.id.friendList);
         leaderBoard = findViewById(R.id.leaderBoard);
 
+        model.friend_search = friendList;
+        model.friendSearch_adapter = FriendAdapter;
+        model.leaderboard = leaderBoard;
+        model.leaderboardAdapter = leaderBoardAdapter;
+        model.context = this;
+
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
         progressBarCenter = findViewById(R.id.progressBarCenter);
@@ -208,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if(view == btnSearchFriends)
         {
-            model.LookForFriends(this, friendsSearchEditText.getText().toString(), friendList, FriendAdapter);
+            model.typed_username = friendsSearchEditText.getText().toString();
+            model.LookForFriends();
         }
     }
 
@@ -287,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUserDetails(User user)
     {
         this.user = user;
+        model.myUser = user;
         tvUsername.setText(this.user.getUsername());
 
         if(user.getPictureURL() != null)
@@ -401,8 +409,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if(firebaseDB.CheckOnlineStatus(context))
         {
-            model.downloadFriends(this, leaderBoard, leaderBoardAdapter);
-        }
+            leaderBoard.setVisibility(View.VISIBLE);
+            model.UpdateLeaderBoard();
+        }else leaderBoard.setVisibility(View.INVISIBLE);
     }
 
     private void checkFriendListAvailability()
