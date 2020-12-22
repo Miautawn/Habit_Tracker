@@ -16,17 +16,21 @@ public class Habit {
     private int colourID;
     private boolean isRepeatble;
     private int repeatNumber;
-    private String endDate;
+    private int endYear;
+    private int endMonth;
+    private int endDayOfMonth;
     private int totalProgress;
     private int currentProgress;
 
-    public Habit(String name, String iconID, int colourID, boolean isRepeatble, int repeatNumber, String endDate, int totalProgress, int currentProgress) {
+    public Habit(String name, String iconID, int colourID, boolean isRepeatble, int repeatNumber, int endYear, int endMonth, int endDayOfMonth, int totalProgress, int currentProgress) {
         this.name = name;
         this.iconID = iconID;
         this.colourID = colourID;
         this.isRepeatble = isRepeatble;
         this.repeatNumber = repeatNumber;
-        this.endDate = endDate;
+        this.endYear = endYear;
+        this.endMonth = endMonth;
+        this.endDayOfMonth = endDayOfMonth;
         this.totalProgress = totalProgress;
         this.currentProgress = currentProgress;
     }
@@ -59,10 +63,6 @@ public class Habit {
         return repeatNumber;
     }
 
-    public String getEndDate() {
-        return endDate;
-    }
-
     public int getTotalProgress() {
         return totalProgress;
     }
@@ -73,5 +73,29 @@ public class Habit {
 
     public void setCurrentProgress(int currentProgress) {
         this.currentProgress = currentProgress;
+    }
+
+    public int getEndYear() {
+        return endYear;
+    }
+
+    public void setEndYear(int endYear) {
+        this.endYear = endYear;
+    }
+
+    public int getEndMonth() {
+        return endMonth;
+    }
+
+    public void setEndMonth(int endMonth) {
+        this.endMonth = endMonth;
+    }
+
+    public int getEndDayOfMonth() {
+        return endDayOfMonth;
+    }
+
+    public void setEndDayOfMonth(int endDayOfMonth) {
+        this.endDayOfMonth = endDayOfMonth;
     }
 }

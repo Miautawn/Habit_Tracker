@@ -24,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -64,11 +66,13 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     private int colourID;
     private boolean isRepeatable = false;
     private int repeatNumber = 1;
-    private String endDate = "";
+    private int endYear = 0;
+    private int endMonth = 0;
+    private int endDayOfMonth = 0;
     private int totalProgress = 1;
     private int currentProgress = 0;
 
-    private int days = 0;
+    private boolean useDate = false;
 
 
     //Cia tas naudojamas listas
@@ -162,13 +166,43 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
                         return;
                     }
                     repeatNumber = Integer.parseInt(numberOfDays);
+
+                    Calendar dateNow = Calendar.getInstance();
+                    dateNow.add(Calendar.DATE, repeatNumber);
+
+                    endYear = dateNow.get(Calendar.YEAR);
+                    endMonth = dateNow.get(Calendar.MONTH);
+                    endDayOfMonth = dateNow.get(Calendar.DAY_OF_MONTH);
+                } else {
+                    Calendar dateNow = Calendar.getInstance();
+                    dateNow.add(Calendar.DATE, repeatNumber);
+
+                    endYear = dateNow.get(Calendar.YEAR);
+                    endMonth = dateNow.get(Calendar.MONTH);
+                    endDayOfMonth = dateNow.get(Calendar.DAY_OF_MONTH);
+                }
+            } else {
+                Calendar habitDate = Calendar.getInstance();
+                habitDate.set(Calendar.YEAR, endYear);
+                habitDate.set(Calendar.MONTH, endMonth);
+                habitDate.set(Calendar.DAY_OF_MONTH, endDayOfMonth);
+
+                Calendar dateNow = Calendar.getInstance();
+
+                if (habitDate.get(Calendar.YEAR) == dateNow.get(Calendar.YEAR) &&
+                        habitDate.get(Calendar.DAY_OF_YEAR) == dateNow.get(Calendar.DAY_OF_YEAR)){
+                    sendShortText("Date must be after this day!");
+                    return;
+                } else if (dateNow.after(habitDate)){
+                        sendShortText("Date must be after this day!");
+                        return;
                 }
             }
 
             totalProgress = Integer.parseInt(totalAmount);
 
-            Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endDate,
-                    totalProgress, currentProgress);
+            Habit habit = new Habit(name, iconID, colourID, isRepeatable, repeatNumber, endYear,
+                    endMonth, endDayOfMonth, totalProgress, currentProgress);
 
             viewModel.insertHabit(habit);
 
@@ -215,7 +249,27 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
         String currentDateString = DateFormat.getDateInstance().format(calendar.getTime());
+
+        endYear = year;
+        endMonth = month;
+        endDayOfMonth = dayOfMonth;
+
+        Calendar dateNow = Calendar.getInstance();
+
+        int index = -2;
+
+        if (calendar.get(Calendar.YEAR) == dateNow.get(Calendar.YEAR) &&
+                calendar.get(Calendar.DAY_OF_YEAR) == dateNow.get(Calendar.DAY_OF_YEAR)){
+            index = 0;
+        } else if (dateNow.before(calendar)) {
+            index = 1;
+        } else {
+            index = -1;
+        }
+
+        sendShortText(String.valueOf(index));
 
         tvDate.setText(currentDateString);
     }
@@ -281,18 +335,16 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
             case R.id.endDateOn:
                 if (checked){
                     containerDate.setVisibility(View.VISIBLE);
+                    useDate = true;
                 }
                 break;
             case R.id.endDateOff:
                 if (checked){
                     containerDate.setVisibility(View.GONE);
+                    useDate = false;
                 }
                 break;
         }
-    }
-
-    private void setColor(@ColorInt int color) {
-        Toast.makeText(this, "Changed color", Toast.LENGTH_SHORT);
     }
 
     @Override
