@@ -5,30 +5,37 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
+import vu.mif.habit_tracker.Fragments.DatePickerFragment;
 import vu.mif.habit_tracker.Fragments.iconPicker;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.CustomHabitViewModel;
 
-public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener, iconPicker.iconPickerListener {
+public class CustomHabitActivity extends AppCompatActivity implements View.OnClickListener, iconPicker.iconPickerListener, DatePickerDialog.OnDateSetListener {
 
     // Color picker
     int[] colors;
@@ -43,6 +50,7 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
     iconPicker pickerDialog;
     private EditText etDays;
     private EditText etTotal;
+    private TextView tvDate;
 
     CustomHabitActivity context;
 
@@ -83,6 +91,9 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
         etDays = findViewById(R.id.etDays);
         etTotal = findViewById(R.id.etTotal);
+
+        tvDate = findViewById(R.id.tvDate);
+        tvDate.setOnClickListener(this);
 
         submitCustomHabitBtn = findViewById(R.id.submitCustomHabitBtn);
         submitCustomHabitBtn.setOnClickListener(this);
@@ -187,12 +198,26 @@ public class CustomHabitActivity extends AppCompatActivity implements View.OnCli
 
                     }
                 }).show();
-        }else if (view == iconPickerBtn)
+        } else if (view == iconPickerBtn)
         {
             pickerDialog = new iconPicker();
             pickerDialog.items = pictureID;
             pickerDialog.show(getSupportFragmentManager(), "icon picker");
+        } else if (view == tvDate) {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getSupportFragmentManager(), "date picker");
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String currentDateString = DateFormat.getDateInstance().format(calendar.getTime());
+
+        tvDate.setText(currentDateString);
     }
 
     private void sendShortText(String message) {
