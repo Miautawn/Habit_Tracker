@@ -45,6 +45,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
+import vu.mif.habit_tracker.Adapters.LeaderBoardAdapter;
 import vu.mif.habit_tracker.Models.Habit;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnSearchFriends;
     private ListView friendList;
     private ArrayAdapter<String> FriendAdapter;
+    private ListView leaderBoard;
+    private LeaderBoardAdapter leaderBoardAdapter;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -121,6 +124,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSearchFriends = findViewById(R.id.btnFriendSearch);
         friendListLayout = findViewById(R.id.friendListLayout);
         friendList = findViewById(R.id.friendList);
+        leaderBoard = findViewById(R.id.leaderBoard);
+
+        model.friend_search = friendList;
+        model.friendSearch_adapter = FriendAdapter;
+        model.leaderboard = leaderBoard;
+        model.leaderboardAdapter = leaderBoardAdapter;
+        model.context = this;
 
         progressBarLeftTwo = findViewById(R.id.progressBarLeftTwo);
         progressBarLeftOne = findViewById(R.id.progressBarLeftOne);
@@ -175,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == overlayTrigger) {
             if(!isPanelShown()) {
                 slideUpDown(hiddenLeaderBoardOverlay);
+                updateLeaderBoard();
             }
         } else if(view == hiddenLeaderBoardOverlay) {
             if(isPanelShown()) {
@@ -203,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if(view == btnSearchFriends)
         {
-            model.LookForFriends(this, friendsSearchEditText.getText().toString(), friendList, FriendAdapter);
+            model.typed_username = friendsSearchEditText.getText().toString();
+            model.LookForFriends();
         }
     }
 
@@ -282,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void updateUserDetails(User user)
     {
         this.user = user;
+        model.myUser = user;
         tvUsername.setText(this.user.getUsername());
 
         if(user.getPictureURL() != null)
@@ -390,6 +403,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    private void updateLeaderBoard()
+    {
+        if(firebaseDB.CheckOnlineStatus(context))
+        {
+            leaderBoard.setVisibility(View.VISIBLE);
+            model.UpdateLeaderBoard();
+        }else leaderBoard.setVisibility(View.INVISIBLE);
     }
 
     private void checkFriendListAvailability()
