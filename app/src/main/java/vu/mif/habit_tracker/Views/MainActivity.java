@@ -423,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == USER_PICTURE_ACTIVITY && resultCode == Activity.RESULT_OK) {
             String path = model.getPath(data.getData(), context);
-            User newUser = new User(user.getUsername(), user.getCurrency(), path, user.getUID());
+            User newUser = new User(user.getUsername(), user.getCurrency(), user.getPoints(), path, user.getUID());
             newUser.setId(user.getId());
             model.updateUser(newUser);
             //Update image to Firebase
