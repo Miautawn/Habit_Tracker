@@ -20,30 +20,34 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.Models.User;
+import vu.mif.habit_tracker.Repositories.PetRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.MainActivity;
 
 public class RegisterActivityViewModel extends AndroidViewModel {
-    UserRepository repo;
+    UserRepository userRepo;
+    PetRepository petRepo;
     public RegisterActivityViewModel(@NonNull Application application) {
         super(application);
-        repo = new UserRepository(application);
+        userRepo = new UserRepository(application);
+        petRepo = new PetRepository(application);
     }
 
     public void registerUser(String username, String email, String password, Activity context)
     {
         if(!email.isEmpty() && !password.isEmpty())
         {
-            if(!repo.isLogedIn())
+            if(!userRepo.isLogedIn())
             {
-                repo.registerUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                userRepo.registerUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
-                            repo.purge();
-                            InsertAndUpload(username, repo.getUID(), context);
+                            userRepo.purge();
+                            InsertAndUpload(username, userRepo.getUID(), context);
                         }else
                         {
                             System.out.println(task.getException());
@@ -53,7 +57,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
                 });
             }else
             {
-               InsertAndUpload(username, repo.getUID(), context);
+               InsertAndUpload(username, userRepo.getUID(), context);
             }
 
         }
@@ -63,8 +67,11 @@ public class RegisterActivityViewModel extends AndroidViewModel {
     private void InsertAndUpload(String username, String UID, Activity context)
     {
         User newUser = new User(username, 0, 0, null, UID);
-        repo.insertUser(newUser);
-        DatabaseReference ref = repo.uploadUser();
+        Pet newPet = new Pet("Alfonsas", 0);
+        userRepo.insertUser(newUser);
+        petRepo.insertPet(newPet);
+
+        DatabaseReference ref = userRepo.uploadUser();
         ref.setValue(newUser, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {

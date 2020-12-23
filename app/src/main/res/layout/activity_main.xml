@@ -238,12 +238,13 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
-                <ImageView
-                    android:id="@+id/petImg"
+                <ImageButton
+                    android:id="@+id/pet_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:src="@drawable/dog"/>
+                    android:src="@drawable/dog"
+                    android:background="@null"/>
 
                 <View
                     android:id="@+id/line"
