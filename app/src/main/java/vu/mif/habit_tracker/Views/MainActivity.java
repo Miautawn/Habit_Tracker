@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ivAccountPic.setImageURI(Uri.fromFile(userPicture));
             }else ivAccountPic.setImageResource(R.drawable.default_account_pic);
         }else ivAccountPic.setImageResource(R.drawable.default_account_pic);
+        model.UploadUser(user);
     }
 
     private void resetCards(){
@@ -548,6 +549,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             default: btnPet.setImageResource(R.drawable.dog);
         }
+        model.UploadPet(pet);
     }
-
 }

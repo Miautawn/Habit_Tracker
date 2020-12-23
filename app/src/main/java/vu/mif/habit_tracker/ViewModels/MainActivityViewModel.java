@@ -153,10 +153,17 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void LogOut() {userRepo.disconnectUser();}
     public boolean isLoggedIn() {return userRepo.isLogedIn();}
     public String getUID() {return  userRepo.getUID();}
+    public void UploadUser(User user) {
+        if(firebaseDB.CheckOnlineStatus(context))
+        {
+            UploadUserToFireBase(user);
+        }
+    }
 
     //methods for Pet
     public void updatePet(Pet pet) {petRepo.updatePet(pet);}
     public LiveData<Pet> getPet() {return pet;}
+    public void UploadPet(Pet pet) {}
 
 
     public LiveData<Habit[]> getHabitCards() {
@@ -522,5 +529,16 @@ public class MainActivityViewModel extends AndroidViewModel {
     {
             leaderboardAdapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
             leaderboard.setAdapter(leaderboardAdapter);
+    }
+
+    private void UploadUserToFireBase(User user)
+    {
+        DatabaseReference ref = userRepo.uploadUser();
+        ref.setValue(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(error != null) System.out.println(error.getMessage());
+            }
+        });
     }
 }

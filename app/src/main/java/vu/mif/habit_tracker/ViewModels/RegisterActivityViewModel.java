@@ -47,7 +47,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
                         if(task.isSuccessful())
                         {
                             userRepo.purge();
-                            InsertAndUpload(username, userRepo.getUID(), context);
+                            InsertAndUploadUser(username, userRepo.getUID(), context);
                         }else
                         {
                             System.out.println(task.getException());
@@ -57,14 +57,14 @@ public class RegisterActivityViewModel extends AndroidViewModel {
                 });
             }else
             {
-               InsertAndUpload(username, userRepo.getUID(), context);
+               InsertAndUploadUser(username, userRepo.getUID(), context);
             }
 
         }
 
     }
 
-    private void InsertAndUpload(String username, String UID, Activity context)
+    private void InsertAndUploadUser(String username, String UID, Activity context)
     {
         User newUser = new User(username, 0, 0, null, UID);
         Pet newPet = new Pet("Alfonsas", 0);
@@ -93,6 +93,4 @@ public class RegisterActivityViewModel extends AndroidViewModel {
             }
         });
     }
-
-
 }
