@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -27,6 +28,7 @@ import vu.mif.habit_tracker.Views.MainActivity;
     private static FirebaseDatabase database;
     private static FirebaseStorage storage;
     public static List<User> Friends = new ArrayList<>();
+    public static List<Bitmap> FriendImages = new ArrayList<>();
     public static boolean areFriendsDownloaded = false;
 
     public static synchronized FirebaseAuth getAuthInstance()

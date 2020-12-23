@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="Views.NewHabitActivity"
+    tools:context="Views.CustomHabitActivity"
     android:orientation="vertical"
     android:background="@color/darkGrey"
     android:gravity="center_horizontal">
@@ -109,84 +109,7 @@
         android:layout_margin="10dp"
         android:background="@color/lightGrey"/>
 
-    <TextView
-        android:id="@+id/tvRepeatHabit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat_medium"
-        android:textSize="17sp"
-        android:textColor="@color/lightGrey"
-        android:text="repeat this habit"/>
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        app:layout_constraintTop_toBottomOf="@+id/tvRepeatHabit"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_width="290dp"
-        android:layout_height="wrap_content">
-
-        <RadioButton
-            android:id="@+id/dailyBtn"
-            android:layout_width="70dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/radio_btn_status_selector"
-            android:button="@android:color/transparent"
-            android:checked="true"
-            android:fontFamily="@font/montserrat_medium"
-            android:gravity="center"
-            android:onClick="onRepeatRBClicked"
-            android:text="daily"
-            android:textColor="@color/radio_btn_state_text_color"
-            android:textSize="15sp" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
-
-        <RadioButton
-            android:id="@+id/weeklyBtn"
-            android:layout_width="70dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/montserrat_medium"
-            android:textSize="15sp"
-            android:textColor="@color/radio_btn_state_text_color"
-            android:text="weekly"
-            android:gravity="center"
-            android:button="@android:color/transparent"
-            android:background="@drawable/radio_btn_status_selector"
-            android:onClick="onRepeatRBClicked"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"/>
-
-        <RadioButton
-            android:id="@+id/monthlyBtn"
-            android:layout_width="70dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/montserrat_medium"
-            android:textSize="15sp"
-            android:textColor="@color/radio_btn_state_text_color"
-            android:text="monthly"
-            android:gravity="center"
-            android:button="@android:color/transparent"
-            android:background="@drawable/radio_btn_status_selector"
-            android:onClick="onRepeatRBClicked"/>
-
-    </RadioGroup>
-
-    <View
-        android:layout_width="290dp"
-        android:layout_height="1dp"
-        android:layout_margin="10dp"
-        android:background="@color/lightGrey"/>
-
+    <!-- Repeatable radio field -->
     <RelativeLayout
         android:layout_width="290dp"
         android:layout_height="wrap_content">
@@ -198,10 +121,10 @@
             android:fontFamily="@font/montserrat_medium"
             android:textSize="17sp"
             android:textColor="@color/lightGrey"
-            android:text="set end date"/>
+            android:text="repeatable"/>
 
         <RadioGroup
-            android:id="@+id/radioGroupDate"
+            android:id="@+id/radioGroupRepeatable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -209,7 +132,7 @@
             android:gravity="center_vertical">
 
             <RadioButton
-                android:id="@+id/endDateOn"
+                android:id="@+id/repeatableOn"
                 android:layout_width="55dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="10dp"
@@ -217,52 +140,26 @@
                 android:textSize="15sp"
                 android:textColor="@color/radio_btn_state_text_color"
                 android:text="on"
-                android:checked="true"
                 android:gravity="center"
                 android:button="@android:color/transparent"
                 android:background="@drawable/radio_btn_status_selector"
-                android:onClick="onSetDateRBClicked"/>
+                android:onClick="onRepeatableRBClicked"/>
 
             <RadioButton
-                android:id="@+id/endDateOff"
+                android:id="@+id/repeatableOff"
                 android:layout_width="55dp"
                 android:layout_height="25dp"
                 android:fontFamily="@font/montserrat_medium"
                 android:textSize="15sp"
                 android:textColor="@color/radio_btn_state_text_color"
                 android:text="off"
+                android:checked="true"
                 android:gravity="center"
                 android:button="@android:color/transparent"
                 android:background="@drawable/radio_btn_status_selector"
-                android:onClick="onSetDateRBClicked"/>
+                android:onClick="onRepeatableRBClicked"/>
 
         </RadioGroup>
-
-        <TextView
-            android:id="@+id/tvType"
-            android:layout_width="130dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/tvDate"
-            android:fontFamily="@font/montserrat_medium"
-            android:textSize="15sp"
-            android:textColor="@color/black"
-            android:text="date"
-            android:gravity="center"
-            android:background="@drawable/white_btn_container"/>
-
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="130dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="40dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:textSize="15sp"
-            android:textColor="@color/black"
-            android:text="14 Jan, 2021"
-            android:gravity="center"
-            android:background="@drawable/white_btn_container"/>
 
     </RelativeLayout>
 
@@ -272,6 +169,250 @@
         android:layout_margin="10dp"
         android:background="@color/lightGrey"/>
 
+    <!-- Repeatable on container -->
+    <LinearLayout
+        android:id="@+id/containerRepeatableOn"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvRepeatHabit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="17sp"
+            android:textColor="@color/lightGrey"
+            android:text="repeat this habit" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            app:layout_constraintTop_toBottomOf="@+id/tvRepeatHabit"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/dailyBtn"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:button="@android:color/transparent"
+                android:checked="true"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:onClick="onRepeatRBClicked"
+                android:text="daily"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:textSize="15sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+            <RadioButton
+                android:id="@+id/weeklyBtn"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="weekly"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:onClick="onRepeatRBClicked"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"/>
+
+            <RadioButton
+                android:id="@+id/monthlyBtn"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/radio_btn_state_text_color"
+                android:text="monthly"
+                android:gravity="center"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_btn_status_selector_alternative"
+                android:onClick="onRepeatRBClicked"/>
+
+        </RadioGroup>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <View
+                android:layout_width="290dp"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/lightGrey"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/darkGrey"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="or"
+                android:textColor="@color/lightGrey"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="290dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="repeat after"
+                android:textColor="@color/lightGrey"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/etDays"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:hint="Days"
+                android:inputType="number"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:background="@drawable/white_btn_container"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Repeatable off container -->
+    <LinearLayout
+        android:id="@+id/containerRepeatableOff"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="290dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="17sp"
+                android:textColor="@color/lightGrey"
+                android:text="set end date"/>
+
+            <RadioGroup
+                android:id="@+id/radioGroupDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/endDateOn"
+                    android:layout_width="55dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textSize="15sp"
+                    android:textColor="@color/radio_btn_state_text_color"
+                    android:text="on"
+                    android:gravity="center"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/radio_btn_status_selector_alternative"
+                    android:onClick="onSetDateRBClicked"/>
+
+                <RadioButton
+                    android:id="@+id/endDateOff"
+                    android:layout_width="55dp"
+                    android:layout_height="25dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textSize="15sp"
+                    android:textColor="@color/radio_btn_state_text_color"
+                    android:text="off"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/radio_btn_status_selector_alternative"
+                    android:onClick="onSetDateRBClicked"/>
+
+            </RadioGroup>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="290dp"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/lightGrey"/>
+
+        <LinearLayout
+            android:id="@+id/containerDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="17sp"
+                android:textColor="@color/lightGrey"
+                android:text="selected date" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="290dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:background="@drawable/white_btn_container"
+                android:hint="click to select"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="290dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/lightGrey" />
+
     <RelativeLayout
         android:layout_width="290dp"
         android:layout_height="wrap_content">
@@ -279,49 +420,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:fontFamily="@font/montserrat_medium"
-            android:textSize="17sp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="set a goal"
             android:textColor="@color/lightGrey"
-            android:text="set a goal"/>
+            android:textSize="17sp" />
 
-        <RadioGroup
-            android:id="@+id/radioGroupGoal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <EditText
+            android:id="@+id/etTotal"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <RadioButton
-                android:id="@+id/endGoalOn"
-                android:layout_width="55dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:textSize="15sp"
-                android:textColor="@color/radio_btn_state_text_color"
-                android:text="on"
-                android:gravity="center"
-                android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector_alternative"
-                android:onClick="onSetGoalRBClicked"/>
-
-            <RadioButton
-                android:id="@+id/endGoalOff"
-                android:layout_width="55dp"
-                android:layout_height="25dp"
-                android:fontFamily="@font/montserrat_medium"
-                android:textSize="15sp"
-                android:textColor="@color/radio_btn_state_text_color"
-                android:text="off"
-                android:checked="true"
-                android:gravity="center"
-                android:button="@android:color/transparent"
-                android:background="@drawable/radio_btn_status_selector_alternative"
-                android:onClick="onSetGoalRBClicked"/>
-
-        </RadioGroup>
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:hint="Goal"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:gravity="center"
+            android:background="@drawable/white_btn_container"/>
 
     </RelativeLayout>
 

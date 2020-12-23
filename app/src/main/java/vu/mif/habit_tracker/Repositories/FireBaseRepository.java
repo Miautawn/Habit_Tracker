@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
@@ -61,6 +63,9 @@ public class FireBaseRepository {
 
     public void downloadAllData(Activity login_context)
     {
+        firebaseDB.Friends.clear();
+        firebaseDB.FriendImages.clear();
+        firebaseDB.areFriendsDownloaded = false;
        DownloadUserProfilePicture(login_context);
     }
 
@@ -71,15 +76,19 @@ public class FireBaseRepository {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User downloadedUser = snapshot.getValue(User.class);
-                userRepository.insertUser(new User(downloadedUser.getUsername(), downloadedUser.getCurrency(), downloadedUser.getPoints(), imagePath, userRepository.getUID()));
-                //TODO: continue to download habits and pet data
-                login_context.startActivity(new Intent(login_context, MainActivity.class));
-                login_context.finish();
+                if(snapshot.getValue() != null)
+                {
+                    User downloadedUser = snapshot.getValue(User.class);
+                    userRepository.insertUser(new User(downloadedUser.getUsername(), downloadedUser.getCurrency(), downloadedUser.getPoints(), imagePath, userRepository.getUID()));
+                    //TODO: continue to download habits and pet data
+                    login_context.startActivity(new Intent(login_context, MainActivity.class));
+                    login_context.finish();
+                }else failedDownload(login_context, "something failed in the user downloading");
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                failedDownload(login_context);
+                failedDownload(login_context, error.getMessage());
             }
         });
     }
@@ -88,39 +97,39 @@ public class FireBaseRepository {
     {
         StorageReference storageRef = fireStorage.getReference();
         StorageReference myRef = storageRef.child("UserImages/" + userRepository.getUID());
-
         myRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
+                    File userImage = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "TackleProfile.png");
+                    if(userImage.exists()) userImage.delete();
+                    try
+                    {
+                        FileOutputStream out = new FileOutputStream(userImage.getAbsolutePath());
+                        out.write(bytes);
+                        out.close();
 
-                File userImage = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "TackleProfile.png");
-                if(userImage.exists()) userImage.delete();
-                try
-                {
-                    FileOutputStream out = new FileOutputStream(userImage.getAbsolutePath());
-                    out.write(bytes);
-                    out.close();
-
-                    //continuing to download user
-                    DownloadUser(login_context, userImage.getAbsolutePath());
-                }catch (Exception e)
-                {
-                    System.out.println(e.getMessage());
-                    failedDownload(login_context);
+                        //continuing to download user
+                        DownloadUser(login_context, userImage.getAbsolutePath());
+                    }catch (Exception e)
+                    {
+                        //continue download without user profile
+                        System.out.println();
+                        DownloadUser(login_context, null);
+                    }
                 }
-
-            }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                failedDownload(login_context);
+                //continue download without user profile
+                System.out.println(e.getMessage());
+                DownloadUser(login_context, null);
             }
         });
     }
 
-    private void failedDownload(Activity login_context)
+    private void failedDownload(Activity login_context, String error_message)
     {
-        new AlertDialog.Builder(login_context).setTitle("Download Failed").setMessage("Something went wrong when downloading your account data, we recommend you create new user with the sane Email").setPositiveButton("Oh no...", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(login_context).setTitle("Download Failed").setMessage("Something went wrong when downloading your account data, we recommend you create new user with the same Email").setPositiveButton("Oh no...", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent( login_context, RegisterActivity.class);
@@ -128,6 +137,7 @@ public class FireBaseRepository {
             }
         }).create().show();
     }
+
 
 
 }

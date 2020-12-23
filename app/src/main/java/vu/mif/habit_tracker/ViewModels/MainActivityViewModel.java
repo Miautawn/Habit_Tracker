@@ -7,10 +7,14 @@ import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,12 +29,15 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
@@ -43,12 +50,16 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import vu.mif.habit_tracker.Adapters.LeaderBoardAdapter;
 import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.HabitRepository;
+import vu.mif.habit_tracker.Repositories.PetRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
+import vu.mif.habit_tracker.Views.MainActivity;
 import vu.mif.habit_tracker.firebaseDB;
 import vu.mif.habit_tracker.roomDB;
 
@@ -63,7 +74,20 @@ public class MainActivityViewModel extends AndroidViewModel {
     private FireBaseRepository fireBaseRepository;
     private LiveData<List<Habit>> habits;
     private UserRepository userRepo;
+    private PetRepository petRepo;
     private LiveData<User> user;
+    private LiveData<Pet> pet;
+    private  List<String> friend_names;
+
+
+    //Egzistencializmas man artimas
+    public Activity context;
+    public ListView friend_search;
+    public ArrayAdapter<String> friendSearch_adapter;
+    public ListView leaderboard;
+    public LeaderBoardAdapter leaderboardAdapter;
+    public String typed_username;
+    public User myUser;
 
     private List<Habit> habitCardList;
 
@@ -72,12 +96,16 @@ public class MainActivityViewModel extends AndroidViewModel {
 
         //Getting habits and user with livedata
         roomDB database = roomDB.getInstance(application);
-        habitRepo = new HabitRepository(application);
-        userRepo = new UserRepository(application);
-        habits = habitRepo.getAllHabits();
-        user = userRepo.getUser();
-        fireBaseRepository = new FireBaseRepository(application);
-        downloaded_users = new ArrayList<>();
+        this.habitRepo = new HabitRepository(application);
+        this.userRepo = new UserRepository(application);
+        this.petRepo = new PetRepository(application);
+        this.habits = habitRepo.getAllHabits();
+        this.user = userRepo.getUser();
+        this.pet = petRepo.getPet();
+        this.fireBaseRepository = new FireBaseRepository(application);
+        this.downloaded_users = new ArrayList<>();
+        this.friend_names = new ArrayList<>();
+
         //sito nelieciu
         habitCards = new MutableLiveData<>();
     }
@@ -125,6 +153,10 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void LogOut() {userRepo.disconnectUser();}
     public boolean isLoggedIn() {return userRepo.isLogedIn();}
     public String getUID() {return  userRepo.getUID();}
+
+    //methods for Pet
+    public void updatePet(Pet pet) {petRepo.updatePet(pet);}
+    public LiveData<Pet> getPet() {return pet;}
 
 
     public LiveData<Habit[]> getHabitCards() {
@@ -243,39 +275,19 @@ public class MainActivityViewModel extends AndroidViewModel {
         });
     }
 
-    public void LookForFriends(Activity context, String typed_username, ListView friendList, ArrayAdapter<String> adapter)
+    public void LookForFriends()
     {
         downloaded_users.clear();
         if(!typed_username.isEmpty())
         {
-            //download olf friends, if not yet downloaded
             if(!firebaseDB.areFriendsDownloaded)
             {
-                Query myQuery = userRepo.DownloadFriends();
-                myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.getChildrenCount() > 0)
-                        {
-                            for(DataSnapshot child : snapshot.getChildren())
-                            {
-                                User downloaded_friend = child.getValue(User.class);
-                                firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), downloaded_friend.getPoints(),null, child.getKey()));
-                            }
-                            firebaseDB.areFriendsDownloaded = true;
-                        }
-                        DownloadNewFriends(context, typed_username, friendList, adapter);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        System.out.println(error.getMessage());
-                    }
-                });
-            } else DownloadNewFriends(context, typed_username, friendList, adapter);
+                LookUpFriendIds(1);
+            }else DownloadPotentialFriends();
         }
     }
 
-    private void DownloadNewFriends(Activity context, String typed_username, ListView friendList, ArrayAdapter<String> adapter)
+    private void DownloadPotentialFriends()
     {
         Query myQuery = userRepo.DownloadPotentialFriends(typed_username);
         myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -292,7 +304,7 @@ public class MainActivityViewModel extends AndroidViewModel {
                         }
                     }
                 } else downloaded_users.clear();
-                cleanPossibleFriends(context, adapter, friendList);
+                cleanPossibleFriends();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -308,9 +320,9 @@ public class MainActivityViewModel extends AndroidViewModel {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                uploadUserToFirebase(downloaded_users.get(position));
+                uploadNewFriendToFirebase(downloaded_users.get(position));
                 firebaseDB.Friends.add(downloaded_users.get(position));
-                cleanPossibleFriends(context, adapter, friendList);
+                cleanPossibleFriends();
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -320,44 +332,195 @@ public class MainActivityViewModel extends AndroidViewModel {
         }).create().show();
     }
 
-    private void cleanPossibleFriends(Activity context, ArrayAdapter<String> adapter, ListView friendList)
+    private void cleanPossibleFriends()
     {
         if(downloaded_users.size() != 0 && firebaseDB.Friends.size() != 0)
         {
-            for(int i = 0; i<downloaded_users.size(); i++)
+            int size = downloaded_users.size();
+            for(int i = 0; i<size; i++)
             {
                 for(int j = 0; j< firebaseDB.Friends.size(); j++)
                 {
-                    if(downloaded_users.get(i).getUID().equals(firebaseDB.Friends.get(j).getUID())) downloaded_users.remove(i);
+                    if(downloaded_users.get(0).getUID().equals(firebaseDB.Friends.get(j).getUID()))
+                    {
+                        downloaded_users.remove(0);
+                        break;
+                    }
                 }
             }
         }
-        updateAdapter(context, adapter, friendList);
+        updateFriend_search();
     }
 
-    private void updateAdapter(Activity context, ArrayAdapter<String> adapter, ListView friendList)
+    private void updateFriend_search()
     {
-        List<String> friend_names = new ArrayList<>();
-        for(int i = 0; i<downloaded_users.size(); i++) friend_names.add(downloaded_users.get(i).getUsername());
-        if(adapter == null)
+        friend_names.clear();
+        if(friendSearch_adapter == null)
         {
-            adapter = new ArrayAdapter<String>(context, R.layout.friendlist_item, friend_names);
-            friendList.setAdapter(adapter);
+            friendSearch_adapter = new ArrayAdapter<String>(context, R.layout.friendlist_item, friend_names);
+            friend_search.setAdapter(friendSearch_adapter);
         }
-        adapter.notifyDataSetChanged();
+        for(int i = 0; i<downloaded_users.size(); i++) friend_names.add(downloaded_users.get(i).getUsername());
+        friendSearch_adapter.notifyDataSetChanged();
     }
 
-    private void uploadUserToFirebase(User user)
+    private void uploadNewFriendToFirebase(User user)
     {
        DatabaseReference myRef = userRepo.UploadNewFriend(user.getUID());
-       myRef.setValue(user, new DatabaseReference.CompletionListener() {
+       myRef.setValue(user.getUID(), new DatabaseReference.CompletionListener() {
            @Override
            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-               if(error == null)
-               {
-
-               }else System.out.println(error.getMessage());
+               if(error != null) System.out.println(error.getMessage());
            }
        });
+    }
+
+    private void LookUpFriendIds(int CODE)
+    {
+        Query myQuery = userRepo.GetFriendIds();
+        List<String> friendIds = new ArrayList<>();
+        myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getChildrenCount() > 0)
+                {
+                    for(DataSnapshot id : snapshot.getChildren())
+                    {
+                        friendIds.add(id.getKey());
+                    }
+                    firebaseDB.areFriendsDownloaded = true;
+                }
+                switch (CODE)
+                {
+                    case 1:
+                        if(snapshot.getChildrenCount() > 0) DownloadFriends(friendIds, userRepo.DownloadUser(friendIds.get(0)), CODE);
+                        else  DownloadPotentialFriends();
+                        break;
+                    case 2:
+                        if(snapshot.getChildrenCount() > 0) DownloadFriends(friendIds, userRepo.DownloadUser(friendIds.get(0)), CODE);
+                        else SortLeaderboard();
+                        break;
+
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println(error.getMessage());
+            }
+        });
+    }
+
+    private void DownloadFriends(List<String> FriendIds, DatabaseReference myRef, int CODE)
+    {
+        List<String> myIds = new ArrayList<>(FriendIds);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User downloaded_friend = snapshot.getValue(User.class);
+                firebaseDB.Friends.add(new User(downloaded_friend.getUsername(), downloaded_friend.getCurrency(), downloaded_friend.getPoints(), null, snapshot.getKey()));
+                myIds.remove(0);
+                if(myIds.size() != 0) DownloadFriends(myIds, userRepo.DownloadUser(myIds.get(0)), CODE);
+                else
+                {
+                    switch (CODE)
+                    {
+                        case 1:
+                            DownloadPotentialFriends();
+                            break;
+                        case 2:
+                            downloadFriendImages(firebaseDB.Friends, firebaseDB.getStorageInstance().getReference().child("UserImages"));
+                            break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println(error.getMessage());
+            }
+        });
+    }
+
+    private void downloadFriendImages(List<User> friends, StorageReference myRef)
+    {
+        List<User> tempFriends = new ArrayList<>(friends);
+       StorageReference tempRef = myRef.child(tempFriends.get(0).getUID());
+       tempRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+           @Override
+           public void onSuccess(byte[] bytes) {
+               Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                firebaseDB.FriendImages.add(bmp);
+                tempFriends.remove(0);
+                if(tempFriends.size() != 0)
+                {
+                   downloadFriendImages(tempFriends, firebaseDB.getStorageInstance().getReference().child("UserImages"));
+                }else{
+                    SortLeaderboard();
+                }
+           }
+       }).addOnFailureListener(new OnFailureListener() {
+           @Override
+           public void onFailure(@NonNull Exception e) {
+               System.out.println(e.getMessage());
+               firebaseDB.FriendImages.add(null);
+               tempFriends.remove(0);
+               if(tempFriends.size() != 0)
+               {
+                   downloadFriendImages(tempFriends, firebaseDB.getStorageInstance().getReference().child("UserImages"));
+               }else{
+                   SortLeaderboard();
+               }
+           }
+       });
+    }
+
+    public void UpdateLeaderBoard()
+    {
+        firebaseDB.Friends.clear();
+        firebaseDB.FriendImages.clear();
+        LookUpFriendIds(2);
+
+    }
+
+    private void SortLeaderboard()
+    {
+        List<User> friends = new ArrayList<>(firebaseDB.Friends);
+        friends.add(myUser);
+        List<Bitmap> images = new ArrayList<>(firebaseDB.FriendImages);
+        try
+        {
+            File userPicture = new File(myUser.getPictureURL());
+            Bitmap temp_bmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.fromFile(userPicture));
+            images.add(temp_bmp);
+        }catch (Exception e)
+        {
+            images.add(null);
+        }
+
+
+     for(int i = 0; i<friends.size()-1; i++)
+     {
+         for(int j = i+1; j<friends.size(); j++)
+         {
+           if(friends.get(j).getPoints() > friends.get(i).getPoints())
+           {
+                User tempUser = friends.get(i);
+                friends.set(i, friends.get(j));
+                friends.set(j, tempUser);
+
+                Bitmap tempBmp = images.get(i);
+                images.set(i, images.get(j));
+                images.set(j, tempBmp);
+           }
+         }
+     }
+     firebaseDB.Friends = friends;
+     firebaseDB.FriendImages = images;
+     updateLeaderBoardAdapter();
+    }
+
+    private void updateLeaderBoardAdapter()
+    {
+            leaderboardAdapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
+            leaderboard.setAdapter(leaderboardAdapter);
     }
 }

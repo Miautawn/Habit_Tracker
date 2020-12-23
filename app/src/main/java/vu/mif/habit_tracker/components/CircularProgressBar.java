@@ -42,8 +42,11 @@ public class CircularProgressBar extends View{
 
     // Setters
     public void setImage(Drawable drawable){
-        if (drawable == null) return;
-        image = drawable;
+        if (drawable == null) {
+            image = null;
+        } else {
+            image = drawable;
+        }
     }
     public void setProgress(float value) {
         progress = (Math.min(value, progressMax));
