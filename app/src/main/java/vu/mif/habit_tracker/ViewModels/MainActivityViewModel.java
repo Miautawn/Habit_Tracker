@@ -52,10 +52,12 @@ import java.util.List;
 
 import vu.mif.habit_tracker.Adapters.LeaderBoardAdapter;
 import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.HabitRepository;
+import vu.mif.habit_tracker.Repositories.PetRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.MainActivity;
 import vu.mif.habit_tracker.firebaseDB;
@@ -72,7 +74,9 @@ public class MainActivityViewModel extends AndroidViewModel {
     private FireBaseRepository fireBaseRepository;
     private LiveData<List<Habit>> habits;
     private UserRepository userRepo;
+    private PetRepository petRepo;
     private LiveData<User> user;
+    private LiveData<Pet> pet;
     private  List<String> friend_names;
 
 
@@ -94,8 +98,10 @@ public class MainActivityViewModel extends AndroidViewModel {
         roomDB database = roomDB.getInstance(application);
         this.habitRepo = new HabitRepository(application);
         this.userRepo = new UserRepository(application);
+        this.petRepo = new PetRepository(application);
         this.habits = habitRepo.getAllHabits();
         this.user = userRepo.getUser();
+        this.pet = petRepo.getPet();
         this.fireBaseRepository = new FireBaseRepository(application);
         this.downloaded_users = new ArrayList<>();
         this.friend_names = new ArrayList<>();
@@ -147,6 +153,10 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void LogOut() {userRepo.disconnectUser();}
     public boolean isLoggedIn() {return userRepo.isLogedIn();}
     public String getUID() {return  userRepo.getUID();}
+
+    //methods for Pet
+    public void updatePet(Pet pet) {petRepo.updatePet(pet);}
+    public LiveData<Pet> getPet() {return pet;}
 
 
     public LiveData<Habit[]> getHabitCards() {
@@ -476,9 +486,9 @@ public class MainActivityViewModel extends AndroidViewModel {
         List<User> friends = new ArrayList<>(firebaseDB.Friends);
         friends.add(myUser);
         List<Bitmap> images = new ArrayList<>(firebaseDB.FriendImages);
-        File userPicture = new File(myUser.getPictureURL());
         try
         {
+            File userPicture = new File(myUser.getPictureURL());
             Bitmap temp_bmp = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.fromFile(userPicture));
             images.add(temp_bmp);
         }catch (Exception e)

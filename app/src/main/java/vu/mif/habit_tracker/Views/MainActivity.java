@@ -46,7 +46,9 @@ import java.util.List;
 import java.util.Locale;
 
 import vu.mif.habit_tracker.Adapters.LeaderBoardAdapter;
+import vu.mif.habit_tracker.Fragments.marketplaceFragment;
 import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.R;
 import vu.mif.habit_tracker.ViewModels.MainActivityViewModel;
@@ -54,7 +56,7 @@ import vu.mif.habit_tracker.components.CircularProgressBar;
 import vu.mif.habit_tracker.components.HabitDialog;
 import vu.mif.habit_tracker.firebaseDB;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, HabitDialog.HabitDialogListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, HabitDialog.HabitDialogListener, marketplaceFragment.MarketplaceListener {
 
     private final int USER_PICTURE_ACTIVITY = 1;
     private final int STORAGE_PERMISION_REQUEST = 3;
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayAdapter<String> FriendAdapter;
     private ListView leaderBoard;
     private LeaderBoardAdapter leaderBoardAdapter;
+    private ImageButton btnPet;
+    private marketplaceFragment marketDialog;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Cia habitu listas ir useris
     List<Habit> habits;
     User user;
+    Pet pet;
 
     private CircularProgressBar progressBarLeftTwo;
     private CircularProgressBar progressBarLeftOne;
@@ -129,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         friendListLayout = findViewById(R.id.friendListLayout);
         friendList = findViewById(R.id.friendList);
         leaderBoard = findViewById(R.id.leaderBoard);
+        btnPet = findViewById(R.id.pet_btn);
 
         model.friend_search = friendList;
         model.friendSearch_adapter = FriendAdapter;
@@ -149,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         model.getUser().observe(context, this::updateUserDetails);
+        model.getPet().observe(context, this::updatePetDetails);
         model.getHabitCards().observe(context, this::updateCards);
 
         motionLayout.setTransitionListener(new TransitionAdapter() {
@@ -182,7 +189,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLogOut.setOnClickListener(this);
         ivAccountPic.setOnClickListener(this);
         btnSearchFriends.setOnClickListener(this);
+        btnPet.setOnClickListener(this);
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -220,6 +230,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             model.typed_username = friendsSearchEditText.getText().toString();
             model.LookForFriends();
+        }else if(view == btnPet)
+        {
+            marketDialog = new marketplaceFragment(user.getCurrency());
+            marketDialog.show(getSupportFragmentManager(), "marketplace");
         }
     }
 
@@ -506,6 +520,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             model.updateUser(newUser);
             //Update image to Firebase
             model.UploadProfilePicture(new File(model.getPath(data.getData(), context)) , context);
+        }
+    }
+
+    @Override
+    public void boughtItem(int item_index, int price) {
+
+        marketDialog.dismiss();
+        User updatable_user = new User(user.getUsername(), user.getCurrency() - price, user.getPoints(), user.getPictureURL(), user.getUID());
+        updatable_user.setId(user.getId());
+        Pet updatable_pet = new Pet(pet.getPet_name(), item_index);
+        updatable_pet.setId(pet.getId());
+        model.updateUser(updatable_user);
+        model.updatePet(updatable_pet);
+    }
+
+    private void updatePetDetails(Pet pet) {
+        this.pet = pet;
+        switch (pet.getAksesuaras())
+        {
+            case 0:
+                btnPet.setImageResource(R.drawable.dog);
+                break;
+            case 1:
+                btnPet.setImageResource(R.drawable.dog_w_hat);
+                break;
+
+            default: btnPet.setImageResource(R.drawable.dog);
         }
     }
 
