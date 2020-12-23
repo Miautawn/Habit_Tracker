@@ -72,7 +72,6 @@ public class LoginActivityViewModel extends AndroidViewModel   {
             hasCalledCheck = true;
             if(user == null)
             {
-                //TODO: implement data download from firebase
                 //jei nera, downloadinti is web
                fireBaseRepository.downloadAllData(context);
             }else
@@ -86,7 +85,6 @@ public class LoginActivityViewModel extends AndroidViewModel   {
                 }else
                 {
                     //Prisijunge naujas
-                    //TODO: implement data download from firebase
                     userRepository.purge();
                     fireBaseRepository.downloadAllData(context);
                 }

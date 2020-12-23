@@ -157,6 +157,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     //methods for Pet
     public void updatePet(Pet pet) {petRepo.updatePet(pet);}
     public LiveData<Pet> getPet() {return pet;}
+    public void insertPet(Pet pet) { petRepo.insertPet(pet); }
 
 
     public LiveData<Habit[]> getHabitCards() {

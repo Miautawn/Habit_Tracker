@@ -536,17 +536,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updatePetDetails(Pet pet) {
-        this.pet = pet;
-        switch (pet.getAksesuaras())
-        {
-            case 0:
-                btnPet.setImageResource(R.drawable.dog);
-                break;
-            case 1:
-                btnPet.setImageResource(R.drawable.dog_w_hat);
-                break;
 
-            default: btnPet.setImageResource(R.drawable.dog);
+        if(pet != null)
+        {
+            this.pet = pet;
+            switch (pet.getAksesuaras())
+            {
+                case 0:
+                    btnPet.setImageResource(R.drawable.dog);
+                    break;
+                case 1:
+                    btnPet.setImageResource(R.drawable.dog_w_hat);
+                    break;
+
+                default: btnPet.setImageResource(R.drawable.dog);
+            }
+        }else
+        {
+            model.insertPet(new Pet("Alfonsas", 0));
         }
     }
 
