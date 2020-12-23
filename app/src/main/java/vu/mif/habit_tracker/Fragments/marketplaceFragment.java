@@ -25,6 +25,7 @@ public class marketplaceFragment extends AppCompatDialogFragment implements View
     private ImageButton btn_hat;
     private TextView user_money;
     private MarketplaceListener marketplace_picker;
+    private Button btn_close;
     private int money;
 
 
@@ -47,6 +48,8 @@ public class marketplaceFragment extends AppCompatDialogFragment implements View
         btn_hat.setOnClickListener(this);
         user_money = mView.findViewById(R.id.market_money);
         user_money.setText(String.valueOf(money));
+        btn_close = mView.findViewById(R.id.market_closet_btn);
+        btn_close.setOnClickListener(this);
 
         builder.setView(mView);
         return builder.create();
@@ -70,6 +73,9 @@ public class marketplaceFragment extends AppCompatDialogFragment implements View
             int price = 12;
             if(money >= price) marketplace_picker.boughtItem(1, price);
             else Toast.makeText(context, "You lack " + String.valueOf(price-money) + " coins!", Toast.LENGTH_SHORT).show();
+        }else if(view == btn_close)
+        {
+            this.dismiss();
         }
 
     }
