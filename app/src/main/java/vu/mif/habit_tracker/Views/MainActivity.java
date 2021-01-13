@@ -36,6 +36,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton btnPet;
     private marketplaceFragment marketDialog;
     private TextView userPoints;
+    private ProgressBar friendLoader;
+    private TextView NoFriendsFoundMessage;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -137,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         leaderBoard = findViewById(R.id.leaderBoard);
         btnPet = findViewById(R.id.pet_btn);
         userPoints = findViewById(R.id.rank);
+        friendLoader = findViewById(R.id.loading_friends);
+        NoFriendsFoundMessage = findViewById(R.id.NoFriendsFoundMessage);
 
         model.friend_search = friendList;
         model.friendSearch_adapter = FriendAdapter;
@@ -230,8 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if(view == btnSearchFriends)
         {
-            model.typed_username = friendsSearchEditText.getText().toString();
-            model.LookForFriends();
+            model.LookForFriends(friendsSearchEditText.getText().toString());
         }else if(view == btnPet)
         {
             marketDialog = new marketplaceFragment(user.getCurrency());
@@ -557,6 +561,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else
         {
             model.insertPet(new Pet("Alfonsas", 0));
+        }
+    }
+
+    public void updateFriendsLoadingScreen(int CODE)
+    {
+        if(CODE == 1) { friendLoader.setVisibility(View.VISIBLE); }
+        else if(CODE == 2) {
+            friendLoader.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setVisibility(View.GONE);
+        }
+        else if(CODE == 3) {
+            friendLoader.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setVisibility(View.VISIBLE);
         }
     }
 

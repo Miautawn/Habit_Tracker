@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -79,14 +81,14 @@ public class MainActivityViewModel extends AndroidViewModel {
     private LiveData<Pet> pet;
     private  List<String> friend_names;
 
-
     //Egzistencializmas man artimas
+    private MainActivity mainActivity;
     public Activity context;
     public ListView friend_search;
     public ArrayAdapter<String> friendSearch_adapter;
     public ListView leaderboard;
     public LeaderBoardAdapter leaderboardAdapter;
-    public String typed_username;
+    private String typed_username;
     public User myUser;
 
     private List<Habit> habitCardList;
@@ -200,29 +202,6 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
 
-//    public String GetAndCopyImage(Activity context, Intent data)
-//    {
-//        Uri uri = data.getData();
-//        File source = new File(getPath(uri, context));
-//        String filename = source.getName();
-//
-//        File destination_path = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/");
-//        File destination = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TackleData/UserPicture/" + filename);
-//
-//        boolean success = true;
-//        try
-//        {
-//            checkDestination(destination_path, context);
-//            copy(source, destination, context);
-//        }catch (Exception e)
-//        {
-//            System.out.println(e.getMessage());
-//            success = false;
-//        }
-//        if(success) return destination.getAbsolutePath();
-//        return null;
-//    }
-
     public String getPath(Uri uri, Activity context) {
 
         String path = null;
@@ -242,28 +221,6 @@ public class MainActivityViewModel extends AndroidViewModel {
         return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
     }
 
-//    private void copy(File source, File destination, Activity context) throws IOException {
-//            FileChannel in = new FileInputStream(source).getChannel();
-//            FileChannel out = new FileOutputStream(destination).getChannel();
-//            in.transferTo(0, in.size(), out);
-//            if (in != null)
-//                in.close();
-//            if (out != null)
-//                out.close();
-//    }
-//
-
-//    private void checkDestination(File destination, Activity context)
-//    {
-//        if(!destination.isDirectory())
-//        {
-//            if(!destination.mkdirs())
-//            {
-//                Toast.makeText(context, "Failed to create a directory", Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    }
-
     public void UploadProfilePicture(File image, Activity context)
     {
         UploadTask mTask = userRepo.UploadProfilePicture(Uri.fromFile(image));
@@ -276,11 +233,15 @@ public class MainActivityViewModel extends AndroidViewModel {
         });
     }
 
-    public void LookForFriends()
+    public void LookForFriends(String username)
     {
+        typed_username = username;
+
         downloaded_users.clear();
         if(!typed_username.isEmpty())
         {
+            if(mainActivity == null) mainActivity = (MainActivity)context;
+            mainActivity.updateFriendsLoadingScreen(1);
             if(!firebaseDB.areFriendsDownloaded)
             {
                 LookUpFriendIds(1);
@@ -362,6 +323,9 @@ public class MainActivityViewModel extends AndroidViewModel {
             friend_search.setAdapter(friendSearch_adapter);
         }
         for(int i = 0; i<downloaded_users.size(); i++) friend_names.add(downloaded_users.get(i).getUsername());
+
+        if(downloaded_users.size() > 0) mainActivity.updateFriendsLoadingScreen(2);
+        else mainActivity.updateFriendsLoadingScreen(3);
         friendSearch_adapter.notifyDataSetChanged();
     }
 
@@ -521,7 +485,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     private void updateLeaderBoardAdapter()
     {
-            leaderboardAdapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
-            leaderboard.setAdapter(leaderboardAdapter);
+        leaderboardAdapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
+        leaderboard.setAdapter(leaderboardAdapter);
     }
 }

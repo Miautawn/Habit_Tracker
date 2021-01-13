@@ -382,6 +382,30 @@
                 android:dividerHeight="3dp"
                 android:layout_below="@+id/friend_search_linearLayout" />
 
+            <TextView
+                android:id="@+id/NoFriendsFoundMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No matching usernames :("
+                android:gravity="center"
+                android:layout_below="@+id/friendList"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:visibility="gone"
+                />
+
+            <ProgressBar
+                android:id="@+id/loading_friends"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:minWidth="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@+id/friendList"
+                android:layout_centerInParent="true"/>
+
         </RelativeLayout>
 
     </LinearLayout>
