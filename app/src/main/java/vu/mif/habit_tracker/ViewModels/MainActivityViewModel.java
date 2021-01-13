@@ -241,7 +241,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         if(!typed_username.isEmpty())
         {
             if(mainActivity == null) mainActivity = (MainActivity)context;
-            mainActivity.updateFriendsLoadingScreen(1);
+            mainActivity.updateFriendsLoadingScreen(2);
             if(!firebaseDB.areFriendsDownloaded)
             {
                 LookUpFriendIds(1);
@@ -324,8 +324,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         }
         for(int i = 0; i<downloaded_users.size(); i++) friend_names.add(downloaded_users.get(i).getUsername());
 
-        if(downloaded_users.size() > 0) mainActivity.updateFriendsLoadingScreen(2);
-        else mainActivity.updateFriendsLoadingScreen(3);
+        if(downloaded_users.size() > 0) mainActivity.updateFriendsLoadingScreen(3);
+        else mainActivity.updateFriendsLoadingScreen(4);
         friendSearch_adapter.notifyDataSetChanged();
     }
 
@@ -440,6 +440,8 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     public void UpdateLeaderBoard()
     {
+        if(mainActivity == null) mainActivity = (MainActivity)context;
+        mainActivity.updateLeaderboardLoadingScreen(1);
         firebaseDB.Friends.clear();
         firebaseDB.FriendImages.clear();
         LookUpFriendIds(2);
@@ -485,6 +487,8 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     private void updateLeaderBoardAdapter()
     {
+        if(firebaseDB.Friends.size() != 1) mainActivity.updateLeaderboardLoadingScreen(2);
+        else mainActivity.updateLeaderboardLoadingScreen(3);
         leaderboardAdapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
         leaderboard.setAdapter(leaderboardAdapter);
     }
