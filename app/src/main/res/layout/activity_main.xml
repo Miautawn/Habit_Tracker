@@ -240,11 +240,12 @@
 
                 <ImageButton
                     android:id="@+id/pet_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="171dp"
+                    android:layout_height="117dp"
                     android:layout_marginTop="30dp"
                     android:src="@drawable/dog"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:scaleType="fitCenter"/>
 
                 <View
                     android:id="@+id/line"

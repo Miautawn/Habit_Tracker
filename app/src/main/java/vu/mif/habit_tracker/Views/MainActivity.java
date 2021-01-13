@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LeaderBoardAdapter leaderBoardAdapter;
     private ImageButton btnPet;
     private marketplaceFragment marketDialog;
+    private TextView userPoints;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         friendList = findViewById(R.id.friendList);
         leaderBoard = findViewById(R.id.leaderBoard);
         btnPet = findViewById(R.id.pet_btn);
+        userPoints = findViewById(R.id.rank);
 
         model.friend_search = friendList;
         model.friendSearch_adapter = FriendAdapter;
@@ -340,7 +342,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         model.myUser = user;
         tvUsername.setText(this.user.getUsername());
 
-        tvCoins.setText(String.valueOf(this.user.getCurrency()));
+        tvCoins.setText(String.valueOf(user.getCurrency()));
+        userPoints.setText(String.valueOf(user.getPoints()));
 
         if(user.getPictureURL() != null)
         {
@@ -537,17 +540,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updatePetDetails(Pet pet) {
-        this.pet = pet;
-        switch (pet.getAksesuaras())
-        {
-            case 0:
-                btnPet.setImageResource(R.drawable.dog);
-                break;
-            case 1:
-                btnPet.setImageResource(R.drawable.dog_w_hat);
-                break;
 
-            default: btnPet.setImageResource(R.drawable.dog);
+        if(pet != null)
+        {
+            this.pet = pet;
+            switch (pet.getAksesuaras())
+            {
+                case 0:
+                    btnPet.setImageResource(R.drawable.dog);
+                    break;
+                case 1:
+                    btnPet.setImageResource(R.drawable.dog_w_hat);
+                    break;
+
+                default: btnPet.setImageResource(R.drawable.dog);
+            }
+        }else
+        {
+            model.insertPet(new Pet("Alfonsas", 0));
         }
         model.UploadPet(pet);
     }
