@@ -607,12 +607,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(CODE == 1)
         {
             leaderboardMessage.setVisibility(View.GONE);
+            leaderBoard.setVisibility(View.GONE);
             leaderLoader.setVisibility(View.VISIBLE);
         }else if (CODE == 2) {
             leaderboardMessage.setVisibility(View.GONE);
             leaderLoader.setVisibility(View.GONE);
+            leaderBoard.setVisibility(View.VISIBLE);
         }else if(CODE == 3) {
             leaderLoader.setVisibility(View.GONE);
+            leaderBoard.setVisibility(View.GONE);
             leaderboardMessage.setVisibility(View.VISIBLE);
             leaderboardMessage.setText("You have no friends to\ncompete with");
         }

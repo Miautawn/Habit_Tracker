@@ -28,6 +28,8 @@ import vu.mif.habit_tracker.Repositories.PetRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.MainActivity;
 import vu.mif.habit_tracker.Views.RegisterActivity;
+import vu.mif.habit_tracker.firebaseDB;
+
 
 public class RegisterActivityViewModel extends AndroidViewModel {
     private UserRepository userRepo;
@@ -41,54 +43,46 @@ public class RegisterActivityViewModel extends AndroidViewModel {
     public void registerUser(String username, String email, String password, Activity context)
     {
         RegisterActivity register_activity = (RegisterActivity)context;
-        if(!username.isEmpty() && !email.isEmpty() && !password.isEmpty())
-        {
-            register_activity.updateRegisterLoading(1, null);
-            if(!userRepo.isLogedIn())
-            {
-                userRepo.registerUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
-                            userRepo.purge();
-                            InsertAndUpload(username, userRepo.getUID(), context);
-                        }else
-                        {
-                            try
-                            {
-                                throw task.getException();
-                            }catch (FirebaseTooManyRequestsException e)
-                            {
-                                register_activity.updateRegisterLoading(2, "Too many requests,\nplease wait and try again later");
-                            }catch (FirebaseAuthException e)
-                            {
-                                String errorCode = ((FirebaseAuthException)task.getException()).getErrorCode();
-                                switch(errorCode)
-                                {
-                                    case "ERROR_INVALID_EMAIL":
-                                        register_activity.updateRegisterLoading(2, "Please enter the email correctly!");
-                                        break;
-                                    case "ERROR_WEAK_PASSWORD":
-                                        register_activity.updateRegisterLoading(2, "Weak password,\nit should be at least 6 characters");
-                                        break;
-                                    case "ERROR_EMAIL_ALREADY_IN_USE":
-                                        register_activity.updateRegisterLoading(2, "This email is already taken");
-                                        break;
+        if(firebaseDB.CheckOnlineStatus(context)) {
+            if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                register_activity.updateRegisterLoading(1, null);
+                if (!userRepo.isLogedIn()) {
+                    userRepo.registerUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                userRepo.purge();
+                                InsertAndUpload(username, userRepo.getUID(), context);
+                            } else {
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseTooManyRequestsException e) {
+                                    register_activity.updateRegisterLoading(2, "Too many requests,\nplease wait and try again later");
+                                } catch (FirebaseAuthException e) {
+                                    String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                                    switch (errorCode) {
+                                        case "ERROR_INVALID_EMAIL":
+                                            register_activity.updateRegisterLoading(2, "Please enter the email correctly!");
+                                            break;
+                                        case "ERROR_WEAK_PASSWORD":
+                                            register_activity.updateRegisterLoading(2, "Weak password,\nit should be at least 6 characters");
+                                            break;
+                                        case "ERROR_EMAIL_ALREADY_IN_USE":
+                                            register_activity.updateRegisterLoading(2, "This email is already taken");
+                                            break;
+                                    }
+                                } catch (Exception e) {
+                                    register_activity.updateRegisterLoading(2, "Unknown error");
                                 }
-                            }catch (Exception e)
-                            {
-                                register_activity.updateRegisterLoading(2, "Unknown error");
                             }
                         }
-                    }
-                });
-            }else
-            {
-               InsertAndUpload(username, userRepo.getUID(), context);
-            }
+                    });
+                } else {
+                    InsertAndUpload(username, userRepo.getUID(), context);
+                }
 
-        }else register_activity.updateRegisterLoading(2, "You must fill in all of the fields");
+            } else register_activity.updateRegisterLoading(2, "You must fill in all of the fields");
+        }else register_activity.updateRegisterLoading(2, "You must be online to register");
 
     }
 

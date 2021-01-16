@@ -23,6 +23,7 @@ import vu.mif.habit_tracker.Repositories.FireBaseRepository;
 import vu.mif.habit_tracker.Repositories.UserRepository;
 import vu.mif.habit_tracker.Views.LoginActivity;
 import vu.mif.habit_tracker.Views.MainActivity;
+import vu.mif.habit_tracker.firebaseDB;
 
 
 
@@ -43,49 +44,41 @@ public class LoginActivityViewModel extends AndroidViewModel   {
     {
         this.context = context;
         if(loginActivity == null) loginActivity = (LoginActivity)context;
-        if(!email.isEmpty() && !password.isEmpty())
-        {
-            loginActivity.updateLoginLoading(1, null);
-            userRepository.loginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful())
-                    {
-                        SuccessfulLogin();
-                    }
-                    else
-                    {
-                        try
-                        {
-                            throw task.getException();
-                        }catch (FirebaseTooManyRequestsException e)
-                        {
-                            loginActivity.updateLoginLoading(2, "Too many requests,\nplease wait and try again later");
-                        }catch (FirebaseAuthException e)
-                        {
-                            String errorCode = ((FirebaseAuthException)task.getException()).getErrorCode();
-                            switch(errorCode)
-                            {
-                                case "ERROR_USER_NOT_FOUND":
-                                    loginActivity.updateLoginLoading(2, "Such user does not exist!");
-                                    break;
-                                case "ERROR_INVALID_EMAIL":
-                                    loginActivity.updateLoginLoading(2, "Please enter the email correctly!");
-                                    break;
-                                case "ERROR_WRONG_PASSWORD":
-                                    loginActivity.updateLoginLoading(2, "The password is incorrect!");
-                                    break;
+        if(firebaseDB.CheckOnlineStatus(context)) {
+            if (!email.isEmpty() && !password.isEmpty()) {
+                loginActivity.updateLoginLoading(1, null);
+                userRepository.loginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            SuccessfulLogin();
+                        } else {
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseTooManyRequestsException e) {
+                                loginActivity.updateLoginLoading(2, "Too many requests,\nplease wait and try again later");
+                            } catch (FirebaseAuthException e) {
+                                String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                                switch (errorCode) {
+                                    case "ERROR_USER_NOT_FOUND":
+                                        loginActivity.updateLoginLoading(2, "Such user does not exist!");
+                                        break;
+                                    case "ERROR_INVALID_EMAIL":
+                                        loginActivity.updateLoginLoading(2, "Please enter the email correctly!");
+                                        break;
+                                    case "ERROR_WRONG_PASSWORD":
+                                        loginActivity.updateLoginLoading(2, "The password is incorrect!");
+                                        break;
+                                }
+                            } catch (Exception e) {
+                                loginActivity.updateLoginLoading(2, "Unknown error");
                             }
-                        }catch (Exception e)
-                        {
-                            loginActivity.updateLoginLoading(2, "Unknown error");
-                        }
 
+                        }
                     }
-                }
-            });
-        }
-        else loginActivity.updateLoginLoading(2, "You must fill in all of the fields");
+                });
+            } else loginActivity.updateLoginLoading(2, "You must fill in all of the fields");
+        } else loginActivity.updateLoginLoading(2, "You must be online to log in");
 
     }
 
