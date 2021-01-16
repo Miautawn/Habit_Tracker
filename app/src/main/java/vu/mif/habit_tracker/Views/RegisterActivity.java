@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -34,6 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText email;
     private EditText username;
     private RegisterActivityViewModel viewmodel;
+    private ProgressBar register_loader;
+    private TextView regiter_message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
         email= findViewById(R.id.signinEmailEditText);
         username = findViewById(R.id.signiUserNameEditText);
         btnSignIn = findViewById(R.id.signinBtn);
+        register_loader = findViewById(R.id.loading_register);
+        regiter_message = findViewById(R.id.register_message);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,5 +94,21 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateRegisterLoading(int CODE, String message)
+    {
+        if(message == null) message = "Nothing is wrong";
+
+        if(CODE == 1)
+        {
+            regiter_message.setVisibility(View.GONE);
+            register_loader.setVisibility(View.VISIBLE);
+        }else
+        {
+            register_loader.setVisibility(View.GONE);
+            regiter_message.setText(message);
+            regiter_message.setVisibility(View.VISIBLE);
+        }
     }
 }

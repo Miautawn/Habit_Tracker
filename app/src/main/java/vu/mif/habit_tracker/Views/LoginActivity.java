@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void updateLoginLoading(int CODE, String message)
     {
-        if(message == null) message = "Unknown error";
+        if(message == null) message = "Nothing is wrong";
 
         if(CODE == 1)
         {

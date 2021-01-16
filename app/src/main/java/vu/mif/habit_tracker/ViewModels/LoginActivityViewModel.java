@@ -85,7 +85,7 @@ public class LoginActivityViewModel extends AndroidViewModel   {
                 }
             });
         }
-        else loginActivity.updateLoginLoading(2, "You must fill all of the fields");
+        else loginActivity.updateLoginLoading(2, "You must fill in all of the fields");
 
     }
 
