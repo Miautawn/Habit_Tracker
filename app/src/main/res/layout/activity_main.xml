@@ -265,15 +265,42 @@
                     android:textColor="@color/leaderBoardText"
                     android:text="leaderboard"/>
 
-                <ListView
-                    android:id="@+id/leaderBoard"
-                    android:layout_width="315dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/friend_list_bg"
-                    android:minHeight="100dp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp">
+
+                    <ListView
+                        android:id="@+id/leaderBoard"
+                        android:layout_width="315dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="30dp"
+                        android:background="@drawable/friend_list_bg"
+                        android:clickable="false"
+                        android:layout_centerInParent="true" />
+
+                    <TextView
+                        android:id="@+id/LeaderBoardMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="You must be online to view\nthe leader board!"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/loading_leaderboard"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="100dp"
+                        android:minHeight="40dp"
+                        android:minWidth="40dp"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
 
             </LinearLayout>
         </LinearLayout>
@@ -331,7 +358,6 @@
             android:background="@color/lightGrey"/>
 
         <RelativeLayout
-            android:id="@+id/friendListLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -382,7 +408,30 @@
                 android:dividerHeight="3dp"
                 android:layout_below="@+id/friend_search_linearLayout" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/NoFriendsFoundMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No matching usernames :("
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/friendList"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:visibility="gone"
+                />
 
+            <ProgressBar
+                android:id="@+id/loading_friends"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:minWidth="40dp"
+                android:layout_marginTop="50dp"
+                android:layout_below="@+id/friend_search_linearLayout"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

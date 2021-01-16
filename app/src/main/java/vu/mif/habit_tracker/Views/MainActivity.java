@@ -35,7 +35,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvCoins;
     private DrawerLayout drawerLayout;
     private AppCompatButton btnLogOut;
-    private RelativeLayout friendListLayout;
+    private LinearLayout friendListLayout;
     private ImageView ivAccountPic;
     private EditText friendsSearchEditText;
     private Button btnSearchFriends;
@@ -84,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton btnPet;
     private marketplaceFragment marketDialog;
     private TextView userPoints;
+    private ProgressBar friendLoader;
+    private TextView NoFriendsFoundMessage;
+    private ProgressBar leaderLoader;
+    private TextView leaderboardMessage;
 
     private MainActivity context;
     private MotionLayout motionLayout;
@@ -132,11 +138,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvCoins = findViewById(R.id.tvCoins);
         friendsSearchEditText = findViewById(R.id.friendsSearch_EditText);
         btnSearchFriends = findViewById(R.id.btnFriendSearch);
-        friendListLayout = findViewById(R.id.friendListLayout);
+        friendListLayout = findViewById(R.id.friend_search_linearLayout);
         friendList = findViewById(R.id.friendList);
         leaderBoard = findViewById(R.id.leaderBoard);
         btnPet = findViewById(R.id.pet_btn);
         userPoints = findViewById(R.id.rank);
+        friendLoader = findViewById(R.id.loading_friends);
+        NoFriendsFoundMessage = findViewById(R.id.NoFriendsFoundMessage);
+        leaderLoader = findViewById(R.id.loading_leaderboard);
+        leaderboardMessage = findViewById(R.id.LeaderBoardMessage);
 
         model.friend_search = friendList;
         model.friendSearch_adapter = FriendAdapter;
@@ -230,8 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if(view == btnSearchFriends)
         {
-            model.typed_username = friendsSearchEditText.getText().toString();
-            model.LookForFriends();
+            model.LookForFriends(friendsSearchEditText.getText().toString());
         }else if(view == btnPet)
         {
             marketDialog = new marketplaceFragment(user.getCurrency());
@@ -484,13 +493,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             leaderBoard.setVisibility(View.VISIBLE);
             model.UpdateLeaderBoard();
-        }else leaderBoard.setVisibility(View.INVISIBLE);
+        }else{
+            leaderBoard.setVisibility(View.INVISIBLE);
+            updateLeaderboardLoadingScreen(4);
+        }
     }
 
     private void checkFriendListAvailability()
     {
-        if(firebaseDB.CheckOnlineStatus(this)) friendListLayout.setVisibility(View.VISIBLE);
-        else friendListLayout.setVisibility(View.INVISIBLE);
+        if(firebaseDB.CheckOnlineStatus(this)) updateFriendsLoadingScreen(1);
+        else updateFriendsLoadingScreen(5);
     }
 
 
@@ -557,6 +569,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else
         {
             model.insertPet(new Pet("Alfonsas", 0));
+        }
+    }
+
+    public void updateFriendsLoadingScreen(int CODE)
+    {
+        if(CODE == 1) {
+            friendListLayout.setVisibility(View.VISIBLE);
+            friendLoader.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setVisibility(View.GONE);
+        }
+        else if(CODE == 2) {
+            friendLoader.setVisibility(View.VISIBLE);
+            friendList.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setVisibility(View.GONE);
+        }
+        else if(CODE == 3) {
+            friendLoader.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setVisibility(View.GONE);
+            friendList.setVisibility(View.VISIBLE);
+        } else if(CODE == 4)
+        {
+            friendLoader.setVisibility(View.GONE);
+            friendList.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setText("No matching users found :(");
+            NoFriendsFoundMessage.setVisibility(View.VISIBLE);
+        } else if(CODE == 5)
+        {
+            friendListLayout.setVisibility(View.GONE);
+            friendList.setVisibility(View.GONE);
+            NoFriendsFoundMessage.setVisibility(View.VISIBLE);
+            NoFriendsFoundMessage.setText("You must be online to\nsearch for friends!");
+        }
+    }
+    public void updateLeaderboardLoadingScreen(int CODE)
+    {
+        if(CODE == 1)
+        {
+            leaderboardMessage.setVisibility(View.GONE);
+            leaderBoard.setVisibility(View.GONE);
+            leaderLoader.setVisibility(View.VISIBLE);
+        }else if (CODE == 2) {
+            leaderboardMessage.setVisibility(View.GONE);
+            leaderLoader.setVisibility(View.GONE);
+            leaderBoard.setVisibility(View.VISIBLE);
+        }else if(CODE == 3) {
+            leaderLoader.setVisibility(View.GONE);
+            leaderBoard.setVisibility(View.GONE);
+            leaderboardMessage.setVisibility(View.VISIBLE);
+            leaderboardMessage.setText("You have no friends to\ncompete with");
+        }
+        else if(CODE == 4)
+        {
+            leaderLoader.setVisibility(View.GONE);
+            leaderboardMessage.setVisibility(View.VISIBLE);
+            leaderboardMessage.setText("You must be online to view\nthe leader board!");
         }
     }
 
