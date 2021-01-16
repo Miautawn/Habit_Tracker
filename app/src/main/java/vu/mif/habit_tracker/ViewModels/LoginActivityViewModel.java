@@ -14,7 +14,9 @@ import androidx.lifecycle.Observer;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthException;
 
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.Repositories.FireBaseRepository;
@@ -29,6 +31,7 @@ public class LoginActivityViewModel extends AndroidViewModel   {
     private FireBaseRepository fireBaseRepository;
     private boolean hasCalledCheck = false;
     private Activity context;
+    private LoginActivity loginActivity;
 
     public LoginActivityViewModel(@NonNull Application application) {
         super(application);
@@ -39,8 +42,10 @@ public class LoginActivityViewModel extends AndroidViewModel   {
     public void logInUser(String email, String password, Activity context)
     {
         this.context = context;
+        if(loginActivity == null) loginActivity = (LoginActivity)context;
         if(!email.isEmpty() && !password.isEmpty())
         {
+            loginActivity.updateLoginLoading(1, null);
             userRepository.loginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -50,12 +55,37 @@ public class LoginActivityViewModel extends AndroidViewModel   {
                     }
                     else
                     {
-                        Toast.makeText(context, task.getException().toString(), Toast.LENGTH_LONG).show();
+                        try
+                        {
+                            throw task.getException();
+                        }catch (FirebaseTooManyRequestsException e)
+                        {
+                            loginActivity.updateLoginLoading(2, "Too many requests,\nplease wait and try again later");
+                        }catch (FirebaseAuthException e)
+                        {
+                            String errorCode = ((FirebaseAuthException)task.getException()).getErrorCode();
+                            switch(errorCode)
+                            {
+                                case "ERROR_USER_NOT_FOUND":
+                                    loginActivity.updateLoginLoading(2, "Such user does not exist!");
+                                    break;
+                                case "ERROR_INVALID_EMAIL":
+                                    loginActivity.updateLoginLoading(2, "Please enter the email correctly!");
+                                    break;
+                                case "ERROR_WRONG_PASSWORD":
+                                    loginActivity.updateLoginLoading(2, "The password is incorrect!");
+                                    break;
+                            }
+                        }catch (Exception e)
+                        {
+                            loginActivity.updateLoginLoading(2, "Unknown error");
+                        }
+
                     }
                 }
             });
         }
-        else Toast.makeText(getApplication(), "Please fill all of the fields", Toast.LENGTH_SHORT).show();
+        else loginActivity.updateLoginLoading(2, "You must fill all of the fields");
 
     }
 

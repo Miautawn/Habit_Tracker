@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button btnLogIn;
     Button btnSignIn;
     LoginActivityViewModel viewmodel;
+    ProgressBar login_loader;
+    TextView login_message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogIn = findViewById(R.id.btnLogIn);
         btnLogIn.setOnClickListener(this);
         btnSignIn = findViewById(R.id.signinBtn);
+        login_loader = findViewById(R.id.loading_login);
+        login_message = findViewById(R.id.login_message);
         btnSignIn.setOnClickListener(this);
 
 
@@ -93,4 +98,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+    public void updateLoginLoading(int CODE, String message)
+    {
+        if(message == null) message = "Unknown error";
+
+        if(CODE == 1)
+        {
+            login_loader.setVisibility(View.VISIBLE);
+            login_message.setVisibility(View.GONE);
+        }else {
+            login_loader.setVisibility(View.GONE);
+            login_message.setText(message);
+            login_message.setVisibility(View.VISIBLE);
+        }
+    }
+
 }
