@@ -160,12 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBarRightOne = findViewById(R.id.progressBarRightOne);
         progressBarRightTwo = findViewById(R.id.progressBarRightTwo);
 
-        model.getAllHabits().observe(context, new Observer<List<Habit>>() {
-            @Override
-            public void onChanged(List<Habit> habits) {
-                context.habits = habits;
-            }
-        });
+        model.getAllHabits().observe(context, this::updateHabitDetails);
         model.getUser().observe(context, this::updateUserDetails);
         model.getPet().observe(context, this::updatePetDetails);
         model.getHabitCards().observe(context, this::updateCards);
@@ -552,9 +547,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updatePetDetails(Pet pet) {
-
-        if(pet != null)
-        {
             this.pet = pet;
             switch (pet.getAksesuaras())
             {
@@ -567,11 +559,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 default: btnPet.setImageResource(R.drawable.dog);
             }
-        }else
-        {
-            model.insertPet(new Pet("Alfonsas", 0));
-        }
         model.UploadPet(pet);
+    }
+
+    private void updateHabitDetails(List<Habit> habits)
+    {
+        this.habits = habits;
+        if(habits.size() > 0) model.UploadHabits(habits);
     }
 
     public void updateFriendsLoadingScreen(int CODE)

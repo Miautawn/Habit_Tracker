@@ -54,15 +54,15 @@ public class UserRepository {
     public String getUID() {if(isLogedIn()) return auth.getCurrentUser().getUid(); return null;}
 
     //Firebase methods
-    public Task<AuthResult> loginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
-    public Task<AuthResult> registerUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
-    public DatabaseReference uploadUser() {
+    public Task<AuthResult> LoginUser(String email, String password) { return auth.signInWithEmailAndPassword(email, password); }
+    public Task<AuthResult> RegisterUser(String email, String password) { return auth.createUserWithEmailAndPassword(email, password); }
+    public DatabaseReference UploadUser() {
         DatabaseReference myRef = fireDB.getReference("/Users");
-        return myRef.child(auth.getCurrentUser().getUid());
+        return myRef.child(getUID());
     }
     public UploadTask UploadProfilePicture(Uri image) {
         StorageReference storageRef = fireStorage.getReference();
-        StorageReference myRef = storageRef.child("UserImages/"+ auth.getCurrentUser().getUid());
+        StorageReference myRef = storageRef.child("UserImages/"+ getUID());
         return myRef.putFile(image);
     }
     public Query DownloadPotentialFriends(String typed_username) {
@@ -75,6 +75,16 @@ public class UserRepository {
     }
     public DatabaseReference DownloadUser(String UID) { return fireDB.getReference("/Users/"+UID);}
     public DatabaseReference GetFriendIds() { return fireDB.getReference("/Friends/"+ getUID());}
+    public DatabaseReference UploadPet()
+    {
+        DatabaseReference myRef = fireDB.getReference("/Pets");
+        return myRef.child(getUID());
+    }
+    public DatabaseReference UploadHabits()
+    {
+        DatabaseReference myRef = fireDB.getReference("/Habits");
+        return  myRef.child(getUID());
+    }
 
 
     private static class InsertUserAsyncTask extends AsyncTask<User, Void, Void>

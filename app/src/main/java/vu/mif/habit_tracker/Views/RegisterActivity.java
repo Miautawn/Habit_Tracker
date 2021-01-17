@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -104,11 +105,18 @@ public class RegisterActivity extends AppCompatActivity {
         {
             regiter_message.setVisibility(View.GONE);
             register_loader.setVisibility(View.VISIBLE);
+
+            //disable user interaction
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }else
         {
             register_loader.setVisibility(View.GONE);
             regiter_message.setText(message);
             regiter_message.setVisibility(View.VISIBLE);
+
+            //Re-enabling the interaction
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 }

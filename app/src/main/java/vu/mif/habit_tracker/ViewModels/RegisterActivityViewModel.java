@@ -47,7 +47,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
             if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
                 register_activity.updateRegisterLoading(1, null);
                 if (!userRepo.isLogedIn()) {
-                    userRepo.registerUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                    userRepo.RegisterUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -93,7 +93,7 @@ public class RegisterActivityViewModel extends AndroidViewModel {
         userRepo.insertUser(newUser);
         petRepo.insertPet(newPet);
 
-        DatabaseReference ref = userRepo.uploadUser();
+        DatabaseReference ref = userRepo.UploadUser();
         ref.setValue(newUser, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
