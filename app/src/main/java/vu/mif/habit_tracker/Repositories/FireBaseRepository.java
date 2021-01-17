@@ -35,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
+import vu.mif.habit_tracker.Models.Habit;
+import vu.mif.habit_tracker.Models.Pet;
 import vu.mif.habit_tracker.Models.User;
 import vu.mif.habit_tracker.Views.LoginActivity;
 import vu.mif.habit_tracker.Views.MainActivity;
@@ -49,6 +51,8 @@ public class FireBaseRepository {
     private FirebaseDatabase fireDB;
     private FirebaseStorage fireStorage;
     private UserRepository userRepository;
+    private PetRepository petRepository;
+    private HabitRepository habitRepository;
 
     public FireBaseRepository(Application context)
     {
@@ -57,8 +61,9 @@ public class FireBaseRepository {
         this.auth = firebaseDB.getAuthInstance();
         this.fireDB = firebaseDB.getDatabaseInstance();
         this.fireStorage = firebaseDB.getStorageInstance();
-        userRepository = new UserRepository(context);
-
+        this.userRepository = new UserRepository(context);
+        this.petRepository = new PetRepository(context);
+        this.habitRepository = new HabitRepository(context);
     }
 
     public void downloadAllData(Activity login_context)
@@ -70,6 +75,62 @@ public class FireBaseRepository {
     }
 
 
+    private void DownloadHabits(Activity login_context)
+    {
+        DatabaseReference myRef = fireDB.getReference("/Habits/"+userRepository.getUID());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue() != null)
+                {
+                    for (DataSnapshot habit: snapshot.getChildren())
+                    {
+                        Habit downloadedHabit = habit.getValue(Habit.class);
+                        habitRepository.insertHabit(downloadedHabit);
+                    }
+                    login_context.startActivity(new Intent(login_context, MainActivity.class));
+                    login_context.finish();
+                } else
+                {
+                    //just continue without habits
+                    login_context.startActivity(new Intent(login_context, MainActivity.class));
+                    login_context.finish();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println(error.getMessage());
+                failedDownload(login_context);
+            }
+        });
+    }
+
+    private void DownloadPet(Activity login_context)
+    {
+        DatabaseReference myRef = fireDB.getReference("/Pets/" + userRepository.getUID());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue() != null)
+                {
+                    Pet downloadedPet = snapshot.getValue(Pet.class);
+                    petRepository.insertPet(new Pet("Alfonsas", downloadedPet.getAksesuaras()));
+                    DownloadHabits(login_context);
+                } else
+                {
+                    //if no pet was found, insert a new one and continue downloading the habits
+                    petRepository.insertPet(new Pet("Alfonsas2", 0));
+                    DownloadHabits(login_context);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println(error.getMessage());
+                failedDownload(login_context);
+            }
+        });
+    }
+
     private void DownloadUser(Activity login_context, String imagePath)
     {
         DatabaseReference myRef = fireDB.getReference("/Users/" + userRepository.getUID());
@@ -80,15 +141,14 @@ public class FireBaseRepository {
                 {
                     User downloadedUser = snapshot.getValue(User.class);
                     userRepository.insertUser(new User(downloadedUser.getUsername(), downloadedUser.getCurrency(), downloadedUser.getPoints(), imagePath, userRepository.getUID()));
-                    //TODO: continue to download habits and pet data
-                    login_context.startActivity(new Intent(login_context, MainActivity.class));
-                    login_context.finish();
-                }else failedDownload(login_context, "something failed in the user downloading");
+                    DownloadPet(login_context);
+                }else failedDownload(login_context);
 
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                failedDownload(login_context, error.getMessage());
+                System.out.println(error.getMessage());
+                failedDownload(login_context);
             }
         });
     }
@@ -127,9 +187,9 @@ public class FireBaseRepository {
         });
     }
 
-    private void failedDownload(Activity login_context, String error_message)
+    private void failedDownload(Activity login_context)
     {
-        new AlertDialog.Builder(login_context).setTitle("Download Failed").setMessage("Something went wrong when downloading your account data, we recommend you create new user with the same Email").setPositiveButton("Oh no...", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(login_context).setTitle("Download Failed").setMessage("Something went wrong when downloading your account data, we recommend you to create new account").setPositiveButton("Oh no...", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent( login_context, RegisterActivity.class);

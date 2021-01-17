@@ -2,7 +2,10 @@ package vu.mif.habit_tracker.Models;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.google.firebase.database.Exclude;
 
 // This is a Habit table
 @Entity(tableName = "Habit")
@@ -22,6 +25,10 @@ public class Habit {
     private int totalProgress;
     private int currentProgress;
 
+    //for Firebase
+    @Ignore
+    public Habit(){}
+
     public Habit(String name, String iconID, int colourID, boolean isRepeatble, int repeatNumber, int endYear, int endMonth, int endDayOfMonth, int totalProgress, int currentProgress) {
         this.name = name;
         this.iconID = iconID;
@@ -39,6 +46,7 @@ public class Habit {
         this.id = id;
     }
 
+    @Exclude
     public int getId() {
         return id;
     }

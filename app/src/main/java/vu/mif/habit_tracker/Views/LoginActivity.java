@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -54,15 +55,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login_message = findViewById(R.id.login_message);
         btnSignIn.setOnClickListener(this);
 
-
-//TODO: nuspresti del galutinio log in dizaino
-
-//      emailBtn = findViewById(R.id.emailBtn);
-//      emailBtn.setOnClickListener(this);
-
-
-        //  loginTextRedirect = findViewById(R.id.logInText);
-        //  loginTextRedirect.setOnClickListener(this);
     }
 
     @Override
@@ -107,10 +99,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             login_loader.setVisibility(View.VISIBLE);
             login_message.setVisibility(View.GONE);
+
+            //disable user interaction
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }else {
             login_loader.setVisibility(View.GONE);
             login_message.setText(message);
             login_message.setVisibility(View.VISIBLE);
+
+            //Re-enabling the interaction
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 

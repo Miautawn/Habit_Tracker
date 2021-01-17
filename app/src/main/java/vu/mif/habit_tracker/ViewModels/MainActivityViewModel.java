@@ -126,6 +126,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     {
         habitRepo.deleteAllHabits();
     }
+    public LiveData<Habit[]> getHabitCards() { return habitCards; }
     public LiveData<List<Habit>> getAllHabits()
     {
         MediatorLiveData<List<Habit>> data = new MediatorLiveData<>();
@@ -136,6 +137,10 @@ public class MainActivityViewModel extends AndroidViewModel {
             updateCards();
         });
         return data;
+    }
+    public void UploadHabits(List<Habit> habits)
+    {
+        if(firebaseDB.CheckOnlineStatus(context)) UploadHabitsToFireBase(habits);
     }
 
     //methods for user
@@ -155,15 +160,16 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void LogOut() {userRepo.disconnectUser();}
     public boolean isLoggedIn() {return userRepo.isLogedIn();}
     public String getUID() {return  userRepo.getUID();}
+    public void UploadUser(User user) {
+        if(firebaseDB.CheckOnlineStatus(context)) UploadUserToFireBase(user);
+    }
 
     //methods for Pet
     public void updatePet(Pet pet) {petRepo.updatePet(pet);}
     public LiveData<Pet> getPet() {return pet;}
     public void insertPet(Pet pet) { petRepo.insertPet(pet); }
-
-
-    public LiveData<Habit[]> getHabitCards() {
-        return habitCards;
+    public void UploadPet(Pet pet) {
+        if(firebaseDB.CheckOnlineStatus(context)) UploadPetToFireBase(pet);
     }
 
 
@@ -365,7 +371,6 @@ public class MainActivityViewModel extends AndroidViewModel {
                         if(snapshot.getChildrenCount() > 0) DownloadFriends(friendIds, userRepo.DownloadUser(friendIds.get(0)), CODE);
                         else SortLeaderboard();
                         break;
-
                 }
             }
             @Override
@@ -491,5 +496,37 @@ public class MainActivityViewModel extends AndroidViewModel {
         else mainActivity.updateLeaderboardLoadingScreen(3);
         leaderboardAdapter = new LeaderBoardAdapter(context, firebaseDB.Friends, firebaseDB.FriendImages);
         leaderboard.setAdapter(leaderboardAdapter);
+    }
+
+    private void UploadUserToFireBase(User user)
+    {
+        DatabaseReference ref = userRepo.UploadUser();
+        ref.setValue(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(error != null) System.out.println(error.getMessage());
+            }
+        });
+    }
+    private void UploadPetToFireBase(Pet pet)
+    {
+        DatabaseReference ref = userRepo.UploadPet();
+        ref.setValue(pet, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(error != null) System.out.println(error.getMessage());
+            }
+        });
+    }
+
+    private void UploadHabitsToFireBase(List<Habit> habits)
+    {
+        DatabaseReference ref = userRepo.UploadHabits();
+        ref.setValue(habits, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if(error != null) System.out.println(error.getMessage());
+            }
+        });
     }
 }

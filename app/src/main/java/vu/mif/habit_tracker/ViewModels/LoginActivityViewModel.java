@@ -47,7 +47,7 @@ public class LoginActivityViewModel extends AndroidViewModel   {
         if(firebaseDB.CheckOnlineStatus(context)) {
             if (!email.isEmpty() && !password.isEmpty()) {
                 loginActivity.updateLoginLoading(1, null);
-                userRepository.loginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                userRepository.LoginUser(email, password).addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
