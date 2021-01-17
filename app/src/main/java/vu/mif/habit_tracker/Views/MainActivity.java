@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean leaderBoardOpen;
     private boolean cardsPopulated = false;
+    private boolean visibleKeyboard = false;
 
     private float startX;
     private float startY;
@@ -188,6 +189,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) { }
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) { }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                if (visibleKeyboard) {
+                    hideSystemUI();
+                    visibleKeyboard = false;
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) { }
+        });
+
         // TODO: Fix onClick issue
         overlayTrigger.setOnClickListener(this);
         hiddenLeaderBoardOverlay.setOnClickListener(this);
@@ -218,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (view == moreInfoBtn){
             checkFriendListAvailability();
             drawerLayout.openDrawer(GravityCompat.START);
+            visibleKeyboard = true;
         } else if (view == btnLogOut){
             model.LogOut();
             if(!model.isLoggedIn())
@@ -473,14 +493,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            hideSystemUI();
         }
+    }
+
+    private void hideSystemUI() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     private void updateLeaderBoard()
