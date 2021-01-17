@@ -61,6 +61,10 @@ public class HabitDialog extends DialogFragment {
                     }
                     updateProgressBar();
                     listener.applyChanges(id, currentProgress);
+                } else {
+                    currentProgress += 1;
+                    updateProgressBar();
+                    listener.applyChanges(id, currentProgress);
                 }
             }
         });
@@ -76,6 +80,15 @@ public class HabitDialog extends DialogFragment {
                         } else {
                             currentProgress -= currentNumber;
                         }
+                    }
+                    updateProgressBar();
+                    listener.applyChanges(id, currentProgress);
+                } else {
+                    int currentNumber = 1;
+                    if (currentProgress - currentNumber < 0) {
+                        currentProgress = 0;
+                    } else {
+                        currentProgress -= currentNumber;
                     }
                     updateProgressBar();
                     listener.applyChanges(id, currentProgress);
