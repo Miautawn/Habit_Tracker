@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     AppCompatButton emailBtn;
     TextView loginTextRedirect;
+
+    ImageButton passwordVisibilityToggle;
+    private boolean isPasswordVisible = false;
 
     //cia demo stuff
     EditText email;
@@ -53,6 +58,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnSignIn = findViewById(R.id.signinBtn);
         login_loader = findViewById(R.id.loading_login);
         login_message = findViewById(R.id.login_message);
+
+        passwordVisibilityToggle = findViewById(R.id.password_visibility_toggle);
+
+        passwordVisibilityToggle.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
 
     }
@@ -74,6 +83,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (view == loginTextRedirect) {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
+        } else if (view == passwordVisibilityToggle) {
+            if (isPasswordVisible) {
+                password.setInputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                password.setSelection(password.length());
+                isPasswordVisible = false;
+
+            } else {
+                password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                password.setSelection(password.length());
+                isPasswordVisible = true;
+            }
         }
     }
 
