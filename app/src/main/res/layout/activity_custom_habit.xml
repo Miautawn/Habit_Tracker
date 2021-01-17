@@ -301,7 +301,8 @@
                 android:inputType="number"
                 android:digits="0123456789"
                 android:gravity="center"
-                android:background="@drawable/white_btn_container"/>
+                android:background="@drawable/white_btn_container"
+                android:imeOptions="actionDone"/>
 
         </RelativeLayout>
 
@@ -439,7 +440,8 @@
             android:inputType="number"
             android:digits="0123456789"
             android:gravity="center"
-            android:background="@drawable/white_btn_container"/>
+            android:background="@drawable/white_btn_container"
+            android:imeOptions="actionDone"/>
 
     </RelativeLayout>
 
