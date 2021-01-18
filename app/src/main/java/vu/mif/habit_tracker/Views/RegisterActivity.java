@@ -6,11 +6,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +29,7 @@ import vu.mif.habit_tracker.ViewModels.HabitTestViewModel;
 import vu.mif.habit_tracker.ViewModels.LoginActivityViewModel;
 import vu.mif.habit_tracker.ViewModels.PetTestViewModel;
 import vu.mif.habit_tracker.ViewModels.RegisterActivityViewModel;
+import vu.mif.habit_tracker.firebaseDB;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -39,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     private RegisterActivityViewModel viewmodel;
     private ProgressBar register_loader;
     private TextView regiter_message;
+    private int STORAGE_PERMISION_CODE = 28;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,16 @@ public class RegisterActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewmodel.registerUser(username.getText().toString(), email.getText().toString(), passwordField.getText().toString(), RegisterActivity.this);
+
+                if(firebaseDB.CheckPermission(RegisterActivity.this, STORAGE_PERMISION_CODE)) {
+                    //closing the keyboard
+                    View mView = RegisterActivity.this.getCurrentFocus();
+                    if (mView != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(mView.getWindowToken(), 0);
+                    }
+                    viewmodel.registerUser(username.getText().toString(), email.getText().toString(), passwordField.getText().toString(), RegisterActivity.this);
+                }
             }
         });
 

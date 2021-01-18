@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -255,6 +257,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if(view == btnSearchFriends)
         {
+            //closing the keyboard
+            View mView = this.getCurrentFocus();
+            if(mView != null)
+            {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mView.getWindowToken(), 0);
+            }
             model.LookForFriends(friendsSearchEditText.getText().toString());
         }else if(view == btnPet)
         {

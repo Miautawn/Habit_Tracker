@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -75,6 +77,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             if(firebaseDB.CheckPermission(this, STORAGE_PERMISION_CODE))
             {
+                //closing the keyboard
+                View mView = this.getCurrentFocus();
+                if(mView != null)
+                {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mView.getWindowToken(), 0);
+                }
                 viewmodel.logInUser(email.getText().toString(), password.getText().toString(), this);
             }
         } else if (view == btnSignIn) {
